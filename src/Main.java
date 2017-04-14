@@ -1,3 +1,6 @@
+import Presenter.Presenter;
+import view.MainWindow;
+
 import javax.swing.*;
 
 /**
@@ -5,11 +8,15 @@ import javax.swing.*;
  */
 public class Main {
     public static void main(String[] args) {
+
+        MainWindow myGui = new MainWindow();
         JFrame frame = new JFrame("PPD");
-        frame.setContentPane(new MainWindow().$$$getRootComponent$$$());
-        frame.setVisible(true);
-        frame.setSize(1600,900);
+        frame.setContentPane(myGui.$$$getRootComponent$$$());
+        frame.setSize(1600, 900);
         frame.setResizable(false);
+        frame.setVisible(true);
+        myGui.startUp();
+
 
     }
 }
