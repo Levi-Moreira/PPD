@@ -25,13 +25,9 @@ public class ClientThread extends Thread {
             this.start();
             ostream = new DataOutputStream(socket.getOutputStream());
             istream = new DataInputStream(socket.getInputStream());
-            Scanner console = new Scanner(System.in);
-            while (true) {
-                System.out.println("Mensagem: ");
-                String MSnd = console.nextLine();
-                ostream.writeUTF(MSnd);
-                ostream.flush();
-            }
+
+
+
         } catch (Exception e) {
             System.out.println(e);
         }
