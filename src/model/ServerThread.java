@@ -1,5 +1,7 @@
 package model;
 
+import Presenter.Presenter;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
@@ -25,12 +27,17 @@ public class ServerThread extends Thread {
     private boolean sendReceive = true;
     private boolean hasMsg = true;
 
-    public ServerThread() {
+    private MainModelIO model;
+
+    public ServerThread(MainModelIO model) {
+
+        this.model = model;
+
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Aguardando conexão...");
             socket = serverSocket.accept();
-            System.out.println("Conexão Estabelecida.");
+            model.serverConnected();
             ostream = new DataOutputStream(socket.getOutputStream());
             istream = new DataInputStream(socket.getInputStream());
 

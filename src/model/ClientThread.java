@@ -1,5 +1,7 @@
 package model;
 
+import Presenter.Presenter;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -9,6 +11,7 @@ import java.util.Scanner;
  * Created by ellca on 14/04/2017.
  */
 public class ClientThread extends Thread {
+
     static DataOutputStream ostream = null;
     DataInputStream istream = null;
     static String host = "";
@@ -16,11 +19,15 @@ public class ClientThread extends Thread {
     Socket socket = null;
     String MRcv = "";
     static String MSnd = "";
+    private MainModelIO model;
 
 
-    public ClientThread() {
+    public ClientThread( MainModelIO model) {
+
+        this.model = model;
         try {
             socket = new Socket(host, port);
+            model.clientConnected();
             System.out.println("Conectado....");
             this.start();
             ostream = new DataOutputStream(socket.getOutputStream());

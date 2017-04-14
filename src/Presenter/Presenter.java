@@ -16,7 +16,7 @@ public class Presenter {
 
     public Presenter(MainView myGui) {
         this.myGui = myGui;
-        model = new MainModelIO();
+        model = new MainModelIO(this);
     }
 
     public void startUpClient() {
@@ -25,5 +25,15 @@ public class Presenter {
 
     public void startUpServer() {
         model.startUpServer();
+    }
+
+    public void clientConnected() {
+        myGui.connectionMessage("Conectado");
+        myGui.onUserConnected();
+    }
+
+    public void serverConnected() {
+        myGui.connectionMessage("Conectado");
+        myGui.onUserConnected();
     }
 }
