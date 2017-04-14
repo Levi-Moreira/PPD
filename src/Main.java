@@ -8,7 +8,7 @@ public class Main {
         JFrame frame = new JFrame("PPD");
         frame.setContentPane(new MainWindow().$$$getRootComponent$$$());
         frame.setVisible(true);
-        frame.setSize(1200,800);
+        frame.setSize(1600,900);
         frame.setResizable(false);
 
     }
