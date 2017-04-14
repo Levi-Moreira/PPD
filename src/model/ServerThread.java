@@ -21,10 +21,9 @@ public class ServerThread extends Thread {
     private DataInputStream istream = null;
 
     private String MRcv = "";
-    private String MSnd = ""+"\r\n";
+    private String MSnd = "" + "\n";
 
-    private boolean sendReceive = true;
-    private boolean hasMsg = true;
+    private boolean hasMsg = false;
 
     private MainModelIO model;
 
@@ -73,9 +72,9 @@ public class ServerThread extends Thread {
                 }
 
                 if (bfr.ready()) {
+                    MRcv = "";
                     MRcv = bfr.readLine();
-                    model.receivedMessage("Mensagem Recebida: "+MRcv+"\r\n");
-                    System.out.println("Remoto: " + MRcv);
+                    model.receivedMessage("Mensagem Recebida: " + MRcv + "\n");
                 }
 
             }
@@ -90,6 +89,6 @@ public class ServerThread extends Thread {
 
     public void sendMessage(String msg) {
         hasMsg = true;
-        MSnd = msg+"\r\n";
+        MSnd = msg + "\n";
     }
 }

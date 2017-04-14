@@ -16,10 +16,9 @@ public class ClientThread extends Thread {
     Socket socket = null;
 
     private String MRcv = "";
-    private String MSnd = "";
+    private String MSnd = ""+"\n";
 
-    private boolean sendReceive = true;
-    private boolean hasMsg = true;
+    private boolean hasMsg = false;
 
     private boolean keepAlive = true;
 
@@ -64,13 +63,13 @@ public class ClientThread extends Thread {
                     bfw.write(MSnd);
                     bfw.flush();
                     hasMsg = false;
-
                 }
 
                 if (bfr.ready()) {
+
+                    MRcv = "";
                     MRcv = bfr.readLine();
-                    model.receivedMessage("Mensagem Recebida: " + MRcv+"\r\n");
-                    System.out.println("Remoto: " + MRcv);
+                    model.receivedMessage("Mensagem Recebida: " + MRcv + "\n");
                 }
 
             }
@@ -81,7 +80,7 @@ public class ClientThread extends Thread {
 
     public void sendMessage(String text) {
         hasMsg = true;
-        MSnd = text+"\r\n";
+        MSnd = text + "\n";
 
     }
 }
