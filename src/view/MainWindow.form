@@ -324,7 +324,7 @@
             <properties/>
             <border type="etched" title="Chat Area"/>
             <children>
-              <component id="3ec19" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="3ec19" class="javax.swing.JTextField" binding="tfMsgmToSend">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -340,7 +340,7 @@
                   <text value="Enviar"/>
                 </properties>
               </component>
-              <component id="80c06" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+              <component id="80c06" class="javax.swing.JTextArea" binding="taReceiveArea">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
@@ -429,7 +429,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value=""/>
+                  <text value="Desconectado"/>
                 </properties>
               </component>
             </children>

@@ -7,4 +7,6 @@ public interface MainView {
     void connectionMessage(String conectado);
 
     void onUserConnected();
+
+    void receivedMessage(String mRcv);
 }

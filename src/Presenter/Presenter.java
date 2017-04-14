@@ -36,4 +36,12 @@ public class Presenter {
         myGui.connectionMessage("Conectado");
         myGui.onUserConnected();
     }
+
+    public void sendMessage(String text) {
+        model.sendMessage(text);
+    }
+
+    public void receivedMessage(String mRcv) {
+        myGui.receivedMessage(mRcv);
+    }
 }

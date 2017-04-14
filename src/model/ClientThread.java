@@ -2,8 +2,7 @@ package model;
 
 import Presenter.Presenter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -12,17 +11,30 @@ import java.util.Scanner;
  */
 public class ClientThread extends Thread {
 
-    static DataOutputStream ostream = null;
-    DataInputStream istream = null;
     static String host = "";
     static int port = 9090;
     Socket socket = null;
-    String MRcv = "";
-    static String MSnd = "";
+
+    private String MRcv = "";
+    private String MSnd = "";
+
+    private boolean sendReceive = true;
+    private boolean hasMsg = true;
+
+    private boolean keepAlive = true;
+
     private MainModelIO model;
 
+    InputStream in;
+    InputStreamReader inr;
+    BufferedReader bfr;
 
-    public ClientThread( MainModelIO model) {
+    OutputStream ou;
+    Writer ouw;
+    BufferedWriter bfw;
+
+
+    public ClientThread(MainModelIO model) {
 
         this.model = model;
         try {
@@ -30,9 +42,13 @@ public class ClientThread extends Thread {
             model.clientConnected();
             System.out.println("Conectado....");
             this.start();
-            ostream = new DataOutputStream(socket.getOutputStream());
-            istream = new DataInputStream(socket.getInputStream());
+            in = socket.getInputStream();
+            inr = new InputStreamReader(in);
+            bfr = new BufferedReader(inr);
 
+            ou = socket.getOutputStream();
+            ouw = new OutputStreamWriter(ou);
+            bfw = new BufferedWriter(ouw);
 
 
         } catch (Exception e) {
@@ -41,12 +57,31 @@ public class ClientThread extends Thread {
     }
 
     public void run() {
-        while (true) {
-            try {
-                MRcv = istream.readUTF();
-                System.out.println("Remoto: " + MRcv);
-            } catch (Exception e) {
+        try {
+            while (keepAlive) {
+
+                if (hasMsg) {
+                    bfw.write(MSnd);
+                    bfw.flush();
+                    hasMsg = false;
+
+                }
+
+                if (bfr.ready()) {
+                    MRcv = bfr.readLine();
+                    model.receivedMessage("Mensagem Recebida: " + MRcv+"\r\n");
+                    System.out.println("Remoto: " + MRcv);
+                }
+
             }
+        } catch (Exception e) {
+            System.out.println(e);
         }
+    }
+
+    public void sendMessage(String text) {
+        hasMsg = true;
+        MSnd = text+"\r\n";
+
     }
 }

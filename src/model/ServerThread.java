@@ -2,8 +2,7 @@ package model;
 
 import Presenter.Presenter;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -22,12 +21,20 @@ public class ServerThread extends Thread {
     private DataInputStream istream = null;
 
     private String MRcv = "";
-    private static String MSnd = "";
+    private String MSnd = ""+"\r\n";
 
     private boolean sendReceive = true;
     private boolean hasMsg = true;
 
     private MainModelIO model;
+
+    InputStream in;
+    InputStreamReader inr;
+    BufferedReader bfr;
+
+    OutputStream ou;
+    Writer ouw;
+    BufferedWriter bfw;
 
     public ServerThread(MainModelIO model) {
 
@@ -38,8 +45,15 @@ public class ServerThread extends Thread {
             System.out.println("Aguardando conexão...");
             socket = serverSocket.accept();
             model.serverConnected();
-            ostream = new DataOutputStream(socket.getOutputStream());
-            istream = new DataInputStream(socket.getInputStream());
+
+            in = socket.getInputStream();
+            inr = new InputStreamReader(in);
+            bfr = new BufferedReader(inr);
+
+            ou = socket.getOutputStream();
+            ouw = new OutputStreamWriter(ou);
+            bfw = new BufferedWriter(ouw);
+
 
             this.start();
 
@@ -48,19 +62,24 @@ public class ServerThread extends Thread {
         }
     }
 
-    public void run(){
+    public void run() {
         try {
-            while(keepAlive){
-                if(hasMsg && sendReceive) {
-                    ostream.writeUTF(MSnd);
-                    ostream.flush();
-                    MRcv = istream.readUTF();
+            while (keepAlive) {
+
+                if (hasMsg) {
+                    bfw.write(MSnd);
+                    bfw.flush();
                     hasMsg = false;
                 }
 
+                if (bfr.ready()) {
+                    MRcv = bfr.readLine();
+                    model.receivedMessage("Mensagem Recebida: "+MRcv+"\r\n");
+                    System.out.println("Remoto: " + MRcv);
+                }
 
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -69,10 +88,8 @@ public class ServerThread extends Thread {
         this.keepAlive = keepAlive;
     }
 
-    public void sendMessage(String msg)
-    {
+    public void sendMessage(String msg) {
         hasMsg = true;
-        sendReceive = true;
-        MSnd = msg;
+        MSnd = msg+"\r\n";
     }
 }

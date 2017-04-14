@@ -31,4 +31,17 @@ public class MainModelIO {
     public void serverConnected() {
         presenter.serverConnected();
     }
+
+    public void sendMessage(String text) {
+
+        if (clientThread != null)
+            clientThread.sendMessage(text);
+
+        if(serverThread!=null)
+            serverThread.sendMessage(text);
+    }
+
+    public void receivedMessage(String mRcv) {
+        presenter.receivedMessage(mRcv);
+    }
 }
