@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Created by ellca on 14/04/2017.
  */
-public class ServerThread extends Thread {
+public class Server extends Thread {
 
     private boolean keepAlive = true;
 
@@ -21,21 +21,24 @@ public class ServerThread extends Thread {
     private DataInputStream istream = null;
 
     private String MRcv = "";
-    private String MSnd = "" + "\n";
+    private String MSnd = "";
 
     private boolean hasMsg = false;
 
     private MainModelIO model;
 
     InputStream in;
-    InputStreamReader inr;
-    BufferedReader bfr;
+    Scanner scanner;
 
+    PrintWriter out;
     OutputStream ou;
-    Writer ouw;
-    BufferedWriter bfw;
 
-    public ServerThread(MainModelIO model) {
+    private ServerReceiver receiver;
+
+    private ServerSender sender;
+
+
+    public Server(MainModelIO model) {
 
         this.model = model;
 
@@ -52,28 +55,15 @@ public class ServerThread extends Thread {
             model.serverConnected();
 
             in = socket.getInputStream();
-            inr = new InputStreamReader(in);
-            bfr = new BufferedReader(inr);
+            scanner = new Scanner(in);
 
             ou = socket.getOutputStream();
-            ouw = new OutputStreamWriter(ou);
-            bfw = new BufferedWriter(ouw);
+            out = new PrintWriter(ou, true);
 
-            while (keepAlive) {
+            receiver = new ServerReceiver(scanner, model);
+            sender = new ServerSender(out, model);
 
-                if (hasMsg) {
-                    bfw.write(MSnd);
-                    bfw.flush();
-                    hasMsg = false;
-                }
 
-                if (bfr.ready()) {
-                    MRcv = "";
-                    MRcv = bfr.readLine();
-                    model.receivedMessage("Mensagem Recebida: " + MRcv + "\n");
-                }
-
-            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -84,7 +74,6 @@ public class ServerThread extends Thread {
     }
 
     public void sendMessage(String msg) {
-        hasMsg = true;
-        MSnd = msg + "\n";
+        sender.sendMessage(msg);
     }
 }
