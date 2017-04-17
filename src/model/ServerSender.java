@@ -25,7 +25,6 @@ public class ServerSender extends Thread {
         try {
             while (keepAlive) {
 
-
                 if (hasMsg) {
                     pw.println(MSnd);
                     hasMsg = false;

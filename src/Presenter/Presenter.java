@@ -1,8 +1,13 @@
 package Presenter;
 
+import model.Client;
 import model.MainModelIO;
+import model.Server;
 import view.MainView;
 import view.MainWindow;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by ellca on 14/04/2017.
@@ -13,6 +18,10 @@ public class Presenter {
 
     private MainModelIO model;
 
+    private ArrayList<Client> mClients = new ArrayList<>();
+
+    private Server mServer;
+
 
     public Presenter(MainView myGui) {
         this.myGui = myGui;
@@ -20,11 +29,12 @@ public class Presenter {
     }
 
     public void startUpClient() {
-        model.startUpClient();
+        mClients.add(model.startUpClient());
     }
 
     public void startUpServer() {
-        model.startUpServer();
+
+        mServer = model.startUpServer();
     }
 
     public void clientConnected() {

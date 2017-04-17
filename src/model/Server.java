@@ -63,6 +63,8 @@ public class Server extends Thread {
             receiver = new ServerReceiver(scanner, model);
             sender = new ServerSender(out, model);
 
+            receiver.start();
+            sender.start();
 
         } catch (Exception e) {
             System.out.println(e);

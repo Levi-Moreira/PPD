@@ -16,12 +16,15 @@ public class MainModelIO {
         this.presenter = presenter;
     }
 
-    public void startUpClient() {
-        clientThread = new Client(this);
+    public Client startUpClient() {
+        clientThread =  new Client(this);
+        return  clientThread;
+
     }
 
-    public void startUpServer() {
-        serverThread = new Server(this);
+    public Server startUpServer() {
+        serverThread =  new Server(this);
+        return serverThread;
     }
 
     public void clientConnected() {
