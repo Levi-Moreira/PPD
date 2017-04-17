@@ -39,9 +39,15 @@ public class ServerThread extends Thread {
 
         this.model = model;
 
+        this.start();
+    }
+
+    public void run() {
         try {
+
+
             serverSocket = new ServerSocket(port);
-            System.out.println("Aguardando conexão...");
+            model.waitingForConnections();
             socket = serverSocket.accept();
             model.serverConnected();
 
@@ -53,16 +59,6 @@ public class ServerThread extends Thread {
             ouw = new OutputStreamWriter(ou);
             bfw = new BufferedWriter(ouw);
 
-
-            this.start();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    public void run() {
-        try {
             while (keepAlive) {
 
                 if (hasMsg) {

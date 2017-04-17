@@ -44,4 +44,8 @@ public class MainModelIO {
     public void receivedMessage(String mRcv) {
         presenter.receivedMessage(mRcv);
     }
+
+    public void waitingForConnections() {
+        presenter.waitingForConnections();
+    }
 }

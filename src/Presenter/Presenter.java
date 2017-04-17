@@ -44,4 +44,8 @@ public class Presenter {
     public void receivedMessage(String mRcv) {
         myGui.receivedMessage(mRcv);
     }
+
+    public void waitingForConnections() {
+        myGui.connectionMessage("Esperando por conexões");
+    }
 }
