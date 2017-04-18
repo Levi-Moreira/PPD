@@ -70,11 +70,9 @@ public class MainWindow implements MainView {
         conectarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isTheServer) {
-                    presenter.startUpClient();
-                } else {
-                    presenter.startUpServer();
-                }
+
+                presenter.startUpClient();
+
 
             }
         });

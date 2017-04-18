@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,17 +16,14 @@ import java.util.Scanner;
 public class ServerThread extends Thread {
 
     private boolean keepAlive = true;
+    private String nome;
 
-    private ServerSocket serverSocket = null;
+    private static ArrayList<BufferedWriter> clients;
+
+    private static ServerSocket serverSocket = null;
     private Socket socket = null;
-    private static DataOutputStream ostream = null;
+
     private static int port = 9090;
-    private DataInputStream istream = null;
-
-    private String MRcv = "";
-    private String MSnd = "" + "\n";
-
-    private boolean hasMsg = false;
 
     InputStream in;
     InputStreamReader inr;
@@ -35,49 +33,35 @@ public class ServerThread extends Thread {
     Writer ouw;
     BufferedWriter bfw;
 
-    public ServerThread() {
-
+    public ServerThread(Socket socket) {
+        this.socket = socket;
 
         try {
-            serverSocket = new ServerSocket(port);
-            System.out.println("Esperando por conecões");
-            socket = serverSocket.accept();
-            System.out.println("Cliente conectado");
             in = socket.getInputStream();
             inr = new InputStreamReader(in);
             bfr = new BufferedReader(inr);
 
-            ou = socket.getOutputStream();
-            ouw = new OutputStreamWriter(ou);
-            bfw = new BufferedWriter(ouw);
         } catch (Exception e) {
             System.out.println(e);
-        }
-
-        this.start();
-
-        while (true) {
-            try {
-                if (hasMsg) {
-                    bfw.write(MSnd);
-                    bfw.flush();
-                    hasMsg = false;
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            }
         }
     }
 
     public void run() {
         try {
 
-            while (keepAlive) {
+            String msg;
+            OutputStream ou = socket.getOutputStream();
+            OutputStreamWriter ouw = new OutputStreamWriter(ou);
+            BufferedWriter bfw = new BufferedWriter(ouw);
 
-                if (bfr.ready()) {
-                    MRcv = "";
-                    MRcv = bfr.readLine();
-                }
+            clients.add(bfw);
+            nome = msg = bfr.readLine();
+
+            while (keepAlive && msg != null) {
+
+                msg = bfr.readLine();
+                sendToAll(bfw, msg);
+                System.out.println(msg);
 
             }
         } catch (Exception e) {
@@ -90,8 +74,33 @@ public class ServerThread extends Thread {
     }
 
     public static void main(String[] args) {
-        ServerThread serverThread = new ServerThread();
+        try {
+            serverSocket = new ServerSocket(port);
+            clients = new ArrayList<BufferedWriter>();
 
+            while (clients.size()<2) {
+                System.out.println("Esperando por conecões");
+                Socket socket = serverSocket.accept();
+                System.out.println("Cliente conectado");
+                Thread t = new ServerThread(socket);
+                t.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void sendToAll(BufferedWriter bwSaida, String msg) throws IOException {
+        BufferedWriter bwS;
+
+        for (BufferedWriter bw : clients) {
+            bwS = (BufferedWriter) bw;
+            if (!(bwSaida == bwS)) {
+                bw.write(nome + " -> " + msg + "\r\n");
+                bw.flush();
+            }
+        }
     }
 
 

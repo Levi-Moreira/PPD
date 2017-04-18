@@ -15,18 +15,11 @@ public class ClientThread extends Thread {
     static int port = 9090;
     Socket socket = null;
 
-    private String MRcv = "";
-    private String MSnd = "" + "\n";
-
     private boolean hasMsg = false;
 
     private boolean keepAlive = true;
 
     private MainModelIO model;
-
-    InputStream in;
-    InputStreamReader inr;
-    BufferedReader bfr;
 
     OutputStream ou;
     Writer ouw;
@@ -40,48 +33,56 @@ public class ClientThread extends Thread {
             socket = new Socket(host, port);
             model.clientConnected();
             System.out.println("Conectado....");
-            this.start();
-            in = socket.getInputStream();
-            inr = new InputStreamReader(in);
-            bfr = new BufferedReader(inr);
-
             ou = socket.getOutputStream();
             ouw = new OutputStreamWriter(ou);
             bfw = new BufferedWriter(ouw);
-            while (true) {
-                if (hasMsg) {
-                    bfw.write(MSnd);
-                    bfw.flush();
-                    hasMsg = false;
-                }
-            }
 
-        } catch (Exception e) {
+            bfw.write("ClientName\r\n");
+            bfw.flush();
+            this.start();
+
+
+        } catch (
+                Exception e)
+
+        {
             System.out.println(e);
         }
+
     }
 
     public void run() {
         try {
-            while (keepAlive) {
-
-
-                if (bfr.ready()) {
-
-                    MRcv = "";
-                    MRcv = bfr.readLine();
-                    model.receivedMessage("Mensagem Recebida: " + MRcv + "\n");
-                }
-
-            }
+            this.listen();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public void sendMessage(String text) {
-        hasMsg = true;
-        MSnd = text + "\n";
+    public void listen() throws IOException {
+
+        InputStream in = socket.getInputStream();
+        InputStreamReader inr = new InputStreamReader(in);
+        BufferedReader bfr = new BufferedReader(inr);
+        String msg = "";
+
+        while (true)
+
+            if (bfr.ready()) {
+                msg = bfr.readLine();
+                model.receivedMessage(msg);
+            }
+    }
+
+    public void sendMessage(String msg) {
+
+        try {
+            bfw.write(msg + "\r\n");
+            bfw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

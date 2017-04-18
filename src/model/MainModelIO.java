@@ -33,12 +33,7 @@ public class MainModelIO {
     }
 
     public void sendMessage(String text) {
-
-        if (clientThread != null)
-            clientThread.sendMessage(text);
-
-        if(serverThread!=null)
-            serverThread.sendMessage(text);
+        clientThread.sendMessage(text);
     }
 
     public void receivedMessage(String mRcv) {
