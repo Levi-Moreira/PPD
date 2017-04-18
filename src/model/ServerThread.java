@@ -1,7 +1,9 @@
 package model;
 
 import Presenter.Presenter;
+import view.MainWindow;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -25,8 +27,6 @@ public class ServerThread extends Thread {
 
     private boolean hasMsg = false;
 
-    private MainModelIO model;
-
     InputStream in;
     InputStreamReader inr;
     BufferedReader bfr;
@@ -35,22 +35,14 @@ public class ServerThread extends Thread {
     Writer ouw;
     BufferedWriter bfw;
 
-    public ServerThread(MainModelIO model) {
+    public ServerThread() {
 
-        this.model = model;
 
-        this.start();
-    }
-
-    public void run() {
         try {
-
-
             serverSocket = new ServerSocket(port);
-            model.waitingForConnections();
+            System.out.println("Esperando por conecões");
             socket = serverSocket.accept();
-            model.serverConnected();
-
+            System.out.println("Cliente conectado");
             in = socket.getInputStream();
             inr = new InputStreamReader(in);
             bfr = new BufferedReader(inr);
@@ -58,19 +50,33 @@ public class ServerThread extends Thread {
             ou = socket.getOutputStream();
             ouw = new OutputStreamWriter(ou);
             bfw = new BufferedWriter(ouw);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
-            while (keepAlive) {
+        this.start();
 
+        while (true) {
+            try {
                 if (hasMsg) {
                     bfw.write(MSnd);
                     bfw.flush();
                     hasMsg = false;
                 }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    public void run() {
+        try {
+
+            while (keepAlive) {
 
                 if (bfr.ready()) {
                     MRcv = "";
                     MRcv = bfr.readLine();
-                    model.receivedMessage("Mensagem Recebida: " + MRcv + "\n");
                 }
 
             }
@@ -83,8 +89,10 @@ public class ServerThread extends Thread {
         this.keepAlive = keepAlive;
     }
 
-    public void sendMessage(String msg) {
-        hasMsg = true;
-        MSnd = msg + "\n";
+    public static void main(String[] args) {
+        ServerThread serverThread = new ServerThread();
+
     }
+
+
 }

@@ -16,7 +16,7 @@ public class ClientThread extends Thread {
     Socket socket = null;
 
     private String MRcv = "";
-    private String MSnd = ""+"\n";
+    private String MSnd = "" + "\n";
 
     private boolean hasMsg = false;
 
@@ -48,7 +48,13 @@ public class ClientThread extends Thread {
             ou = socket.getOutputStream();
             ouw = new OutputStreamWriter(ou);
             bfw = new BufferedWriter(ouw);
-
+            while (true) {
+                if (hasMsg) {
+                    bfw.write(MSnd);
+                    bfw.flush();
+                    hasMsg = false;
+                }
+            }
 
         } catch (Exception e) {
             System.out.println(e);
@@ -59,11 +65,6 @@ public class ClientThread extends Thread {
         try {
             while (keepAlive) {
 
-                if (hasMsg) {
-                    bfw.write(MSnd);
-                    bfw.flush();
-                    hasMsg = false;
-                }
 
                 if (bfr.ready()) {
 

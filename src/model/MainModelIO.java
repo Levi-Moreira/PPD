@@ -8,7 +8,7 @@ import Presenter.Presenter;
 public class MainModelIO {
 
     private ClientThread clientThread;
-    private ServerThread serverThread;
+    private ClientThread serverThread;
 
     private Presenter presenter;
 
@@ -21,7 +21,7 @@ public class MainModelIO {
     }
 
     public void startUpServer() {
-        serverThread = new ServerThread(this);
+        serverThread = new ClientThread(this);
     }
 
     public void clientConnected() {
