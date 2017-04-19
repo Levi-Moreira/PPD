@@ -96,7 +96,7 @@ public class MainWindow implements MainView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String msg = tfMsgmToSend.getText();
-                taReceiveArea.append("Mensagem Enviada:" + msg + "\r\n");
+                taReceiveArea.append("Mensagem Enviada:" + msg + "\n");
                 presenter.sendMessage(msg);
             }
         });
@@ -123,7 +123,7 @@ public class MainWindow implements MainView {
 
     @Override
     public void receivedMessage(String mRcv) {
-        taReceiveArea.append(mRcv);
+        taReceiveArea.append(mRcv + "\n");
     }
 
     @Override

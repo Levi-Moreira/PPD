@@ -1,6 +1,7 @@
 package Presenter;
 
 import model.MainModelIO;
+import model.Message;
 import view.MainView;
 import view.MainWindow;
 
@@ -41,8 +42,10 @@ public class Presenter {
         model.sendMessage(text);
     }
 
-    public void receivedMessage(String mRcv) {
-        myGui.receivedMessage(mRcv);
+    public void receivedMessage(Message mRcv) {
+
+        if (mRcv.isChat())
+            myGui.receivedMessage(mRcv.getSender()+" diz-> "+mRcv.getMessage());
     }
 
     public void waitingForConnections() {

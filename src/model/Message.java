@@ -17,6 +17,9 @@ public class Message {
         this.message = message;
     }
 
+    public Message() {
+    }
+
     public String getType() {
         return type;
     }
@@ -39,5 +42,9 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isChat() {
+        return type.equals(TYPE_CHAT);
     }
 }

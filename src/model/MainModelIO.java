@@ -39,16 +39,24 @@ public class MainModelIO {
 
     public void sendMessage(String text) {
         Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {}.getType();
-        Message msg = new Message(Message.TYPE_CHAT,clientName,text);
+        Type type = new TypeToken<Message>() {
+        }.getType();
+        Message msg = new Message(Message.TYPE_CHAT, clientName, text);
 
-        String json = gson.toJson(msg,type);
+        String json = gson.toJson(msg, type);
 
         clientThread.sendMessage(json);
     }
 
     public void receivedMessage(String mRcv) {
-        presenter.receivedMessage(mRcv);
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = gson.fromJson(mRcv, Message.class);
+
+        if (msg != null)
+            presenter.receivedMessage(msg);
     }
 
 
