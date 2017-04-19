@@ -1,13 +1,9 @@
 package Presenter;
 
-import model.Client;
 import model.MainModelIO;
-import model.Server;
+import model.Message;
 import view.MainView;
 import view.MainWindow;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 /**
  * Created by ellca on 14/04/2017.
@@ -18,23 +14,18 @@ public class Presenter {
 
     private MainModelIO model;
 
-    private ArrayList<Client> mClients = new ArrayList<>();
-
-    private Server mServer;
-
 
     public Presenter(MainView myGui) {
         this.myGui = myGui;
         model = new MainModelIO(this);
     }
 
-    public void startUpClient() {
-        mClients.add(model.startUpClient());
+    public void startUpClient(String clientName) {
+        model.startUpClient(clientName);
     }
 
     public void startUpServer() {
-
-        mServer = model.startUpServer();
+        model.startUpServer();
     }
 
     public void clientConnected() {
@@ -51,11 +42,17 @@ public class Presenter {
         model.sendMessage(text);
     }
 
-    public void receivedMessage(String mRcv) {
-        myGui.receivedMessage(mRcv);
+    public void receivedMessage(Message mRcv) {
+
+        if (mRcv.isChat())
+            myGui.receivedMessage(mRcv.getSender()+" diz-> "+mRcv.getMessage());
     }
 
     public void waitingForConnections() {
         myGui.connectionMessage("Esperando por conexões");
+    }
+
+    public void showConnectionError() {
+        myGui.showConnectionError();
     }
 }

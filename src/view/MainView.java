@@ -9,4 +9,6 @@ public interface MainView {
     void onUserConnected();
 
     void receivedMessage(String mRcv);
+
+    void showConnectionError();
 }
