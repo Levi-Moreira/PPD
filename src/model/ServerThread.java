@@ -18,7 +18,7 @@ public class ServerThread extends Thread {
     private boolean keepAlive = true;
     private String nome;
 
-    private static ArrayList<BufferedWriter> clients;
+    private static ArrayList<PrintWriter> clients;
 
     private static ServerSocket serverSocket = null;
     private Socket socket = null;
@@ -28,18 +28,17 @@ public class ServerThread extends Thread {
     InputStream in;
     InputStreamReader inr;
     BufferedReader bfr;
+    Scanner scannerIn;
 
-    OutputStream ou;
-    Writer ouw;
-    BufferedWriter bfw;
 
     public ServerThread(Socket socket) {
         this.socket = socket;
 
         try {
             in = socket.getInputStream();
-            inr = new InputStreamReader(in);
-            bfr = new BufferedReader(inr);
+            //inr = new InputStreamReader(in);
+            //bfr = new BufferedReader(inr);
+            scannerIn = new Scanner(in);
 
         } catch (Exception e) {
             System.out.println(e);
@@ -51,20 +50,21 @@ public class ServerThread extends Thread {
 
             String msg;
             OutputStream ou = socket.getOutputStream();
-            OutputStreamWriter ouw = new OutputStreamWriter(ou);
-            BufferedWriter bfw = new BufferedWriter(ouw);
+            PrintWriter prw = new PrintWriter(ou, true);
 
-            clients.add(bfw);
-            nome = msg = bfr.readLine();
+            clients.add(prw);
+            nome = msg = scannerIn.nextLine();
 
             while (keepAlive && msg != null) {
-
-                msg = bfr.readLine();
-                sendToAll(bfw, msg);
-                System.out.println(msg);
+                if (scannerIn.hasNextLine()) {
+                    msg = scannerIn.nextLine();
+                    sendToAll(prw, msg);
+                    System.out.println(msg);
+                }
 
             }
         } catch (Exception e) {
+            System.out.print("ServerRun: ");
             System.out.println(e);
         }
     }
@@ -73,12 +73,24 @@ public class ServerThread extends Thread {
         this.keepAlive = keepAlive;
     }
 
+
+    public void sendToAll(PrintWriter prwSaida, String msg) throws IOException {
+        PrintWriter bwS;
+
+        for (PrintWriter pw : clients) {
+            bwS = (PrintWriter) pw;
+            if (!(prwSaida == bwS)) {
+                pw.println(nome + " -> " + msg);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         try {
             serverSocket = new ServerSocket(port);
-            clients = new ArrayList<BufferedWriter>();
+            clients = new ArrayList<PrintWriter>();
 
-            while (clients.size()<2) {
+            while (clients.size() < 2) {
                 System.out.println("Esperando por conecões");
                 Socket socket = serverSocket.accept();
                 System.out.println("Cliente conectado");
@@ -89,18 +101,6 @@ public class ServerThread extends Thread {
             e.printStackTrace();
         }
 
-    }
-
-    public void sendToAll(BufferedWriter bwSaida, String msg) throws IOException {
-        BufferedWriter bwS;
-
-        for (BufferedWriter bw : clients) {
-            bwS = (BufferedWriter) bw;
-            if (!(bwSaida == bwS)) {
-                bw.write(nome + " -> " + msg + "\r\n");
-                bw.flush();
-            }
-        }
     }
 
 

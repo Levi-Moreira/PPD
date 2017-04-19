@@ -3,6 +3,7 @@ package model;
 import Presenter.Presenter;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -25,6 +26,7 @@ public class ClientThread extends Thread {
     Writer ouw;
     BufferedWriter bfw;
 
+    PrintWriter prw;
 
     public ClientThread(MainModelIO model) {
 
@@ -34,19 +36,21 @@ public class ClientThread extends Thread {
             model.clientConnected();
             System.out.println("Conectado....");
             ou = socket.getOutputStream();
-            ouw = new OutputStreamWriter(ou);
-            bfw = new BufferedWriter(ouw);
+            //ouw = new OutputStreamWriter(ou);
+            //bfw = new BufferedWriter(ouw);
 
-            bfw.write("ClientName\r\n");
-            bfw.flush();
+            prw = new PrintWriter(ou, true);
+            prw.println("ClientName");
             this.start();
 
 
-        } catch (
-                Exception e)
-
-        {
+        } catch (Exception e) {
+            System.out.print("clientconstructor:");
             System.out.println(e);
+            e.printStackTrace();
+            if (e instanceof ConnectException) {
+                model.showConnectionError();
+            }
         }
 
     }
@@ -55,34 +59,31 @@ public class ClientThread extends Thread {
         try {
             this.listen();
         } catch (Exception e) {
+            System.out.print("clientlistener:");
             System.out.println(e);
+
         }
     }
 
     public void listen() throws IOException {
 
         InputStream in = socket.getInputStream();
-        InputStreamReader inr = new InputStreamReader(in);
-        BufferedReader bfr = new BufferedReader(inr);
+        //InputStreamReader inr = new InputStreamReader(in);
+        //BufferedReader bfr = new BufferedReader(inr);
+
+        Scanner scannerIn = new Scanner(in);
         String msg = "";
 
         while (true)
 
-            if (bfr.ready()) {
-                msg = bfr.readLine();
+            if (scannerIn.hasNextLine()) {
+                msg = scannerIn.nextLine();
                 model.receivedMessage(msg);
             }
     }
 
     public void sendMessage(String msg) {
-
-        try {
-            bfw.write(msg + "\r\n");
-            bfw.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        prw.println(msg);
 
     }
 }

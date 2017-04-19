@@ -12,11 +12,14 @@ public class MainModelIO {
 
     private Presenter presenter;
 
+    private String clientName;
+
     public MainModelIO(Presenter presenter) {
         this.presenter = presenter;
     }
 
-    public void startUpClient() {
+    public void startUpClient(String clientName) {
+        this.clientName = clientName;
         clientThread = new ClientThread(this);
     }
 
@@ -28,9 +31,6 @@ public class MainModelIO {
         presenter.clientConnected();
     }
 
-    public void serverConnected() {
-        presenter.serverConnected();
-    }
 
     public void sendMessage(String text) {
         clientThread.sendMessage(text);
@@ -40,7 +40,8 @@ public class MainModelIO {
         presenter.receivedMessage(mRcv);
     }
 
-    public void waitingForConnections() {
-        presenter.waitingForConnections();
+
+    public void showConnectionError() {
+        presenter.showConnectionError();
     }
 }

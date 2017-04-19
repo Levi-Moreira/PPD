@@ -19,8 +19,8 @@ public class Presenter {
         model = new MainModelIO(this);
     }
 
-    public void startUpClient() {
-        model.startUpClient();
+    public void startUpClient(String clientName) {
+        model.startUpClient(clientName);
     }
 
     public void startUpServer() {
@@ -47,5 +47,9 @@ public class Presenter {
 
     public void waitingForConnections() {
         myGui.connectionMessage("Esperando por conexões");
+    }
+
+    public void showConnectionError() {
+        myGui.showConnectionError();
     }
 }
