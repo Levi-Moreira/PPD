@@ -1,6 +1,11 @@
 package model;
 
 import Presenter.Presenter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 /**
  * Created by ellca on 14/04/2017.
@@ -33,7 +38,13 @@ public class MainModelIO {
 
 
     public void sendMessage(String text) {
-        clientThread.sendMessage(text);
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {}.getType();
+        Message msg = new Message(Message.TYPE_CHAT,clientName,text);
+
+        String json = gson.toJson(msg,type);
+
+        clientThread.sendMessage(json);
     }
 
     public void receivedMessage(String mRcv) {

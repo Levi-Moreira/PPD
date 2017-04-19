@@ -80,7 +80,7 @@ public class ServerThread extends Thread {
         for (PrintWriter pw : clients) {
             bwS = (PrintWriter) pw;
             if (!(prwSaida == bwS)) {
-                pw.println(nome + " -> " + msg);
+                pw.println(msg);
             }
         }
     }

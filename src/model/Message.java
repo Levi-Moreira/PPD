@@ -5,6 +5,8 @@ package model;
  */
 public class Message {
 
+    public static String TYPE_CHAT = "chat";
+    public static String TYPE_GAME = "game";
     String type;
     String sender;
     String message;
