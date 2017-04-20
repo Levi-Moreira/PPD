@@ -19,4 +19,6 @@ public interface MainView {
     void setTurnPlayer(String sender);
 
     void setYourTurn();
+
+    void setGameStarted();
 }

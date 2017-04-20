@@ -59,7 +59,8 @@ public class Presenter {
         {
             if(mRcv.isStartMatch())
             {
-                myGui.enableBoard(false);
+                //myGui.enableBoard(false);
+                myGui.setGameStarted();
                 myGui.setTurnPlayer(mRcv.getSender());
             }
         }
