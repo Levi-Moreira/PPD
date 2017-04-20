@@ -1,10 +1,13 @@
 package model;
 
 import Presenter.Presenter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import view.MainWindow;
 
 import javax.swing.*;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -26,8 +29,6 @@ public class ServerThread extends Thread {
     private static int port = 9090;
 
     InputStream in;
-    InputStreamReader inr;
-    BufferedReader bfr;
     Scanner scannerIn;
 
 
@@ -54,6 +55,7 @@ public class ServerThread extends Thread {
 
             clients.add(prw);
             nome = msg = scannerIn.nextLine();
+            sendBack(prw, clients.size() + "");
 
             while (keepAlive && msg != null) {
                 if (scannerIn.hasNextLine()) {
@@ -83,6 +85,20 @@ public class ServerThread extends Thread {
                 pw.println(msg);
             }
         }
+    }
+
+    public void sendBack(PrintWriter prwSaida, String msg) throws IOException {
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message message = new Message(Message.TYPE_CHAT, Message.SENDER_SERVER, msg);
+
+        String json = gson.toJson(message, type);
+
+        prwSaida.println(json);
+
     }
 
     public static void main(String[] args) {

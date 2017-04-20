@@ -1,5 +1,6 @@
 package Presenter;
 
+import model.Board;
 import model.MainModelIO;
 import model.Message;
 import view.MainView;
@@ -13,6 +14,8 @@ public class Presenter {
     private MainView myGui;
 
     private MainModelIO model;
+
+    private Board board;
 
 
     public Presenter(MainView myGui) {
@@ -44,8 +47,19 @@ public class Presenter {
 
     public void receivedMessage(Message mRcv) {
 
-        if (mRcv.isChat())
-            myGui.receivedMessage(mRcv.getSender()+" diz-> "+mRcv.getMessage());
+        if (mRcv.isChat()) {
+
+            if (mRcv.isFromServer()) {
+                int playerNUmber = Integer.parseInt(mRcv.getMessage());
+                startUpBoard(playerNUmber);
+            } else {
+                myGui.receivedMessage(mRcv.getSender() + " diz-> " + mRcv.getMessage());
+            }
+        }
+    }
+
+    private void startUpBoard(int playerNUmber) {
+        board = new Board(playerNUmber);
     }
 
     public void waitingForConnections() {

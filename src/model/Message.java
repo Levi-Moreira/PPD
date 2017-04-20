@@ -7,6 +7,8 @@ public class Message {
 
     public static String TYPE_CHAT = "chat";
     public static String TYPE_GAME = "game";
+    public static String SENDER_SERVER = "server";
+
     String type;
     String sender;
     String message;
@@ -46,5 +48,9 @@ public class Message {
 
     public boolean isChat() {
         return type.equals(TYPE_CHAT);
+    }
+
+    public boolean isFromServer() {
+        return sender.equals(SENDER_SERVER);
     }
 }
