@@ -8,6 +8,7 @@ public class Message {
     public static String TYPE_CHAT = "chat";
     public static String TYPE_GAME = "game";
     public static String SENDER_SERVER = "server";
+    public static String START_MATCH = "istart";
 
     String type;
     String sender;
@@ -52,5 +53,9 @@ public class Message {
 
     public boolean isFromServer() {
         return sender.equals(SENDER_SERVER);
+    }
+
+    public boolean isStartMatch() {
+        return message.equals(Message.START_MATCH);
     }
 }

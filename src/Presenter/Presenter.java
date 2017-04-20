@@ -55,11 +55,19 @@ public class Presenter {
             } else {
                 myGui.receivedMessage(mRcv.getSender() + " diz-> " + mRcv.getMessage());
             }
+        }else
+        {
+            if(mRcv.isStartMatch())
+            {
+                myGui.enableBoard(false);
+                myGui.setTurnPlayer(mRcv.getSender());
+            }
         }
     }
 
     private void startUpBoard(int playerNUmber) {
         board = new Board(playerNUmber);
+        myGui.emptyBoard();
     }
 
     public void waitingForConnections() {
@@ -68,5 +76,10 @@ public class Presenter {
 
     public void showConnectionError() {
         myGui.showConnectionError();
+    }
+
+    public void warnStartMach() {
+        model.warnStartMatch();
+        myGui.setYourTurn();
     }
 }

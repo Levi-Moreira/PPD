@@ -64,4 +64,15 @@ public class MainModelIO {
     public void showConnectionError() {
         presenter.showConnectionError();
     }
+
+    public void warnStartMatch() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+        Message msg = new Message(Message.TYPE_GAME, clientName, Message.START_MATCH);
+
+        String json = gson.toJson(msg, type);
+
+        clientThread.sendMessage(json);
+    }
 }
