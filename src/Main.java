@@ -12,7 +12,7 @@ public class Main {
         MainWindow myGui = new MainWindow();
         JFrame frame = new JFrame("PPD");
         frame.setContentPane(myGui.$$$getRootComponent$$$());
-        frame.setSize(1600, 900);
+        frame.setSize(1000, 900);
         frame.setResizable(false);
         frame.setVisible(true);
         myGui.startUp();
