@@ -82,22 +82,13 @@ public class MainWindow implements MainView {
 
     private boolean yourTurn = false;
 
+    private boolean shouldEndTurn = false;
+
 
     public MainWindow() {
 
-        jbConnect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if (!tfName.getText().isEmpty())
-                    presenter.startUpClient(tfName.getText());
-                else
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Por favor, insira seu nome");
-
-
-            }
-        });
-
+        addActionListenerForButtons();
+        addActionListenerForBoardButtons();
         cbPlayLocal.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -111,6 +102,69 @@ public class MainWindow implements MainView {
             }
         });
 
+
+    }
+
+    private void addActionListenerForBoardButtons() {
+        space1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (blockedForAdding && !shouldEndTurn) {
+                    finishedAdding();
+                }
+            }
+        });
+
+        space2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        space3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        space4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        space5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+    }
+
+    private void finishedAdding() {
+        shouldEndTurn = true;
+        blockedForAdding = false;
+        jbAddPiece.setText("Add New Piece");
+    }
+
+    private void addActionListenerForButtons() {
+        jbConnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (!tfName.getText().isEmpty())
+                    presenter.startUpClient(tfName.getText());
+                else
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Por favor, insira seu nome");
+
+
+            }
+        });
+
+
         jbSend.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -119,6 +173,7 @@ public class MainWindow implements MainView {
                 presenter.sendMessage(msg);
             }
         });
+
         jbStartGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -129,17 +184,22 @@ public class MainWindow implements MainView {
                 }
             }
         });
+
         jbAddPiece.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if (blockedForAdding) {
-                    blockedForAdding = false;
-                    jbAddPiece.setText("Add New Piece");
-
+                if (shouldEndTurn) {
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
                 } else {
-                    blockedForAdding = true;
-                    jbAddPiece.setText("Cancel Adding");
+                    if (blockedForAdding) {
+                        blockedForAdding = false;
+                        jbAddPiece.setText("Add New Piece");
+
+                    } else {
+                        blockedForAdding = true;
+                        jbAddPiece.setText("Cancel Adding");
+                    }
                 }
             }
         });
