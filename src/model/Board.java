@@ -10,7 +10,7 @@ public class Board {
 
     private int playerNumber;
 
-    private int[][] board;
+    private int[] board;
 
     private int mypieces;
 
@@ -19,12 +19,11 @@ public class Board {
     private int playedPieces;
 
     public Board(int playerNumber) {
-        board = new int[6][5];
+        board = new int[30];
 
-        for (int i = 0; i < 6; i++)
-            for (int j = 0; j < 5; j++) {
-                board[i][j] = -1;
-            }
+        for (int i = 0; i < 30; i++)
+            board[i] = -1;
+
 
         this.playerNumber = playerNumber;
         mypieces = 0;
@@ -41,11 +40,12 @@ public class Board {
         this.playerNumber = playerNumber;
     }
 
-    public int[][] getBoard() {
+
+    public int[] getBoard() {
         return board;
     }
 
-    public void setBoard(int[][] board) {
+    public void setBoard(int[] board) {
         this.board = board;
     }
 
@@ -71,5 +71,15 @@ public class Board {
 
     public void setPlayedPieces(int playedPieces) {
         this.playedPieces = playedPieces;
+    }
+
+    public boolean addToSpace(int i) {
+        if (board[i - 1] == -1) {
+            board[i - 1] = playerNumber;
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

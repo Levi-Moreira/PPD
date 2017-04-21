@@ -4,7 +4,6 @@ import model.Board;
 import model.MainModelIO;
 import model.Message;
 import view.MainView;
-import view.MainWindow;
 
 /**
  * Created by ellca on 14/04/2017.
@@ -18,6 +17,7 @@ public class Presenter {
     private Board board;
 
 
+
     public Presenter(MainView myGui) {
         this.myGui = myGui;
         model = new MainModelIO(this);
@@ -27,9 +27,6 @@ public class Presenter {
         model.startUpClient(clientName);
     }
 
-    public void startUpServer() {
-        model.startUpServer();
-    }
 
     public void clientConnected() {
         myGui.connectionMessage("Conectado");
@@ -42,7 +39,7 @@ public class Presenter {
     }
 
     public void sendMessage(String text) {
-        model.sendMessage(text);
+        model.sendChatMessage(text);
     }
 
     public void receivedMessage(Message mRcv) {
@@ -62,7 +59,15 @@ public class Presenter {
                 //myGui.enableBoard(false);
                 myGui.setGameStarted();
                 myGui.setTurnPlayer(mRcv.getSender());
+            }else
+            {
+                if(mRcv.isEndTurn())
+                {
+                    myGui.setYourTurn();
+                }
             }
+
+
         }
     }
 
@@ -82,5 +87,14 @@ public class Presenter {
     public void warnStartMach() {
         model.warnStartMatch();
         myGui.setYourTurn();
+    }
+
+    public boolean addToSpace(int i) {
+        return board.addToSpace(i);
+    }
+
+    public void endMyTurn() {
+        model.endMyTurn();
+        myGui.setTurnPlayer("Outro");
     }
 }

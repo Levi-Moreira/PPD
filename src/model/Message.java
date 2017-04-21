@@ -9,6 +9,7 @@ public class Message {
     public static String TYPE_GAME = "game";
     public static String SENDER_SERVER = "server";
     public static String START_MATCH = "istart";
+    public static String END_TURN = "endturn";
 
     String type;
     String sender;
@@ -57,5 +58,9 @@ public class Message {
 
     public boolean isStartMatch() {
         return message.equals(Message.START_MATCH);
+    }
+
+    public boolean isEndTurn() {
+        return message.equals(END_TURN);
     }
 }

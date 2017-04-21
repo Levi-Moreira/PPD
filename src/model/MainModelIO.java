@@ -29,16 +29,13 @@ public class MainModelIO {
         clientThread = new ClientThread(this);
     }
 
-    public void startUpServer() {
-        serverThread = new ClientThread(this);
-    }
 
     public void clientConnected() {
         presenter.clientConnected();
     }
 
 
-    public void sendMessage(String text) {
+    public void sendChatMessage(String text) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
@@ -74,5 +71,17 @@ public class MainModelIO {
         String json = gson.toJson(msg, type);
 
         clientThread.sendMessage(json);
+    }
+
+    public void endMyTurn() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+        Message msg = new Message(Message.TYPE_GAME, clientName, Message.END_TURN);
+
+        String json = gson.toJson(msg, type);
+
+        clientThread.sendMessage(json);
+
     }
 }

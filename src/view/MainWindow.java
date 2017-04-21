@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 /**
  * Created by ellca on 12/04/2017.
@@ -84,11 +85,14 @@ public class MainWindow implements MainView {
 
     private boolean shouldEndTurn = false;
 
+    private ArrayList<JButton> buttons = new ArrayList<>();
+
 
     public MainWindow() {
 
         addActionListenerForButtons();
         addActionListenerForBoardButtons();
+        addButtonsToArray();
         cbPlayLocal.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -105,12 +109,48 @@ public class MainWindow implements MainView {
 
     }
 
+    private void addButtonsToArray() {
+        buttons.add(space1);
+        buttons.add(space2);
+        buttons.add(space3);
+        buttons.add(space4);
+        buttons.add(space5);
+        buttons.add(space6);
+        buttons.add(space7);
+        buttons.add(space8);
+        buttons.add(space9);
+        buttons.add(space10);
+        buttons.add(space11);
+        buttons.add(space12);
+        buttons.add(space13);
+        buttons.add(space14);
+        buttons.add(space15);
+        buttons.add(space16);
+        buttons.add(space17);
+        buttons.add(space18);
+        buttons.add(space19);
+        buttons.add(space20);
+        buttons.add(space21);
+        buttons.add(space22);
+        buttons.add(space23);
+        buttons.add(space24);
+        buttons.add(space25);
+        buttons.add(space26);
+        buttons.add(space27);
+        buttons.add(space28);
+        buttons.add(space29);
+        buttons.add(space30);
+    }
+
     private void addActionListenerForBoardButtons() {
         space1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (blockedForAdding && !shouldEndTurn) {
-                    finishedAdding();
+                    if (tryAddingToSpace(1))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
                 }
             }
         });
@@ -118,30 +158,54 @@ public class MainWindow implements MainView {
         space2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (blockedForAdding && !shouldEndTurn) {
+                    if (tryAddingToSpace(2))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                }
             }
         });
 
         space3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (blockedForAdding && !shouldEndTurn) {
+                    if (tryAddingToSpace(3))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                }
             }
         });
 
         space4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (blockedForAdding && !shouldEndTurn) {
+                    if (tryAddingToSpace(4))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                }
             }
         });
 
         space5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (blockedForAdding && !shouldEndTurn) {
+                    if (tryAddingToSpace(5))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                }
             }
         });
+    }
+
+    private boolean tryAddingToSpace(int i) {
+        return presenter.addToSpace(i);
     }
 
     private void finishedAdding() {
@@ -177,10 +241,12 @@ public class MainWindow implements MainView {
         jbStartGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 if (!gameStarted) {
                     presenter.warnStartMach();
                     jbStartGame.setText("End Turn");
+                    gameStarted = true;
+                } else {
+                    presenter.endMyTurn();
                 }
             }
         });

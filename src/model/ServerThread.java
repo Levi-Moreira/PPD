@@ -110,9 +110,11 @@ public class ServerThread extends Thread {
                 System.out.println("Esperando por conecões");
                 Socket socket = serverSocket.accept();
                 System.out.println("Cliente conectado");
-                Thread t = new ServerThread(socket);
+                ServerThread t = new ServerThread(socket);
                 t.start();
             }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
