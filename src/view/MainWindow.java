@@ -266,13 +266,6 @@ public class MainWindow implements ActionListener, MainView {
 
 
     @Override
-    public void enableBoard(boolean en) {
-        for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).setEnabled(en);
-        }
-    }
-
-    @Override
     public void setTurnPlayer(String sender) {
 
         jlTurn.setText("É a vez de: " + sender);

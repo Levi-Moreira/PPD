@@ -4,9 +4,7 @@ import Presenter.Presenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * Created by ellca on 14/04/2017.
@@ -90,7 +88,7 @@ public class MainModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.TYPE_GAME_ADD, clientName, i + "", playerNumber + "");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_ADD, clientName, i + "", playerNumber + "");
 
         String json = gson.toJson(msg, type);
 
@@ -104,7 +102,7 @@ public class MainModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.TYPE_GAME_MOVE, clientName, playerNumber + "", start + "", end + "");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_MOVE, clientName, playerNumber + "", start + "", end + "");
 
         String json = gson.toJson(msg, type);
 

@@ -61,13 +61,13 @@ public class Presenter {
             case Message.END_TURN:
                 myGui.setYourTurn();
                 break;
-            case Message.TYPE_GAME_ADD:
+            case Message.SUBTYPE_GAME_ADD:
                 space = Integer.parseInt(mRcv.getMessage());
                 player = Integer.parseInt(mRcv.getPlayer());
                 board.setPlayerAtSpace(space, player);
                 myGui.addPlayerToSpace(space, player);
                 break;
-            case Message.TYPE_GAME_MOVE:
+            case Message.SUBTYPE_GAME_MOVE:
                 start = Integer.parseInt(mRcv.getStart_move());
                 end = Integer.parseInt(mRcv.getEnd_mode());
                 player = Integer.parseInt(mRcv.getPlayer());

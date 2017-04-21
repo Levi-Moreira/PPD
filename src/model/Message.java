@@ -7,9 +7,14 @@ public class Message {
 
     public static final String TYPE_CHAT = "chat";
     public static final String TYPE_GAME = "game";
-    public static final String TYPE_GAME_ADD = "game_add";
-    public static final String TYPE_GAME_MOVE = "game_move";
+
+    public static final String SUBTYPE_GAME_ADD = "game_add";
+    public static final String SUBTYPE_GAME_REMOVE = "game_remove";
+    public static final String SUBTYPE_GAME_MOVE = "game_move";
+    public static final String SUBTYPE_GAME_CAPTURE = "game_capture";
+
     public static final String SENDER_SERVER = "server";
+
     public static final String START_MATCH = "istart";
     public static final String END_TURN = "endturn";
 
@@ -20,6 +25,7 @@ public class Message {
     String player;
     String start_move;
     String end_mode;
+    String cap_pos;
 
 
     public Message(String type, String sender, String message) {

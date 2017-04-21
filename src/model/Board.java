@@ -113,10 +113,54 @@ public class Board {
     }
 
     public boolean isMoveAllowed(int start, int end) {
-        if ((end == start - 1) || (end == start - 5) || (end == start + 1) || (end == start + 5))
+        if ((end == start - 1) ||
+                (end == start - 5) ||
+                (end == start + 1) ||
+                (end == start + 5)) {
             return true;
-        else
-            return false;
+        } else {
+            if ((end == start - 2) ||
+                    (end == start - 10) ||
+                    (end == start + 2) ||
+                    (end == start + 10)) {
+
+                if (isCapturePossible(start, end)) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private boolean isCapturePossible(int start, int end) {
+
+        boolean res = false;
+        if (end == start + 2) {
+            if ((board[start + 1] != playerNumber) && !isSpaceEmpty(start + 1))
+                res = true;
+
+        }
+
+        if (end == start - 2) {
+            if ((board[start - 1] != playerNumber) && !isSpaceEmpty(start - 1))
+                res = true;
+        }
+
+        if (end == start + 10) {
+            if ((board[start + 5] != playerNumber) && !isSpaceEmpty(start + 5))
+                res = true;
+        }
+
+        if (end == start - 10) {
+            if ((board[start - 5] != playerNumber) && !isSpaceEmpty(start - 5))
+                res = true;
+        }
+
+        return res;
     }
 
     public void movePlayer(int start, int end, int playerNumber) {

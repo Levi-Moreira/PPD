@@ -14,8 +14,6 @@ public interface MainView {
 
     void emptyBoard();
 
-    void enableBoard(boolean b);
-
     void setTurnPlayer(String sender);
 
     void setYourTurn();
