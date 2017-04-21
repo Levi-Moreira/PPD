@@ -113,9 +113,14 @@ public class Board {
     }
 
     public boolean isMoveAllowed(int start, int end) {
-        if((end == start - 1 )|| (end == start -5 )||(end == start + 1 )||(end == start + 5 ))
+        if ((end == start - 1) || (end == start - 5) || (end == start + 1) || (end == start + 5))
             return true;
         else
             return false;
+    }
+
+    public void movePlayer(int start, int end, int playerNumber) {
+        board[start] = -1;
+        board[end] = playerNumber;
     }
 }

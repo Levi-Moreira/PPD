@@ -309,6 +309,12 @@ public class MainWindow implements ActionListener, MainView {
         jlPlayedPieces.setText((Board.TOTAL_PIECES - hand) + "");
     }
 
+    @Override
+    public void move(int start, int end, int playerNumber) {
+        buttons.get(start).setText("Vazio");
+        buttons.get(end).setText(playerNumber + "");
+    }
+
     private void enableAllIpOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);

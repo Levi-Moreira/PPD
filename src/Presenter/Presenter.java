@@ -47,6 +47,10 @@ public class Presenter {
     }
 
     public void receivedGameMessage(Message mRcv) {
+        int space;
+        int player;
+        int start;
+        int end;
 
         String subtype = mRcv.getSubtype();
         switch (subtype) {
@@ -58,12 +62,17 @@ public class Presenter {
                 myGui.setYourTurn();
                 break;
             case Message.TYPE_GAME_ADD:
-                int space = Integer.parseInt(mRcv.getMessage());
-                int player = Integer.parseInt(mRcv.getPlayer());
-
+                space = Integer.parseInt(mRcv.getMessage());
+                player = Integer.parseInt(mRcv.getPlayer());
                 board.setPlayerAtSpace(space, player);
-
                 myGui.addPlayerToSpace(space, player);
+                break;
+            case Message.TYPE_GAME_MOVE:
+                start = Integer.parseInt(mRcv.getStart_move());
+                end = Integer.parseInt(mRcv.getEnd_mode());
+                player = Integer.parseInt(mRcv.getPlayer());
+                board.movePlayer(start, end, player);
+                myGui.move(start, end, player);
                 break;
 
 
@@ -127,6 +136,13 @@ public class Presenter {
     }
 
     public boolean tryToMove(int[] move) {
-        return board.isMoveAllowed(move[0], move[1]);
+        if (board.isMoveAllowed(move[0], move[1])) {
+            board.movePlayer(move[0], move[1], board.getPlayerNumber());
+            myGui.move(move[0], move[1], board.getPlayerNumber());
+            model.move(move[0], move[1], board.getPlayerNumber());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

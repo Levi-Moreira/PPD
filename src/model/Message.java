@@ -18,6 +18,8 @@ public class Message {
     String sender;
     String message;
     String player;
+    String start_move;
+    String end_mode;
 
 
     public Message(String type, String sender, String message) {
@@ -41,7 +43,34 @@ public class Message {
         this.message = message;
     }
 
+    public Message(String type, String subtype, String sender, String player, String start_move, String end_mode) {
+        this.type = type;
+        this.subtype = subtype;
+        this.sender = sender;
+        this.player = player;
+        this.start_move = start_move;
+        this.end_mode = end_mode;
+    }
+
     public Message() {
+    }
+
+
+
+    public String getStart_move() {
+        return start_move;
+    }
+
+    public void setStart_move(String start_move) {
+        this.start_move = start_move;
+    }
+
+    public String getEnd_mode() {
+        return end_mode;
+    }
+
+    public void setEnd_mode(String end_mode) {
+        this.end_mode = end_mode;
     }
 
     public String getPlayer() {

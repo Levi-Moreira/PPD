@@ -98,4 +98,16 @@ public class MainModelIO {
     }
 
 
+    public void move(int start, int end, int playerNumber) {
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.TYPE_GAME_MOVE, clientName, playerNumber + "", start + "", end + "");
+
+        String json = gson.toJson(msg, type);
+
+        clientThread.sendMessage(json);
+    }
 }
