@@ -257,6 +257,7 @@ public class MainWindow implements MainView {
                     gameStarted = true;
                 } else {
                     presenter.endMyTurn();
+                    shouldEndTurn = false;
                 }
             }
         });
