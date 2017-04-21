@@ -75,6 +75,7 @@ public class MainWindow implements ActionListener, MainView {
     private JLabel jlCapturedPieces;
     private JPanel jpConnectionStatus;
     private JPanel jpPlayedPieces;
+    private JLabel jlLostPieces;
 
     private Presenter presenter;
 
