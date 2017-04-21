@@ -88,6 +88,10 @@ public class MainWindow implements ActionListener, MainView {
 
     private ArrayList<JButton> buttons = new ArrayList<>();
 
+    private int[] move = new int[2];
+    private boolean startedMove = false;
+    private boolean finishedMove = false;
+
 
     public MainWindow() {
 
@@ -322,11 +326,51 @@ public class MainWindow implements ActionListener, MainView {
         JButton button = (JButton) e.getSource();
 
         if (yourTurn) {
-            if (blockedForAdding && !shouldEndTurn) {
-                if (tryAddingToSpace(buttons.indexOf(button)))
-                    finishedAdding();
-                else
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+            if (!shouldEndTurn) {
+                if (blockedForAdding) {
+                    if (tryAddingToSpace(buttons.indexOf(button)))
+                        finishedAdding();
+                    else
+                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                } else {
+
+                    tryToMove(buttons.indexOf(button));
+                }
+            } else
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
+
+        }
+    }
+
+    private void tryToMove(int space) {
+        if (!startedMove) {
+            if (presenter.isSpaceMine(space)) {
+                move[0] = space;
+                startedMove = true;
+            } else {
+                startedMove = false;
+                if (!presenter.isSpaceAllowed(space))
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Esta peça não é sua.");
+            }
+        } else {
+            if (presenter.isSpaceAllowed(space)) {
+                move[1] = space;
+                finishedMove = true;
+            } else {
+                startedMove = false;
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço não é vazio.");
+            }
+        }
+
+        if (finishedMove) {
+            if (presenter.tryToMove(move)) {
+                startedMove = false;
+                finishedMove = false;
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento válido.");
+            } else {
+                startedMove = false;
+                finishedMove = false;
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
             }
         }
     }

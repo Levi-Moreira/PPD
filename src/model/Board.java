@@ -95,4 +95,27 @@ public class Board {
     public void setPlayerAtSpace(int space, int player) {
         board[space] = player;
     }
+
+    public boolean isSpaceMine(int space) {
+        if (board[space] == playerNumber)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isSpaceEmpty(int space) {
+        if (board[space] == -1) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean isMoveAllowed(int start, int end) {
+        if((end == start - 1 )|| (end == start -5 )||(end == start + 1 )||(end == start + 5 ))
+            return true;
+        else
+            return false;
+    }
 }

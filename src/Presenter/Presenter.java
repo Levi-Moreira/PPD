@@ -117,4 +117,16 @@ public class Presenter {
     public boolean hasPieces() {
         return board.stillHavePieces();
     }
+
+    public boolean isSpaceMine(int space) {
+        return board.isSpaceMine(space);
+    }
+
+    public boolean isSpaceAllowed(int space) {
+        return board.isSpaceEmpty(space);
+    }
+
+    public boolean tryToMove(int[] move) {
+        return board.isMoveAllowed(move[0], move[1]);
+    }
 }
