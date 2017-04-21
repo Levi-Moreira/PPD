@@ -32,10 +32,6 @@ public class Presenter {
         myGui.onUserConnected();
     }
 
-    public void serverConnected() {
-        myGui.connectionMessage("Conectado");
-        myGui.onUserConnected();
-    }
 
     public void sendMessage(String text) {
         model.sendChatMessage(text);
@@ -65,9 +61,10 @@ public class Presenter {
                 int space = Integer.parseInt(mRcv.getMessage());
                 int player = Integer.parseInt(mRcv.getPlayer());
 
-                board.setPlayerAtSpace(space-1, player);
+                board.setPlayerAtSpace(space, player);
 
                 myGui.addPlayerToSpace(space, player);
+                break;
 
 
         }
@@ -89,10 +86,7 @@ public class Presenter {
     private void startUpBoard(int playerNUmber) {
         board = new Board(playerNUmber);
         myGui.emptyBoard();
-    }
-
-    public void waitingForConnections() {
-        myGui.connectionMessage("Esperando por conexões");
+        myGui.showMyPiecesumber(board.getMypieces());
     }
 
     public void showConnectionError() {
@@ -106,8 +100,9 @@ public class Presenter {
 
     public boolean addToSpace(int i) {
 
-        if (board.addSelfToSpace(i-1)) {
+        if (board.addSelfToSpace(i)) {
             myGui.addPlayerToSpace(i, board.getPlayerNumber());
+            myGui.showMyPiecesumber(board.getMypieces());
             model.addToSpace(i, board.getPlayerNumber());
             return true;
         } else
@@ -117,5 +112,9 @@ public class Presenter {
     public void endMyTurn() {
         model.endMyTurn();
         myGui.setTurnPlayer("Outro");
+    }
+
+    public boolean hasPieces() {
+        return board.stillHavePieces();
     }
 }

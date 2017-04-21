@@ -1,6 +1,7 @@
 package view;
 
 import Presenter.Presenter;
+import model.Board;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by ellca on 12/04/2017.
  */
-public class MainWindow implements MainView {
+public class MainWindow implements ActionListener, MainView {
     private JButton space1;
     private JButton space26;
     private JButton space7;
@@ -91,8 +92,9 @@ public class MainWindow implements MainView {
     public MainWindow() {
 
         addActionListenerForButtons();
-        addActionListenerForBoardButtons();
         addButtonsToArray();
+        addActionListenerForBoardButtons();
+
         cbPlayLocal.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -143,75 +145,11 @@ public class MainWindow implements MainView {
     }
 
     private void addActionListenerForBoardButtons() {
-        space1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yourTurn) {
-                    if (blockedForAdding && !shouldEndTurn) {
-                        if (tryAddingToSpace(1))
-                            finishedAdding();
-                        else
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                    }
-                }
-            }
-        });
 
-        space2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yourTurn) {
-                    if (blockedForAdding && !shouldEndTurn) {
-                        if (tryAddingToSpace(2))
-                            finishedAdding();
-                        else
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                    }
-                }
-            }
-        });
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).addActionListener(this);
+        }
 
-        space3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yourTurn) {
-                    if (blockedForAdding && !shouldEndTurn) {
-                        if (tryAddingToSpace(3))
-                            finishedAdding();
-                        else
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                    }
-                }
-            }
-        });
-
-        space4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yourTurn) {
-                    if (blockedForAdding && !shouldEndTurn) {
-                        if (tryAddingToSpace(4))
-                            finishedAdding();
-                        else
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                    }
-                }
-            }
-        });
-
-        space5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (yourTurn) {
-                    if (blockedForAdding && !shouldEndTurn) {
-                        if (tryAddingToSpace(5))
-                            finishedAdding();
-                        else
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                    }
-                }
-            }
-        });
     }
 
     private boolean tryAddingToSpace(int i) {
@@ -222,6 +160,10 @@ public class MainWindow implements MainView {
         shouldEndTurn = true;
         blockedForAdding = false;
         jbAddPiece.setText("Add New Piece");
+
+        if (!presenter.hasPieces()) {
+            jbAddPiece.setEnabled(false);
+        }
     }
 
     private void addActionListenerForButtons() {
@@ -313,71 +255,17 @@ public class MainWindow implements MainView {
 
     @Override
     public void emptyBoard() {
-        space1.setText("Vazio");
-        space2.setText("Vazio");
-        space3.setText("Vazio");
-        space4.setText("Vazio");
-        space5.setText("Vazio");
-        space6.setText("Vazio");
-        space7.setText("Vazio");
-        space8.setText("Vazio");
-        space9.setText("Vazio");
-        space10.setText("Vazio");
-        space11.setText("Vazio");
-        space12.setText("Vazio");
-        space13.setText("Vazio");
-        space14.setText("Vazio");
-        space15.setText("Vazio");
-        space16.setText("Vazio");
-        space17.setText("Vazio");
-        space18.setText("Vazio");
-        space19.setText("Vazio");
-        space20.setText("Vazio");
-        space21.setText("Vazio");
-        space22.setText("Vazio");
-        space23.setText("Vazio");
-        space24.setText("Vazio");
-        space25.setText("Vazio");
-        space26.setText("Vazio");
-        space27.setText("Vazio");
-        space28.setText("Vazio");
-        space29.setText("Vazio");
-        space30.setText("Vazio");
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).setText("Vazio");
+        }
     }
 
 
     @Override
     public void enableBoard(boolean en) {
-        space1.setEnabled(en);
-        space2.setEnabled(en);
-        space3.setEnabled(en);
-        space4.setEnabled(en);
-        space5.setEnabled(en);
-        space6.setEnabled(en);
-        space7.setEnabled(en);
-        space8.setEnabled(en);
-        space9.setEnabled(en);
-        space10.setEnabled(en);
-        space11.setEnabled(en);
-        space12.setEnabled(en);
-        space13.setEnabled(en);
-        space14.setEnabled(en);
-        space15.setEnabled(en);
-        space16.setEnabled(en);
-        space17.setEnabled(en);
-        space18.setEnabled(en);
-        space19.setEnabled(en);
-        space20.setEnabled(en);
-        space21.setEnabled(en);
-        space22.setEnabled(en);
-        space23.setEnabled(en);
-        space24.setEnabled(en);
-        space25.setEnabled(en);
-        space26.setEnabled(en);
-        space27.setEnabled(en);
-        space28.setEnabled(en);
-        space29.setEnabled(en);
-        space30.setEnabled(en);
+        for (int i = 0; i < buttons.size(); i++) {
+            buttons.get(i).setEnabled(en);
+        }
     }
 
     @Override
@@ -393,7 +281,8 @@ public class MainWindow implements MainView {
     public void setYourTurn() {
         jlTurn.setText("É a sua vez");
         jbStartGame.setEnabled(true);
-        jbAddPiece.setEnabled(true);
+        if (presenter.hasPieces())
+            jbAddPiece.setEnabled(true);
         yourTurn = true;
     }
 
@@ -407,7 +296,13 @@ public class MainWindow implements MainView {
 
     @Override
     public void addPlayerToSpace(int i, int playerNumber) {
-        buttons.get(i - 1).setText(playerNumber + "");
+        buttons.get(i).setText(playerNumber + "");
+    }
+
+    @Override
+    public void showMyPiecesumber(int hand) {
+        jlHandPieces.setText(hand + "");
+        jlPlayedPieces.setText((Board.TOTAL_PIECES - hand) + "");
     }
 
     private void enableAllIpOptions(boolean en) {
@@ -419,6 +314,21 @@ public class MainWindow implements MainView {
         jbConnect.setEnabled(en);
         cbPlayLocal.setEnabled(en);
         tfName.setEnabled(en);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        JButton button = (JButton) e.getSource();
+
+        if (yourTurn) {
+            if (blockedForAdding && !shouldEndTurn) {
+                if (tryAddingToSpace(buttons.indexOf(button)))
+                    finishedAdding();
+                else
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+            }
+        }
     }
 
     {

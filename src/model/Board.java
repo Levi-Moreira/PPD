@@ -5,8 +5,9 @@ package model;
  */
 public class Board {
 
-    public static int PLAYER1 = 1;
-    public static int PLAYER2 = 2;
+    public static final int TOTAL_PIECES = 5;
+    public static final int PLAYER1 = 1;
+    public static final int PLAYER2 = 2;
 
     private int playerNumber;
 
@@ -26,7 +27,7 @@ public class Board {
 
 
         this.playerNumber = playerNumber;
-        mypieces = 0;
+        mypieces = TOTAL_PIECES;
         capturedPieces = 0;
         playedPieces = 0;
 
@@ -73,9 +74,17 @@ public class Board {
         this.playedPieces = playedPieces;
     }
 
+    public boolean stillHavePieces() {
+        if (mypieces <= 0) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean addSelfToSpace(int i) {
         if (board[i] == -1) {
             board[i] = playerNumber;
+            mypieces--;
             return true;
         } else {
             return false;

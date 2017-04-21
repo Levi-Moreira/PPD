@@ -23,4 +23,6 @@ public interface MainView {
     void setGameStarted();
 
     void addPlayerToSpace(int i, int playerNumber);
+
+    void showMyPiecesumber(int s);
 }
