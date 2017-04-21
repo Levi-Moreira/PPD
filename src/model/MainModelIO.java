@@ -66,7 +66,7 @@ public class MainModelIO {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
-        Message msg = new Message(Message.TYPE_GAME, clientName, Message.START_MATCH);
+        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, "");
 
         String json = gson.toJson(msg, type);
 
@@ -77,11 +77,25 @@ public class MainModelIO {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
-        Message msg = new Message(Message.TYPE_GAME, clientName, Message.END_TURN);
+        Message msg = new Message(Message.TYPE_GAME, Message.END_TURN, clientName, "");
 
         String json = gson.toJson(msg, type);
 
         clientThread.sendMessage(json);
 
     }
+
+    public void addToSpace(int i, int playerNumber) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.TYPE_GAME_ADD, clientName, i + "", playerNumber + "");
+
+        String json = gson.toJson(msg, type);
+
+        clientThread.sendMessage(json);
+    }
+
+
 }

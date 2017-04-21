@@ -21,4 +21,6 @@ public interface MainView {
     void setYourTurn();
 
     void setGameStarted();
+
+    void addPlayerToSpace(int i, int playerNumber);
 }

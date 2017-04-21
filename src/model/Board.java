@@ -5,8 +5,8 @@ package model;
  */
 public class Board {
 
-    public static int PLAYER1 = 0;
-    public static int PLAYER2 = 1;
+    public static int PLAYER1 = 1;
+    public static int PLAYER2 = 2;
 
     private int playerNumber;
 
@@ -73,13 +73,17 @@ public class Board {
         this.playedPieces = playedPieces;
     }
 
-    public boolean addToSpace(int i) {
-        if (board[i - 1] == -1) {
-            board[i - 1] = playerNumber;
+    public boolean addSelfToSpace(int i) {
+        if (board[i] == -1) {
+            board[i] = playerNumber;
             return true;
         } else {
             return false;
         }
 
+    }
+
+    public void setPlayerAtSpace(int space, int player) {
+        board[space] = player;
     }
 }

@@ -5,15 +5,20 @@ package model;
  */
 public class Message {
 
-    public static String TYPE_CHAT = "chat";
-    public static String TYPE_GAME = "game";
-    public static String SENDER_SERVER = "server";
-    public static String START_MATCH = "istart";
-    public static String END_TURN = "endturn";
+    public static final String TYPE_CHAT = "chat";
+    public static final String TYPE_GAME = "game";
+    public static final String TYPE_GAME_ADD = "game_add";
+    public static final String TYPE_GAME_MOVE = "game_move";
+    public static final String SENDER_SERVER = "server";
+    public static final String START_MATCH = "istart";
+    public static final String END_TURN = "endturn";
 
     String type;
+    String subtype;
     String sender;
     String message;
+    String player;
+
 
     public Message(String type, String sender, String message) {
         this.type = type;
@@ -21,7 +26,38 @@ public class Message {
         this.message = message;
     }
 
+    public Message(String type, String subtype, String sender, String message, String player) {
+        this.type = type;
+        this.subtype = subtype;
+        this.sender = sender;
+        this.message = message;
+        this.player = player;
+    }
+
+    public Message(String type, String subtype, String sender, String message) {
+        this.type = type;
+        this.subtype = subtype;
+        this.sender = sender;
+        this.message = message;
+    }
+
     public Message() {
+    }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(String player) {
+        this.player = player;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
     }
 
     public String getType() {
@@ -63,4 +99,5 @@ public class Message {
     public boolean isEndTurn() {
         return message.equals(END_TURN);
     }
+
 }

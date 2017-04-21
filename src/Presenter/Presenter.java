@@ -17,7 +17,6 @@ public class Presenter {
     private Board board;
 
 
-
     public Presenter(MainView myGui) {
         this.myGui = myGui;
         model = new MainModelIO(this);
@@ -42,30 +41,46 @@ public class Presenter {
         model.sendChatMessage(text);
     }
 
+    public void receivedChatMessage(Message mRcv) {
+        if (mRcv.isFromServer()) {
+            int playerNUmber = Integer.parseInt(mRcv.getMessage());
+            startUpBoard(playerNUmber);
+        } else {
+            myGui.receivedMessage(mRcv.getSender() + " diz-> " + mRcv.getMessage());
+        }
+    }
+
+    public void receivedGameMessage(Message mRcv) {
+
+        String subtype = mRcv.getSubtype();
+        switch (subtype) {
+            case Message.START_MATCH:
+                myGui.setGameStarted();
+                myGui.setTurnPlayer(mRcv.getSender());
+                break;
+            case Message.END_TURN:
+                myGui.setYourTurn();
+                break;
+            case Message.TYPE_GAME_ADD:
+                int space = Integer.parseInt(mRcv.getMessage());
+                int player = Integer.parseInt(mRcv.getPlayer());
+
+                board.setPlayerAtSpace(space-1, player);
+
+                myGui.addPlayerToSpace(space, player);
+
+
+        }
+
+    }
+
     public void receivedMessage(Message mRcv) {
 
         if (mRcv.isChat()) {
+            receivedChatMessage(mRcv);
 
-            if (mRcv.isFromServer()) {
-                int playerNUmber = Integer.parseInt(mRcv.getMessage());
-                startUpBoard(playerNUmber);
-            } else {
-                myGui.receivedMessage(mRcv.getSender() + " diz-> " + mRcv.getMessage());
-            }
-        }else
-        {
-            if(mRcv.isStartMatch())
-            {
-                //myGui.enableBoard(false);
-                myGui.setGameStarted();
-                myGui.setTurnPlayer(mRcv.getSender());
-            }else
-            {
-                if(mRcv.isEndTurn())
-                {
-                    myGui.setYourTurn();
-                }
-            }
+        } else {
+            receivedGameMessage(mRcv);
 
 
         }
@@ -90,7 +105,13 @@ public class Presenter {
     }
 
     public boolean addToSpace(int i) {
-        return board.addToSpace(i);
+
+        if (board.addSelfToSpace(i-1)) {
+            myGui.addPlayerToSpace(i, board.getPlayerNumber());
+            model.addToSpace(i, board.getPlayerNumber());
+            return true;
+        } else
+            return false;
     }
 
     public void endMyTurn() {
