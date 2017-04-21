@@ -24,7 +24,7 @@ public interface MainView {
 
     void addPlayerToSpace(int i, int playerNumber);
 
-    void showMyPiecesumber(int s);
+    void showMyPiecesNumber(int s);
 
     void move(int start, int end, int playerNumber);
 }

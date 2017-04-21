@@ -95,7 +95,7 @@ public class Presenter {
     private void startUpBoard(int playerNUmber) {
         board = new Board(playerNUmber);
         myGui.emptyBoard();
-        myGui.showMyPiecesumber(board.getMypieces());
+        myGui.showMyPiecesNumber(board.getMypieces());
     }
 
     public void showConnectionError() {
@@ -111,7 +111,7 @@ public class Presenter {
 
         if (board.addSelfToSpace(i)) {
             myGui.addPlayerToSpace(i, board.getPlayerNumber());
-            myGui.showMyPiecesumber(board.getMypieces());
+            myGui.showMyPiecesNumber(board.getMypieces());
             model.addToSpace(i, board.getPlayerNumber());
             return true;
         } else

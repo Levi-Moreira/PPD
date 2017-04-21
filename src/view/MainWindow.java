@@ -165,9 +165,9 @@ public class MainWindow implements ActionListener, MainView {
         blockedForAdding = false;
         jbAddPiece.setText("Add New Piece");
 
-        if (!presenter.hasPieces()) {
-            jbAddPiece.setEnabled(false);
-        }
+
+        jbAddPiece.setEnabled(false);
+
     }
 
     private void addActionListenerForButtons() {
@@ -304,7 +304,7 @@ public class MainWindow implements ActionListener, MainView {
     }
 
     @Override
-    public void showMyPiecesumber(int hand) {
+    public void showMyPiecesNumber(int hand) {
         jlHandPieces.setText(hand + "");
         jlPlayedPieces.setText((Board.TOTAL_PIECES - hand) + "");
     }
@@ -372,7 +372,7 @@ public class MainWindow implements ActionListener, MainView {
             if (presenter.tryToMove(move)) {
                 startedMove = false;
                 finishedMove = false;
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento válido.");
+                shouldEndTurn = true;
             } else {
                 startedMove = false;
                 finishedMove = false;
