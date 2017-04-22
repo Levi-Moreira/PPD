@@ -1,6 +1,6 @@
 package view;
 
-import Presenter.Presenter;
+import presenter.Presenter;
 import model.Board;
 
 import javax.swing.*;
@@ -86,16 +86,19 @@ public class MainWindow implements ActionListener, MainView {
 
     private boolean shouldEndTurn = false;
 
-    private ArrayList<JButton> buttons = new ArrayList<>();
 
-    private int[] move = new int[2];
     private boolean startedMove = false;
     private boolean finishedMove = false;
     private boolean partnerGaveUp = false;
+    private ArrayList<JButton> buttons = new ArrayList<>();
 
+    private int[] move = new int[2];
 
     public MainWindow(JFrame frame) {
         window = frame;
+
+        enableGameOptions(false);
+
         addActionListenerForButtons();
         addButtonsToArray();
         addActionListenerForBoardButtons();
@@ -129,6 +132,12 @@ public class MainWindow implements ActionListener, MainView {
         });
 
 
+        jbRestartGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                presenter.askForResart();
+            }
+        });
     }
 
     private void addButtonsToArray() {
@@ -260,7 +269,9 @@ public class MainWindow implements ActionListener, MainView {
 
     @Override
     public void onUserConnected() {
-        enableAllIpOptions(false);
+
+        enableConnectionOptions(false);
+        enableGameOptions(true);
     }
 
     @Override
@@ -332,12 +343,35 @@ public class MainWindow implements ActionListener, MainView {
         presenter.restoreBoard();
     }
 
-    private void restoreBoard() {
-        emptyBoard();
-        jbStartGame.setText("Start Game");
+    @Override
+    public void partnerAskForRestart(String partnerName) {
+        int dialogResult = JOptionPane.showConfirmDialog($$$getRootComponent$$$(), "Seu oponente " + partnerName + " está solicitando o recomeço da partida. Você aceita?");
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            presenter.acceptRestart();
+        } else {
+            presenter.refuseRestart();
+        }
+
     }
 
-    private void enableAllIpOptions(boolean en) {
+    @Override
+    public void restoreBoard() {
+        emptyBoard();
+        jbStartGame.setText("Start Game");
+        jlTurn.setText("");
+        jbStartGame.setEnabled(true);
+        jbAddPiece.setEnabled(false);
+        yourTurn = false;
+        blockedForAdding = false;
+        gameStarted = false;
+        yourTurn = false;
+        shouldEndTurn = false;
+        startedMove = false;
+        finishedMove = false;
+        partnerGaveUp = false;
+    }
+
+    private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
         tfIpAddress.setEnabled(en);
@@ -346,6 +380,13 @@ public class MainWindow implements ActionListener, MainView {
         jbConnect.setEnabled(en);
         cbPlayLocal.setEnabled(en);
         tfName.setEnabled(en);
+    }
+
+    private void enableGameOptions(boolean en) {
+        jbStartGame.setEnabled(en);
+        jbRestartGame.setEnabled(en);
+        jbYield.setEnabled(en);
+        jbSend.setEnabled(en);
     }
 
     @Override
@@ -625,6 +666,7 @@ public class MainWindow implements ActionListener, MainView {
         jlLostPieces.setText("30");
         panel2.add(jlLostPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jbAddPiece = new JButton();
+        jbAddPiece.setEnabled(false);
         jbAddPiece.setText("Add New Piece");
         jpStatus.add(jbAddPiece, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }

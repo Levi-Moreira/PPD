@@ -1,6 +1,7 @@
 package model;
 
-import Presenter.Presenter;
+import network.Client;
+import presenter.Presenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -9,22 +10,22 @@ import java.lang.reflect.Type;
 /**
  * Created by ellca on 14/04/2017.
  */
-public class MainModelIO {
+public class ModelIO {
 
-    private ClientThread clientThread;
-    private ClientThread serverThread;
+    private Client client;
+    private Client serverThread;
 
     private Presenter presenter;
 
     private String clientName;
 
-    public MainModelIO(Presenter presenter) {
+    public ModelIO(Presenter presenter) {
         this.presenter = presenter;
     }
 
     public void startUpClient(String clientName) {
         this.clientName = clientName;
-        clientThread = new ClientThread(this);
+        client = new Client(this);
     }
 
 
@@ -41,7 +42,7 @@ public class MainModelIO {
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
+        client.sendMessage(json);
     }
 
     public void receivedMessage(String mRcv) {
@@ -68,7 +69,7 @@ public class MainModelIO {
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
+        client.sendMessage(json);
     }
 
     public void endMyTurn() {
@@ -79,7 +80,7 @@ public class MainModelIO {
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
+        client.sendMessage(json);
 
     }
 
@@ -92,7 +93,7 @@ public class MainModelIO {
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
+        client.sendMessage(json);
     }
 
 
@@ -106,7 +107,7 @@ public class MainModelIO {
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
+        client.sendMessage(json);
     }
 
     public void terminateCLient() {
@@ -115,11 +116,35 @@ public class MainModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.CLIENT_TERMINATION, clientName,"end");
+        Message msg = new Message(Message.TYPE_GAME, Message.CLIENT_TERMINATION, clientName,"");
 
         String json = gson.toJson(msg, type);
 
-        clientThread.sendMessage(json);
-        clientThread.terminane();
+        client.sendMessage(json);
+        client.terminane();
+    }
+
+    public void askForRestart() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.ASK_RESTART_GAME, clientName,"");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
+
+    public void sendAcceptRestartMessage() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.ACCEPT_RESTART_GAME, clientName,"");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
     }
 }

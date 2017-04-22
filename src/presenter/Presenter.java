@@ -1,7 +1,7 @@
-package Presenter;
+package presenter;
 
 import model.Board;
-import model.MainModelIO;
+import model.ModelIO;
 import model.Message;
 import view.MainView;
 
@@ -12,14 +12,14 @@ public class Presenter {
 
     private MainView myGui;
 
-    private MainModelIO model;
+    private ModelIO model;
 
     private Board board;
 
 
     public Presenter(MainView myGui) {
         this.myGui = myGui;
-        model = new MainModelIO(this);
+        model = new ModelIO(this);
     }
 
     public void startUpClient(String clientName) {
@@ -51,6 +51,7 @@ public class Presenter {
         int player;
         int start;
         int end;
+        String partnerName;
 
         String subtype = mRcv.getSubtype();
         switch (subtype) {
@@ -73,9 +74,18 @@ public class Presenter {
                 player = Integer.parseInt(mRcv.getPlayer());
                 board.movePlayer(start, end, player);
                 myGui.move(start, end, player);
+                break;
             case Message.CLIENT_TERMINATION:
-                String partnerName = mRcv.getSender();
+                partnerName = mRcv.getSender();
                 myGui.warnPartnerLeft(partnerName);
+                break;
+            case Message.ASK_RESTART_GAME:
+                partnerName = mRcv.getSender();
+                myGui.partnerAskForRestart(partnerName);
+                break;
+            case Message.ACCEPT_RESTART_GAME:
+                restoreBoard();
+                myGui.restoreBoard();
                 break;
 
 
@@ -156,5 +166,18 @@ public class Presenter {
     public void restoreBoard() {
         board.restoreBoard();
         myGui.showMyPiecesNumber(board.getMypieces());
+    }
+
+    public void askForResart() {
+        model.askForRestart();
+    }
+
+    public void refuseRestart() {
+    }
+
+    public void acceptRestart() {
+        restoreBoard();
+        myGui.restoreBoard();
+        model.sendAcceptRestartMessage();
     }
 }

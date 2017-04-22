@@ -1,6 +1,6 @@
-package model;
+package network;
 
-import Presenter.Presenter;
+import model.ModelIO;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Created by ellca on 14/04/2017.
  */
-public class ClientThread extends Thread {
+public class Client extends Thread {
 
     static String host = "";
     static int port = 9090;
@@ -19,13 +19,13 @@ public class ClientThread extends Thread {
 
     private boolean keepAlive = true;
 
-    private MainModelIO model;
+    private ModelIO model;
 
     private OutputStream ou;
 
     private PrintWriter prw;
 
-    public ClientThread(MainModelIO model) {
+    public Client(ModelIO model) {
 
         this.model = model;
         try {

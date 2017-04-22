@@ -27,4 +27,8 @@ public interface MainView {
     void move(int start, int end, int playerNumber);
 
     void warnPartnerLeft(String partnerName);
+
+    void partnerAskForRestart(String partnerName);
+
+    void restoreBoard();
 }

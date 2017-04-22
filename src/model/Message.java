@@ -12,13 +12,17 @@ public class Message {
     public static final String SUBTYPE_GAME_REMOVE = "game_remove";
     public static final String SUBTYPE_GAME_MOVE = "game_move";
     public static final String SUBTYPE_GAME_CAPTURE = "game_capture";
+    public static final String START_MATCH = "istart";
+    public static final String END_TURN = "endturn";
+    public static final String ASK_RESTART_GAME = "ask_retart_game";
+    public static final String ACCEPT_RESTART_GAME = "yes_retart_game";
 
     public static final String SENDER_SERVER = "server";
 
-    public static final String START_MATCH = "istart";
-    public static final String END_TURN = "endturn";
+
     public static final String SERVER_TERMINATION = "exit_server" ;
     public static final String CLIENT_TERMINATION = "exit_client" ;
+
 
     String type;
     String subtype;

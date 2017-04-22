@@ -1,7 +1,8 @@
-package model;
+package network;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import model.Message;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 /**
  * Created by ellca on 14/04/2017.
  */
-public class ServerThread extends Thread {
+public class Server extends Thread {
 
     private boolean keepAlive = true;
     private static boolean hold = true;
@@ -32,7 +33,7 @@ public class ServerThread extends Thread {
     Scanner scannerIn;
 
 
-    public ServerThread(Socket socket) {
+    public Server(Socket socket) {
         this.socket = socket;
 
         try {
@@ -112,7 +113,7 @@ public class ServerThread extends Thread {
                     Socket socket = serverSocket.accept();
                     clientsNumber++;
                     System.out.println("Cliente conectado");
-                    ServerThread t = new ServerThread(socket);
+                    Server t = new Server(socket);
                     t.start();
                     System.out.println("Cliente conectados: " + clientsNumber);
                 }

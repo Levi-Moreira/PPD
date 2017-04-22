@@ -1,4 +1,3 @@
-import Presenter.Presenter;
 import view.MainWindow;
 
 import javax.swing.*;
