@@ -230,7 +230,7 @@ public class Board {
         return res;
     }
 
-    public boolean isCapturePossible(int start) {
+    public boolean checkCapturePossibility(int start) {
         if (start < 28) {
             if (isCapturePossible(start, start + 2))
                 return true;
@@ -248,6 +248,19 @@ public class Board {
             if (isCapturePossible(start, start - 10))
                 return true;
         }
+        return false;
+    }
+
+    public boolean isCaptureGenerallyPossible() {
+
+        for (int i = 0; i < 30; i++) {
+            if (board[i] == playerNumber) {
+                if (checkCapturePossibility(i)) {
+                    return true;
+                }
+            }
+        }
+
 
         return false;
     }

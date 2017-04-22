@@ -220,11 +220,16 @@ public class Presenter {
         return board.isCapturePossible(move[0], move[1]);
     }
 
-    public boolean canStillCapture(int start) {
-        return board.isCapturePossible(start);
+    public boolean canStillCapture() {
+
+        return board.isCaptureGenerallyPossible();
     }
 
     public boolean oponentHasPiecesOnBoard() {
         return board.oponentHasPiecesOnBoard();
+    }
+
+    public boolean checkCapturePossibility(int space) {
+        return board.checkCapturePossibility(space);
     }
 }

@@ -441,7 +441,7 @@ public class ClientWindow implements ActionListener, ClientView {
     }
 
     private void onNotEliminating(int buttonPos) {
-        if (capturedOnce && !presenter.canStillCapture(buttonPos)) {
+        if (capturedOnce && !presenter.canStillCapture()) {
             shouldEndTurn = true;
         }
 
@@ -476,13 +476,21 @@ public class ClientWindow implements ActionListener, ClientView {
 
     private void tryToMove(int space) {
         if (!startedMove) {
-            onNotStartedMove(space);
+            if (capturedOnce && presenter.checkCapturePossibility(space))
+                onNotStartedMove(space);
+            else {
+                if (!capturedOnce)
+                    onNotStartedMove(space);
+                else
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
+            }
         } else {
             onStartedMove(space);
         }
 
         if (finishedMove) {
             onFinishedMove();
+
         }
     }
 
