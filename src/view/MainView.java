@@ -37,4 +37,8 @@ public interface MainView {
     void updateCapturedPiecesCount(int capturedPieces);
 
     void updateLostPiecesCount(int lostPieces);
+
+    void anounceYouWin();
+
+    void anounceYouLost();
 }

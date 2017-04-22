@@ -391,6 +391,21 @@ public class MainWindow implements ActionListener, MainView {
         jlLostPieces.setText(lostPieces + "");
     }
 
+    @Override
+    public void anounceYouWin() {
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você capturou todas as peças do seu oponente. Parabéns, você venceu!");
+        presenter.restoreBoard();
+        restoreBoard();
+
+    }
+
+    @Override
+    public void anounceYouLost() {
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você perdeu todas as suas peças. Desculpe, você perdeu!");
+        presenter.restoreBoard();
+        restoreBoard();
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
@@ -501,8 +516,10 @@ public class MainWindow implements ActionListener, MainView {
             if (presenter.hasCapture(move)) {
                 presenter.performCapture(move);
                 capturedOnce = true;
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do adversário para eliminar.");
-                isBlockedForElimination = true;
+                if (presenter.oponentHasPiecesOnBoard()) {
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do adversário para eliminar.");
+                    isBlockedForElimination = true;
+                }
             } else {
                 shouldEndTurn = true;
             }

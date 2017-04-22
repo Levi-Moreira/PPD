@@ -116,7 +116,7 @@ public class ModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.CLIENT_TERMINATION, clientName,"");
+        Message msg = new Message(Message.TYPE_GAME, Message.CLIENT_TERMINATION, clientName, "");
 
         String json = gson.toJson(msg, type);
 
@@ -129,7 +129,7 @@ public class ModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.ASK_RESTART_GAME, clientName,"");
+        Message msg = new Message(Message.TYPE_GAME, Message.ASK_RESTART_GAME, clientName, "");
 
         String json = gson.toJson(msg, type);
 
@@ -141,7 +141,7 @@ public class ModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.ACCEPT_RESTART_GAME, clientName,"");
+        Message msg = new Message(Message.TYPE_GAME, Message.ACCEPT_RESTART_GAME, clientName, "");
 
         String json = gson.toJson(msg, type);
 
@@ -153,7 +153,7 @@ public class ModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_CAPTURE, clientName,capturedPos+"");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_CAPTURE, clientName, capturedPos + "");
 
         String json = gson.toJson(msg, type);
 
@@ -165,10 +165,23 @@ public class ModelIO {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_REMOVE, clientName,piece+"");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_REMOVE, clientName, piece + "");
 
         String json = gson.toJson(msg, type);
 
         client.sendMessage(json);
+    }
+
+    public void anounceWin() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.ANOUNCE_WIN, clientName, "");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+
     }
 }

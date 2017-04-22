@@ -99,6 +99,10 @@ public class Presenter {
                 myGui.performCapture(removedPos);
                 myGui.updateLostPiecesCount(board.getLostPieces());
                 break;
+            case Message.ANOUNCE_WIN:
+                if (board.hasLostAll())
+                    myGui.anounceYouLost();
+                break;
 
 
         }
@@ -198,6 +202,11 @@ public class Presenter {
         myGui.performCapture(capturedPos);
         myGui.updateCapturedPiecesCount(board.getCapturedPieces());
         model.performCapture(capturedPos);
+
+        if (board.hasCapturedAll()) {
+            model.anounceWin();
+            myGui.anounceYouWin();
+        }
     }
 
     public void removePiece(int piece) {
@@ -213,5 +222,9 @@ public class Presenter {
 
     public boolean canStillCapture(int start) {
         return board.isCapturePossible(start);
+    }
+
+    public boolean oponentHasPiecesOnBoard() {
+        return board.oponentHasPiecesOnBoard();
     }
 }

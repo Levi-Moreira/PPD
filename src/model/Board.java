@@ -5,9 +5,7 @@ package model;
  */
 public class Board {
 
-    public static final int TOTAL_PIECES = 12;
-    public static final int PLAYER1 = 1;
-    public static final int PLAYER2 = 2;
+    public static final int TOTAL_PIECES = 3;
 
     private int playerNumber;
 
@@ -233,20 +231,20 @@ public class Board {
     }
 
     public boolean isCapturePossible(int start) {
-        if(start<28) {
+        if (start < 28) {
             if (isCapturePossible(start, start + 2))
                 return true;
         }
 
-        if(start>1) {
+        if (start > 1) {
             if (isCapturePossible(start, start - 2))
                 return true;
         }
-        if(start<20) {
+        if (start < 20) {
             if (isCapturePossible(start, start + 10))
                 return true;
         }
-        if(start>9) {
+        if (start > 9) {
             if (isCapturePossible(start, start - 10))
                 return true;
         }
@@ -262,5 +260,32 @@ public class Board {
     public void performLost(int removedPos) {
         board[removedPos] = -1;
         lostPieces++;
+    }
+
+    public boolean hasCapturedAll() {
+
+        if (capturedPieces == TOTAL_PIECES)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean hasLostAll() {
+        if (lostPieces == TOTAL_PIECES)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean oponentHasPiecesOnBoard() {
+
+        boolean res = false;
+
+        for (int i = 0; i < 30; i++) {
+            if (board[i] != -1 && board[i] != playerNumber) {
+                res = true;
+            }
+        }
+        return res;
     }
 }

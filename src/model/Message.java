@@ -16,6 +16,7 @@ public class Message {
     public static final String END_TURN = "endturn";
     public static final String ASK_RESTART_GAME = "ask_retart_game";
     public static final String ACCEPT_RESTART_GAME = "yes_retart_game";
+    public static final String ANOUNCE_WIN = "iwin";
 
     public static final String SENDER_SERVER = "server";
 
