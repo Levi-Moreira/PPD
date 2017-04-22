@@ -16,17 +16,14 @@ public class ClientThread extends Thread {
     static int port = 9090;
     Socket socket = null;
 
-    private boolean hasMsg = false;
 
     private boolean keepAlive = true;
 
     private MainModelIO model;
 
-    OutputStream ou;
-    Writer ouw;
-    BufferedWriter bfw;
+    private OutputStream ou;
 
-    PrintWriter prw;
+    private PrintWriter prw;
 
     public ClientThread(MainModelIO model) {
 
@@ -36,8 +33,7 @@ public class ClientThread extends Thread {
             model.clientConnected();
             System.out.println("Conectado....");
             ou = socket.getOutputStream();
-            //ouw = new OutputStreamWriter(ou);
-            //bfw = new BufferedWriter(ouw);
+
 
             prw = new PrintWriter(ou, true);
             prw.println("ClientName");
@@ -74,7 +70,7 @@ public class ClientThread extends Thread {
         Scanner scannerIn = new Scanner(in);
         String msg = "";
 
-        while (true)
+        while (keepAlive)
 
             if (scannerIn.hasNextLine()) {
                 msg = scannerIn.nextLine();
@@ -85,5 +81,16 @@ public class ClientThread extends Thread {
     public void sendMessage(String msg) {
         prw.println(msg);
 
+    }
+
+    public void terminane() {
+        keepAlive = false;
+        try {
+            socket.close();
+            prw.close();
+            ou.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -5,10 +5,7 @@ import model.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -77,6 +74,8 @@ public class MainWindow implements ActionListener, MainView {
     private JPanel jpPlayedPieces;
     private JLabel jlLostPieces;
 
+    private JFrame window;
+
     private Presenter presenter;
 
     private boolean blockedForAdding = false;
@@ -92,10 +91,11 @@ public class MainWindow implements ActionListener, MainView {
     private int[] move = new int[2];
     private boolean startedMove = false;
     private boolean finishedMove = false;
+    private boolean partnerGaveUp = false;
 
 
-    public MainWindow() {
-
+    public MainWindow(JFrame frame) {
+        window = frame;
         addActionListenerForButtons();
         addButtonsToArray();
         addActionListenerForBoardButtons();
@@ -109,6 +109,21 @@ public class MainWindow implements ActionListener, MainView {
                 } else {
                     tfIpAddress.setEnabled(true);
                     tfPort.setEnabled(true);
+                }
+            }
+        });
+
+        window.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                if (!partnerGaveUp) {
+                    int i = JOptionPane.showConfirmDialog(null, "Se você fechar a tela, estará desistindo desta partida");
+                    if (i == 0) {
+                        presenter.terminateClient();
+                        System.exit(0);
+                    }
+                } else {
+                    presenter.terminateClient();
+                    System.exit(0);
                 }
             }
         });
@@ -307,6 +322,19 @@ public class MainWindow implements ActionListener, MainView {
     public void move(int start, int end, int playerNumber) {
         buttons.get(start).setText("Vazio");
         buttons.get(end).setText(playerNumber + "");
+    }
+
+    @Override
+    public void warnPartnerLeft(String partnerName) {
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Seu parceiro " + partnerName + " abandonou o jogo, você venceu!");
+        partnerGaveUp = true;
+        restoreBoard();
+        presenter.restoreBoard();
+    }
+
+    private void restoreBoard() {
+        emptyBoard();
+        jbStartGame.setText("Start Game");
     }
 
     private void enableAllIpOptions(boolean en) {
@@ -565,7 +593,7 @@ public class MainWindow implements ActionListener, MainView {
         jbYield.setText("Yield");
         jpMain.add(jbYield, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jpStatus = new JPanel();
-        jpStatus.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
+        jpStatus.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 5, new Insets(0, 0, 0, 0), -1, -1));
         jpMain.add(jpStatus, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpStatus.setBorder(BorderFactory.createTitledBorder("Game Status"));
         jpPieces = new JPanel();
@@ -577,7 +605,7 @@ public class MainWindow implements ActionListener, MainView {
         jpPieces.add(jlHandPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jpCaptured = new JPanel();
         jpCaptured.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        jpStatus.add(jpCaptured, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        jpStatus.add(jpCaptured, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpCaptured.setBorder(BorderFactory.createTitledBorder("Captured Pieces"));
         jlCapturedPieces = new JLabel();
         jlCapturedPieces.setText("30");
@@ -589,9 +617,16 @@ public class MainWindow implements ActionListener, MainView {
         jlPlayedPieces = new JLabel();
         jlPlayedPieces.setText("30");
         jpPlayedPieces.add(jlPlayedPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        jpStatus.add(panel2, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel2.setBorder(BorderFactory.createTitledBorder("Lost Pieces"));
+        jlLostPieces = new JLabel();
+        jlLostPieces.setText("30");
+        panel2.add(jlLostPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jbAddPiece = new JButton();
         jbAddPiece.setText("Add New Piece");
-        jpStatus.add(jbAddPiece, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        jpStatus.add(jbAddPiece, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

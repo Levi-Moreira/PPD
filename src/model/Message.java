@@ -17,6 +17,8 @@ public class Message {
 
     public static final String START_MATCH = "istart";
     public static final String END_TURN = "endturn";
+    public static final String SERVER_TERMINATION = "exit_server" ;
+    public static final String CLIENT_TERMINATION = "exit_client" ;
 
     String type;
     String subtype;

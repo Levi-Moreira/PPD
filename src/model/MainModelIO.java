@@ -108,4 +108,18 @@ public class MainModelIO {
 
         clientThread.sendMessage(json);
     }
+
+    public void terminateCLient() {
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.CLIENT_TERMINATION, clientName,"end");
+
+        String json = gson.toJson(msg, type);
+
+        clientThread.sendMessage(json);
+        clientThread.terminane();
+    }
 }

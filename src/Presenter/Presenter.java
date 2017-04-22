@@ -73,6 +73,9 @@ public class Presenter {
                 player = Integer.parseInt(mRcv.getPlayer());
                 board.movePlayer(start, end, player);
                 myGui.move(start, end, player);
+            case Message.CLIENT_TERMINATION:
+                String partnerName = mRcv.getSender();
+                myGui.warnPartnerLeft(partnerName);
                 break;
 
 
@@ -144,5 +147,14 @@ public class Presenter {
         } else {
             return false;
         }
+    }
+
+    public void terminateClient() {
+        model.terminateCLient();
+    }
+
+    public void restoreBoard() {
+        board.restoreBoard();
+        myGui.showMyPiecesNumber(board.getMypieces());
     }
 }

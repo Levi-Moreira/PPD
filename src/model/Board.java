@@ -167,4 +167,14 @@ public class Board {
         board[start] = -1;
         board[end] = playerNumber;
     }
+
+    public void restoreBoard() {
+        for (int i = 0; i < 30; i++)
+            board[i] = -1;
+
+        mypieces = TOTAL_PIECES;
+        capturedPieces = 0;
+        playedPieces = 0;
+
+    }
 }

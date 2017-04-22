@@ -25,4 +25,6 @@ public interface MainView {
     void showMyPiecesNumber(int s);
 
     void move(int start, int end, int playerNumber);
+
+    void warnPartnerLeft(String partnerName);
 }

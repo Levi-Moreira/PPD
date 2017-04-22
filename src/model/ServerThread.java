@@ -1,11 +1,8 @@
 package model;
 
-import Presenter.Presenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import view.MainWindow;
 
-import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.ServerSocket;
@@ -19,6 +16,9 @@ import java.util.Scanner;
 public class ServerThread extends Thread {
 
     private boolean keepAlive = true;
+    private static boolean hold = true;
+
+
     private String nome;
 
     private static ArrayList<PrintWriter> clients;
@@ -37,8 +37,6 @@ public class ServerThread extends Thread {
 
         try {
             in = socket.getInputStream();
-            //inr = new InputStreamReader(in);
-            //bfr = new BufferedReader(inr);
             scannerIn = new Scanner(in);
 
         } catch (Exception e) {
@@ -60,19 +58,17 @@ public class ServerThread extends Thread {
             while (keepAlive && msg != null) {
                 if (scannerIn.hasNextLine()) {
                     msg = scannerIn.nextLine();
-                    sendToAll(prw, msg);
                     System.out.println(msg);
+                    sendToAll(prw, msg);
+
                 }
 
             }
+
         } catch (Exception e) {
             System.out.print("ServerRun: ");
             System.out.println(e);
         }
-    }
-
-    public void setKeepAlive(boolean keepAlive) {
-        this.keepAlive = keepAlive;
     }
 
 
@@ -102,16 +98,24 @@ public class ServerThread extends Thread {
     }
 
     public static void main(String[] args) {
+
+        int clientsNumber = 0;
         try {
             serverSocket = new ServerSocket(port);
             clients = new ArrayList<PrintWriter>();
 
-            while (clients.size() < 2) {
-                System.out.println("Esperando por conecões");
-                Socket socket = serverSocket.accept();
-                System.out.println("Cliente conectado");
-                ServerThread t = new ServerThread(socket);
-                t.start();
+
+            while (true) {
+
+                if (clientsNumber < 2) {
+                    System.out.println("Esperando por conecões");
+                    Socket socket = serverSocket.accept();
+                    clientsNumber++;
+                    System.out.println("Cliente conectado");
+                    ServerThread t = new ServerThread(socket);
+                    t.start();
+                    System.out.println("Cliente conectados: " + clientsNumber);
+                }
             }
 
 

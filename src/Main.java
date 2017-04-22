@@ -9,8 +9,9 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
 
-        MainWindow myGui = new MainWindow();
+
         JFrame frame = new JFrame("PPD");
+        MainWindow myGui = new MainWindow(frame);
         frame.setContentPane(myGui.$$$getRootComponent$$$());
         frame.setSize(1000, 900);
         frame.setResizable(false);
