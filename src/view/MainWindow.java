@@ -78,11 +78,11 @@ public class MainWindow implements ActionListener, MainView {
 
     private Presenter presenter;
 
-    private boolean blockedForAdding = false;
+    private boolean isBlockedForAdding = false;
 
-    private boolean gameStarted = false;
+    private boolean hasGameStarted = false;
 
-    private boolean yourTurn = false;
+    private boolean isYourTurn = false;
 
     private boolean shouldEndTurn = false;
 
@@ -90,9 +90,12 @@ public class MainWindow implements ActionListener, MainView {
     private boolean startedMove = false;
     private boolean finishedMove = false;
     private boolean partnerGaveUp = false;
+
     private ArrayList<JButton> buttons = new ArrayList<>();
 
     private int[] move = new int[2];
+    private boolean capturedOnce = false;
+    private boolean isBlockedForElimination = false;
 
     public MainWindow(JFrame frame) {
         window = frame;
@@ -187,7 +190,7 @@ public class MainWindow implements ActionListener, MainView {
 
     private void finishedAdding() {
         shouldEndTurn = true;
-        blockedForAdding = false;
+        isBlockedForAdding = false;
         jbAddPiece.setText("Add New Piece");
 
 
@@ -222,10 +225,11 @@ public class MainWindow implements ActionListener, MainView {
         jbStartGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!gameStarted) {
+                if (!hasGameStarted) {
                     presenter.warnStartMach();
                     jbStartGame.setText("End Turn");
-                    gameStarted = true;
+                    hasGameStarted = true;
+                    partnerGaveUp = false;
                 } else {
                     presenter.endMyTurn();
                     shouldEndTurn = false;
@@ -240,12 +244,12 @@ public class MainWindow implements ActionListener, MainView {
                 if (shouldEndTurn) {
                     JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
                 } else {
-                    if (blockedForAdding) {
-                        blockedForAdding = false;
+                    if (isBlockedForAdding) {
+                        isBlockedForAdding = false;
                         jbAddPiece.setText("Add New Piece");
 
                     } else {
-                        blockedForAdding = true;
+                        isBlockedForAdding = true;
                         jbAddPiece.setText("Cancel Adding");
                     }
                 }
@@ -298,7 +302,7 @@ public class MainWindow implements ActionListener, MainView {
         jlTurn.setText("É a vez de: " + sender);
         jbStartGame.setEnabled(false);
         jbAddPiece.setEnabled(false);
-        yourTurn = false;
+        isYourTurn = false;
     }
 
     @Override
@@ -307,15 +311,15 @@ public class MainWindow implements ActionListener, MainView {
         jbStartGame.setEnabled(true);
         if (presenter.hasPieces())
             jbAddPiece.setEnabled(true);
-        yourTurn = true;
+        isYourTurn = true;
     }
 
     @Override
     public void setGameStarted() {
-        gameStarted = true;
+        hasGameStarted = true;
         jbStartGame.setText("End Turn");
         jbStartGame.setEnabled(false);
-        yourTurn = false;
+        isYourTurn = false;
     }
 
     @Override
@@ -361,14 +365,30 @@ public class MainWindow implements ActionListener, MainView {
         jlTurn.setText("");
         jbStartGame.setEnabled(true);
         jbAddPiece.setEnabled(false);
-        yourTurn = false;
-        blockedForAdding = false;
-        gameStarted = false;
-        yourTurn = false;
+        isYourTurn = false;
+        isBlockedForAdding = false;
+        hasGameStarted = false;
+        isYourTurn = false;
         shouldEndTurn = false;
         startedMove = false;
         finishedMove = false;
-        partnerGaveUp = false;
+
+    }
+
+    @Override
+    public void performCapture(int capturedPos) {
+        buttons.get(capturedPos).setText("Vazio");
+
+    }
+
+    @Override
+    public void updateCapturedPiecesCount(int capturedPieces) {
+        jlCapturedPieces.setText(capturedPieces + "");
+    }
+
+    @Override
+    public void updateLostPiecesCount(int lostPieces) {
+        jlLostPieces.setText(lostPieces + "");
     }
 
     private void enableConnectionOptions(boolean en) {
@@ -393,54 +413,104 @@ public class MainWindow implements ActionListener, MainView {
     public void actionPerformed(ActionEvent e) {
 
         JButton button = (JButton) e.getSource();
+        int buttonPos = buttons.indexOf(button);
 
-        if (yourTurn) {
-            if (!shouldEndTurn) {
-                if (blockedForAdding) {
-                    if (tryAddingToSpace(buttons.indexOf(button)))
-                        finishedAdding();
-                    else
-                        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
-                } else {
+        if (isYourTurn) {
 
-                    tryToMove(buttons.indexOf(button));
-                }
-            } else
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
-
+            if (!isBlockedForElimination) {
+                onNotEliminating(buttonPos);
+            } else {
+                onEliminating(buttonPos);
+            }
         }
     }
 
-    private void tryToMove(int space) {
-        if (!startedMove) {
-            if (presenter.isSpaceMine(space)) {
-                move[0] = space;
-                startedMove = true;
+    private void onNotEliminating(int buttonPos) {
+        if (capturedOnce && !presenter.canStillCapture(buttonPos)) {
+            shouldEndTurn = true;
+        }
+
+        if (!shouldEndTurn) {
+            if (isBlockedForAdding) {
+                if (tryAddingToSpace(buttonPos))
+                    finishedAdding();
+                else
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
             } else {
-                startedMove = false;
-                if (!presenter.isSpaceAllowed(space))
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Esta peça não é sua.");
+
+                tryToMove(buttonPos);
             }
         } else {
-            if (presenter.isSpaceAllowed(space)) {
-                move[1] = space;
-                finishedMove = true;
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
+        }
+    }
+
+    private void onEliminating(int buttonPos) {
+        if (!presenter.isSpaceEmpty(buttonPos)) {
+            if (!presenter.isSpaceMine(buttonPos)) {
+                presenter.removePiece(buttonPos);
+                isBlockedForElimination = false;
             } else {
-                startedMove = false;
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço não é vazio.");
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do oponente.");
             }
+        } else {
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço vazio! Selecione uma peça do oponente.");
+        }
+    }
+
+
+    private void tryToMove(int space) {
+        if (!startedMove) {
+            onNotStartedMove(space);
+        } else {
+            onStartedMove(space);
         }
 
         if (finishedMove) {
-            if (presenter.tryToMove(move)) {
-                startedMove = false;
-                finishedMove = false;
-                shouldEndTurn = true;
+            onFinishedMove();
+        }
+    }
+
+    private void onNotStartedMove(int space) {
+        if (presenter.isSpaceMine(space)) {
+            move[0] = space;
+            startedMove = true;
+            jbAddPiece.setEnabled(false);
+        } else {
+            startedMove = false;
+            if (!presenter.isSpaceEmpty(space))
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Esta peça não é sua.");
+        }
+    }
+
+    private void onStartedMove(int space) {
+        if (presenter.isSpaceEmpty(space)) {
+            move[1] = space;
+            finishedMove = true;
+        } else {
+            startedMove = false;
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço não é vazio.");
+        }
+    }
+
+    private void onFinishedMove() {
+        if (presenter.tryToMove(move)) {
+            startedMove = false;
+            finishedMove = false;
+
+            if (presenter.hasCapture(move)) {
+                presenter.performCapture(move);
+                capturedOnce = true;
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do adversário para eliminar.");
+                isBlockedForElimination = true;
             } else {
-                startedMove = false;
-                finishedMove = false;
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
+                shouldEndTurn = true;
             }
+
+        } else {
+            startedMove = false;
+            finishedMove = false;
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
         }
     }
 
@@ -642,28 +712,28 @@ public class MainWindow implements ActionListener, MainView {
         jpStatus.add(jpPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpPieces.setBorder(BorderFactory.createTitledBorder("Not Played Pieces"));
         jlHandPieces = new JLabel();
-        jlHandPieces.setText("30");
+        jlHandPieces.setText("12");
         jpPieces.add(jlHandPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jpCaptured = new JPanel();
         jpCaptured.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         jpStatus.add(jpCaptured, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpCaptured.setBorder(BorderFactory.createTitledBorder("Captured Pieces"));
         jlCapturedPieces = new JLabel();
-        jlCapturedPieces.setText("30");
+        jlCapturedPieces.setText("0");
         jpCaptured.add(jlCapturedPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jpPlayedPieces = new JPanel();
         jpPlayedPieces.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         jpStatus.add(jpPlayedPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpPlayedPieces.setBorder(BorderFactory.createTitledBorder("Played Pieces"));
         jlPlayedPieces = new JLabel();
-        jlPlayedPieces.setText("30");
+        jlPlayedPieces.setText("0");
         jpPlayedPieces.add(jlPlayedPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         jpStatus.add(panel2, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel2.setBorder(BorderFactory.createTitledBorder("Lost Pieces"));
         jlLostPieces = new JLabel();
-        jlLostPieces.setText("30");
+        jlLostPieces.setText("0");
         panel2.add(jlLostPieces, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jbAddPiece = new JButton();
         jbAddPiece.setEnabled(false);

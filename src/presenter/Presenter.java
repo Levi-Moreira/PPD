@@ -87,6 +87,18 @@ public class Presenter {
                 restoreBoard();
                 myGui.restoreBoard();
                 break;
+            case Message.SUBTYPE_GAME_CAPTURE:
+                int capturedPos = Integer.parseInt(mRcv.getMessage());
+                board.performCapture(capturedPos);
+                myGui.performCapture(capturedPos);
+                myGui.updateLostPiecesCount(board.getLostPieces());
+                break;
+            case Message.SUBTYPE_GAME_REMOVE:
+                int removedPos = Integer.parseInt(mRcv.getMessage());
+                board.performLost(removedPos);
+                myGui.performCapture(removedPos);
+                myGui.updateLostPiecesCount(board.getLostPieces());
+                break;
 
 
         }
@@ -144,7 +156,7 @@ public class Presenter {
         return board.isSpaceMine(space);
     }
 
-    public boolean isSpaceAllowed(int space) {
+    public boolean isSpaceEmpty(int space) {
         return board.isSpaceEmpty(space);
     }
 
@@ -179,5 +191,27 @@ public class Presenter {
         restoreBoard();
         myGui.restoreBoard();
         model.sendAcceptRestartMessage();
+    }
+
+    public void performCapture(int[] move) {
+        int capturedPos = board.performCapture(move[0], move[1]);
+        myGui.performCapture(capturedPos);
+        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
+        model.performCapture(capturedPos);
+    }
+
+    public void removePiece(int piece) {
+        board.performRemoval(piece);
+        myGui.performCapture(piece);
+        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
+        model.performRemoval(piece);
+    }
+
+    public boolean hasCapture(int[] move) {
+        return board.isCapturePossible(move[0], move[1]);
+    }
+
+    public boolean canStillCapture(int start) {
+        return board.isCapturePossible(start);
     }
 }

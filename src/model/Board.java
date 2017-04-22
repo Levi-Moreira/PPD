@@ -5,7 +5,7 @@ package model;
  */
 public class Board {
 
-    public static final int TOTAL_PIECES = 5;
+    public static final int TOTAL_PIECES = 12;
     public static final int PLAYER1 = 1;
     public static final int PLAYER2 = 2;
 
@@ -16,6 +16,9 @@ public class Board {
     private int mypieces;
 
     private int capturedPieces;
+
+    private int lostPieces;
+
 
     private int playedPieces;
 
@@ -72,6 +75,14 @@ public class Board {
 
     public void setPlayedPieces(int playedPieces) {
         this.playedPieces = playedPieces;
+    }
+
+    public int getLostPieces() {
+        return lostPieces;
+    }
+
+    public void setLostPieces(int lostPieces) {
+        this.lostPieces = lostPieces;
     }
 
     public boolean stillHavePieces() {
@@ -136,7 +147,7 @@ public class Board {
         }
     }
 
-    private boolean isCapturePossible(int start, int end) {
+    public boolean isCapturePossible(int start, int end) {
 
         boolean res = false;
         if (end == start + 2) {
@@ -176,5 +187,80 @@ public class Board {
         capturedPieces = 0;
         playedPieces = 0;
 
+    }
+
+    public int performCapture(int start, int end) {
+        int capturePiece = findOutPiecePosition(start, end);
+
+        capturedPieces++;
+        board[capturePiece] = -1;
+
+        return capturePiece;
+
+    }
+
+    public void performCapture(int pos) {
+        lostPieces++;
+
+        board[pos] = -1;
+
+    }
+
+    private int findOutPiecePosition(int start, int end) {
+        int res = -1;
+        if (end == start + 2) {
+            if ((board[start + 1] != playerNumber) && !isSpaceEmpty(start + 1))
+                res = start + 1;
+
+        }
+
+        if (end == start - 2) {
+            if ((board[start - 1] != playerNumber) && !isSpaceEmpty(start - 1))
+                res = start - 1;
+        }
+
+        if (end == start + 10) {
+            if ((board[start + 5] != playerNumber) && !isSpaceEmpty(start + 5))
+                res = start + 5;
+        }
+
+        if (end == start - 10) {
+            if ((board[start - 5] != playerNumber) && !isSpaceEmpty(start - 5))
+                res = start - 5;
+        }
+
+        return res;
+    }
+
+    public boolean isCapturePossible(int start) {
+        if(start<28) {
+            if (isCapturePossible(start, start + 2))
+                return true;
+        }
+
+        if(start>1) {
+            if (isCapturePossible(start, start - 2))
+                return true;
+        }
+        if(start<20) {
+            if (isCapturePossible(start, start + 10))
+                return true;
+        }
+        if(start>9) {
+            if (isCapturePossible(start, start - 10))
+                return true;
+        }
+
+        return false;
+    }
+
+    public void performRemoval(int piece) {
+        capturedPieces++;
+        board[piece] = -1;
+    }
+
+    public void performLost(int removedPos) {
+        board[removedPos] = -1;
+        lostPieces++;
     }
 }

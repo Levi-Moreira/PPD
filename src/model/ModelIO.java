@@ -147,4 +147,28 @@ public class ModelIO {
 
         client.sendMessage(json);
     }
+
+    public void performCapture(int capturedPos) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_CAPTURE, clientName,capturedPos+"");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
+
+    public void performRemoval(int piece) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_REMOVE, clientName,piece+"");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
 }

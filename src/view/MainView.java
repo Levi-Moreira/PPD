@@ -31,4 +31,10 @@ public interface MainView {
     void partnerAskForRestart(String partnerName);
 
     void restoreBoard();
+
+    void performCapture(int capturedPos);
+
+    void updateCapturedPiecesCount(int capturedPieces);
+
+    void updateLostPiecesCount(int lostPieces);
 }
