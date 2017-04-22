@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by ellca on 12/04/2017.
  */
-public class MainWindow implements ActionListener, MainView {
+public class ClientWindow implements ActionListener, ClientView {
     private JButton space1;
     private JButton space26;
     private JButton space7;
@@ -97,7 +97,7 @@ public class MainWindow implements ActionListener, MainView {
     private boolean capturedOnce = false;
     private boolean isBlockedForElimination = false;
 
-    public MainWindow(JFrame frame) {
+    public ClientWindow(JFrame frame) {
         window = frame;
 
         enableGameOptions(false);

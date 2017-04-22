@@ -3,21 +3,21 @@ package presenter;
 import model.Board;
 import model.ModelIO;
 import model.Message;
-import view.MainView;
+import view.ClientView;
 
 /**
  * Created by ellca on 14/04/2017.
  */
 public class Presenter {
 
-    private MainView myGui;
+    private ClientView myGui;
 
     private ModelIO model;
 
     private Board board;
 
 
-    public Presenter(MainView myGui) {
+    public Presenter(ClientView myGui) {
         this.myGui = myGui;
         model = new ModelIO(this);
     }

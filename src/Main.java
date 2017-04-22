@@ -1,4 +1,4 @@
-import view.MainWindow;
+import view.ClientWindow;
 
 import javax.swing.*;
 
@@ -10,7 +10,7 @@ public class Main {
 
 
         JFrame frame = new JFrame("PPD");
-        MainWindow myGui = new MainWindow(frame);
+        ClientWindow myGui = new ClientWindow(frame);
         frame.setContentPane(myGui.$$$getRootComponent$$$());
         frame.setSize(1000, 900);
         frame.setResizable(false);

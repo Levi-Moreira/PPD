@@ -3,7 +3,10 @@ package network;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.Message;
+import view.ClientWindow;
+import view.ServerWindow;
 
+import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.ServerSocket;
@@ -59,7 +62,9 @@ public class Server extends Thread {
             while (keepAlive && msg != null) {
                 if (scannerIn.hasNextLine()) {
                     msg = scannerIn.nextLine();
+
                     System.out.println(msg);
+
                     sendToAll(prw, msg);
 
                 }
@@ -100,28 +105,43 @@ public class Server extends Thread {
 
     public static void main(String[] args) {
 
-        int clientsNumber = 0;
-        try {
-            serverSocket = new ServerSocket(port);
-            clients = new ArrayList<PrintWriter>();
+        JFrame frame = new JFrame("PPD-Server");
+        ServerWindow serverGui = new ServerWindow(frame);
+        frame.setContentPane(serverGui.$$$getRootComponent$$$());
+        frame.setSize(400, 700);
+        frame.setResizable(false);
+        frame.setVisible(true);
+
+        int opt = JOptionPane.showConfirmDialog(frame, "Iniciar Servidor?");
+        if (opt == 0) {
+            int clientsNumber = 0;
+            try {
+                serverSocket = new ServerSocket(port);
+                clients = new ArrayList<PrintWriter>();
 
 
-            while (true) {
+                while (true) {
 
-                if (clientsNumber < 2) {
-                    System.out.println("Esperando por conecões");
-                    Socket socket = serverSocket.accept();
-                    clientsNumber++;
-                    System.out.println("Cliente conectado");
-                    Server t = new Server(socket);
-                    t.start();
-                    System.out.println("Cliente conectados: " + clientsNumber);
+                    if (clientsNumber < 2) {
+                        //System.out.println("Esperando por conecões");
+                        serverGui.printToArea("Esperando por conecões");
+                        Socket socket = serverSocket.accept();
+                        clientsNumber++;
+                        //System.out.println("Cliente conectado");
+                        serverGui.printToArea("Cliente conectado");
+                        Server t = new Server(socket);
+                        t.start();
+                        serverGui.printToArea("Cliente conectados: " + clientsNumber);
+                    }
                 }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        }else
+        {
+            serverGui.close();
         }
 
     }
