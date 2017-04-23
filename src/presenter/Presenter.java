@@ -121,8 +121,44 @@ public class Presenter {
                 myGui.updateLostPiecesCount(board.getLostPieces());
                 break;
             case Message.ANOUNCE_WIN:
-                if (board.hasLostAll())
+                if (board.hasLostAll() || board.isLoser())
                     myGui.anounceYouLost();
+                break;
+            case Message.FINISH_GAME:
+                int openentPieces = Integer.parseInt(mRcv.getMessage());
+                if (board.getFinishSituation(openentPieces)==Board.SITUATION_TIE)
+                {
+                    model.anounceTie();
+                    myGui.anounceTie();
+                }else
+                {
+                    model.anounceNotTie();
+                }
+                break;
+            case Message.TIE:
+                myGui.anounceTie();
+                break;
+            case Message.NOTTIE:
+                int situtation = board.getAfterTieSituation();
+                if(situtation==Board.SITUATION_WON)
+                {
+                    model.anounceWin();
+                    myGui.anounceYouWin();
+                }else
+                {
+                    if(situtation==Board.SITUATION_LOST)
+                    {
+                        model.anounceLost();
+                        myGui.anounceYouLost();
+                    }else
+                    {
+                        model.anounceTie();
+                        myGui.anounceTie();
+                    }
+                }
+                break;
+            case Message.ANOUNCE_LOST:
+                myGui.anounceYouWin();
                 break;
 
 
@@ -262,5 +298,10 @@ public class Presenter {
 
     public boolean checkCapturePossibility(int space) {
         return board.checkCapturePossibility(space);
+    }
+
+    public void finishGame() {
+
+        model.finishGame((board.getPlayerNumber()-board.getLostPieces()));
     }
 }

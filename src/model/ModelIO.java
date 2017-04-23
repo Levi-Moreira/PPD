@@ -189,4 +189,54 @@ public class ModelIO {
     public void closeClient() {
         client.close();
     }
+
+    public void finishGame(int piecesOnBoard) {
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.FINISH_GAME, clientName, piecesOnBoard+"");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
+
+    public void anounceTie() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.TIE, clientName, "");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
+
+    public void anounceNotTie() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.NOTTIE, clientName, "");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
+
+    public void anounceLost() {
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Message>() {
+        }.getType();
+
+        Message msg = new Message(Message.TYPE_GAME, Message.ANOUNCE_LOST, clientName, "");
+
+        String json = gson.toJson(msg, type);
+
+        client.sendMessage(json);
+    }
 }

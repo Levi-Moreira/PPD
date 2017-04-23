@@ -17,6 +17,7 @@ public class Message {
     public static final String ASK_RESTART_GAME = "ask_retart_game";
     public static final String ACCEPT_RESTART_GAME = "yes_retart_game";
     public static final String ANOUNCE_WIN = "iwin";
+    public static final String ANOUNCE_LOST= "ilost";
 
     public static final String SENDER_SERVER = "server";
 
@@ -26,6 +27,9 @@ public class Message {
     public static final String NOT_ENOUGH_CLIENTS = "not_enough_clients";
     public static final String ALL_ENTERED = "all_entered";
     public static final String SERVER_LEFT = "server_left";
+    public static final String FINISH_GAME = "finish_game";
+    public static final String TIE = "tie";
+    public static final String NOTTIE = "nottie";
 
 
     String type;

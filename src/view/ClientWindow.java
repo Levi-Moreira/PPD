@@ -62,7 +62,7 @@ public class ClientWindow implements ActionListener, ClientView {
     private JLabel jlPort;
     private JTextField tfName;
     private JButton jbRestartGame;
-    private JButton jbYield;
+
     private JLabel jlTurn;
     private JButton jbStartGame;
     private JPanel jpStatus;
@@ -160,6 +160,15 @@ public class ClientWindow implements ActionListener, ClientView {
         rbButtons.add(rbBlack);
 
 
+        jbFinishGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (hasGameStarted)
+                    if (isYourTurn) {
+                        mPresenter.finishGame();
+                    }
+            }
+        });
     }
 
     private void addButtonsToArray() {
@@ -251,8 +260,10 @@ public class ClientWindow implements ActionListener, ClientView {
 
                     if (rbBlack.isSelected())
                         piece = Board.PIECE_COLOR_BLACK;
-                    else
+                    else {
                         piece = Board.PIECE_COLOR_RED;
+                        rbRed.setSelected(true);
+                    }
                     mPresenter.warnStartMach(piece);
                     jbStartGame.setText("End Turn");
                     hasGameStarted = true;
@@ -333,6 +344,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jlTurn.setText("É a vez de: " + sender);
         jbStartGame.setEnabled(false);
         jbAddPiece.setEnabled(false);
+        jbFinishGame.setEnabled(false);
         isYourTurn = false;
     }
 
@@ -343,6 +355,7 @@ public class ClientWindow implements ActionListener, ClientView {
         if (mPresenter.hasPieces())
             jbAddPiece.setEnabled(true);
         isYourTurn = true;
+        jbFinishGame.setEnabled(true);
     }
 
     @Override
@@ -413,6 +426,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jlTurn.setText("");
         jbStartGame.setEnabled(true);
         jbAddPiece.setEnabled(false);
+        jbFinishGame.setEnabled(false);
 
         isBlockedForAdding = false;
         hasGameStarted = false;
@@ -447,7 +461,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     @Override
     public void anounceYouWin() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você capturou todas as peças do seu oponente. Parabéns, você venceu!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Parabéns, você venceu!");
         mPresenter.restoreBoard();
         restoreBoard();
 
@@ -455,7 +469,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     @Override
     public void anounceYouLost() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você perdeu todas as suas peças. Desculpe, você perdeu!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Desculpe, você perdeu!");
         mPresenter.restoreBoard();
         restoreBoard();
     }
@@ -493,6 +507,13 @@ public class ClientWindow implements ActionListener, ClientView {
         rbRed.setEnabled(false);
     }
 
+    @Override
+    public void anounceTie() {
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Empate declarado!");
+        mPresenter.restoreBoard();
+        restoreBoard();
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
@@ -508,7 +529,7 @@ public class ClientWindow implements ActionListener, ClientView {
     private void enableGameOptions(boolean en) {
         jbStartGame.setEnabled(en);
         jbRestartGame.setEnabled(en);
-        jbYield.setEnabled(en);
+
         jbSend.setEnabled(en);
         rbBlack.setEnabled(en);
         rbRed.setEnabled(en);
@@ -520,6 +541,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jlTurn.setText("Controle de Turno");
         jbAddPiece.setEnabled(false);
         jbStartGame.setText("Start Game");
+        jbFinishGame.setEnabled(false);
     }
 
     @Override
@@ -665,12 +687,12 @@ public class ClientWindow implements ActionListener, ClientView {
      */
     private void $$$setupUI$$$() {
         jpMain = new JPanel();
-        jpMain.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(9, 5, new Insets(0, 0, 0, 0), -1, -1));
+        jpMain.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 5, new Insets(0, 0, 0, 0), -1, -1));
         jpMain.setName("PPD - Sockets");
         jpMain.setPreferredSize(new Dimension(1000, 800));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new BorderLayout(0, 0));
-        jpMain.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(762, 356), null, 0, false));
+        jpMain.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(762, 356), null, 0, false));
         jpBoard = new JPanel();
         jpBoard.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 5, new Insets(0, 0, 0, 0), -1, -1));
         jpBoard.setEnabled(true);
@@ -769,7 +791,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jpConnection = new JPanel();
         jpConnection.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         jpConnection.setFont(new Font("Montserrat SemiBold", jpConnection.getFont().getStyle(), jpConnection.getFont().getSize()));
-        jpMain.add(jpConnection, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 7, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(34, 73), null, 0, false));
+        jpMain.add(jpConnection, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 5, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(34, 73), null, 0, false));
         jpConnection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connection", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Montserrat SemiBold", jpConnection.getFont().getStyle(), 22)));
         jpIpInfo = new JPanel();
         jpIpInfo.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 4, new Insets(0, 0, 0, 0), -1, -1));
@@ -816,10 +838,10 @@ public class ClientWindow implements ActionListener, ClientView {
         jlConnectionMessages.setText("Desconectado");
         jpConnectionStatus.add(jlConnectionMessages, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        jpMain.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(14, 8), null, 0, false));
+        jpMain.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, new Dimension(14, 8), null, 0, false));
         jpChatArea = new JPanel();
         jpChatArea.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        jpMain.add(jpChatArea, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 2, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        jpMain.add(jpChatArea, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 2, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpChatArea.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Chat Area", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Montserrat SemiBold", jpChatArea.getFont().getStyle(), 22)));
         tfMsgmToSend = new JTextField();
         tfMsgmToSend.setFont(new Font("Montserrat", tfMsgmToSend.getFont().getStyle(), tfMsgmToSend.getFont().getSize()));
@@ -846,18 +868,14 @@ public class ClientWindow implements ActionListener, ClientView {
         jbRestartGame = new JButton();
         jbRestartGame.setFont(new Font("Montserrat", jbRestartGame.getFont().getStyle(), jbRestartGame.getFont().getSize()));
         jbRestartGame.setText("Restart Game");
-        jpMain.add(jbRestartGame, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(167, 8), null, 0, false));
+        jpMain.add(jbRestartGame, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(167, 8), null, 0, false));
         jbStartGame = new JButton();
         jbStartGame.setFont(new Font("Montserrat", jbStartGame.getFont().getStyle(), jbStartGame.getFont().getSize()));
         jbStartGame.setText("Start Game");
-        jpMain.add(jbStartGame, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        jbYield = new JButton();
-        jbYield.setFont(new Font("Montserrat", jbYield.getFont().getStyle(), jbYield.getFont().getSize()));
-        jbYield.setText("Yield");
-        jpMain.add(jbYield, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        jpMain.add(jbStartGame, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         jpStatus = new JPanel();
         jpStatus.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 5, new Insets(0, 0, 0, 0), -1, -1));
-        jpMain.add(jpStatus, new com.intellij.uiDesigner.core.GridConstraints(8, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        jpMain.add(jpStatus, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpStatus.setBorder(BorderFactory.createTitledBorder(null, "Game Status", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Montserrat SemiBold", jpStatus.getFont().getStyle(), 22)));
         jpPieces = new JPanel();
         jpPieces.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -909,7 +927,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbFinishGame = new JButton();
         jbFinishGame.setFont(new Font("Montserrat", jbFinishGame.getFont().getStyle(), jbFinishGame.getFont().getSize()));
         jbFinishGame.setText("Finish Game");
-        jpMain.add(jbFinishGame, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        jpMain.add(jbFinishGame, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 4, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

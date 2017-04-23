@@ -51,4 +51,6 @@ public interface ClientView {
     void returnToUnconnectedState();
 
     void disablePieceSelectors();
+
+    void anounceTie();
 }

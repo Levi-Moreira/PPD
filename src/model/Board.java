@@ -5,10 +5,14 @@ package model;
  */
 public class Board {
 
-    public static final int TOTAL_PIECES = 4;
+    public static final int TOTAL_PIECES = 12;
 
     public static final int PIECE_COLOR_BLACK = 1;
     public static final int PIECE_COLOR_RED = 2;
+
+    public static final int SITUATION_TIE = 100;
+    public static final int SITUATION_WON = 200;
+    public static final int SITUATION_LOST = 300;
 
     private int playerNumber;
 
@@ -317,5 +321,30 @@ public class Board {
 
     public int getOtherPlayerPieceColor() {
         return (myPieceColor == PIECE_COLOR_BLACK) ? PIECE_COLOR_RED : PIECE_COLOR_BLACK;
+    }
+
+
+    public int getFinishSituation(int openentPieces) {
+
+        int myBoardPieces = playedPieces - lostPieces;
+
+        if (openentPieces > 0 && myBoardPieces > 0 && openentPieces <= 3 && myBoardPieces <= 3)
+            return SITUATION_TIE;
+
+        return -1;
+    }
+
+    public int getAfterTieSituation() {
+        if (capturedPieces > lostPieces)
+            return SITUATION_WON;
+
+        if (lostPieces > capturedPieces)
+            return SITUATION_LOST;
+
+        return SITUATION_TIE;
+    }
+
+    public boolean isLoser() {
+        return lostPieces > capturedPieces;
     }
 }
