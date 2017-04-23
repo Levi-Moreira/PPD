@@ -99,6 +99,8 @@ public class ClientWindow implements ActionListener, ClientView {
     private boolean capturedOnce = false;
     private boolean isBlockedForElimination = false;
 
+    private boolean allEntered = false;
+
     private Icon iconBlack;
     private Icon iconRed;
 
@@ -138,6 +140,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
         window.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                if (!allEntered)  System.exit(0);
                 if (!partnerGaveUp) {
                     int i = JOptionPane.showConfirmDialog(null, "Se você fechar a tela, estará desistindo desta partida");
                     if (i == 0) {
@@ -437,6 +440,11 @@ public class ClientWindow implements ActionListener, ClientView {
         jbStartGame.setText("Start Game");
         hasGameStarted = false;
         partnerGaveUp = false;
+    }
+
+    @Override
+    public void setAllEntered() {
+        allEntered = true;
     }
 
     private void enableConnectionOptions(boolean en) {

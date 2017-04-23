@@ -45,8 +45,13 @@ public class Presenter {
                myGui.returnNotStartedStae();
             }else
             {
-                int playerNUmber = Integer.parseInt(mRcv.getMessage());
-                startUpBoard(playerNUmber);
+                if(mRcv.isAllEntered())
+                {
+                    myGui.setAllEntered();
+                }else {
+                    int playerNUmber = Integer.parseInt(mRcv.getMessage());
+                    startUpBoard(playerNUmber);
+                }
             }
         } else {
             myGui.receivedMessage(mRcv.getSender() + " diz -> " + mRcv.getMessage());

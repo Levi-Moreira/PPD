@@ -43,4 +43,6 @@ public interface ClientView {
     void anounceYouLost();
 
     void returnNotStartedStae();
+
+    void setAllEntered();
 }

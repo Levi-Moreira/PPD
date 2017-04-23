@@ -59,16 +59,20 @@ public class Server extends Thread {
             nome = msg = scannerIn.nextLine();
             sendBack(prw, clients.size() + "");
 
+            if (clients.size() == 2) {
+                sendBack(clients.get(0), Message.ALL_ENTERED);
+                sendBack(clients.get(1), Message.ALL_ENTERED);
+            }
+
             while (keepAlive && msg != null) {
                 if (scannerIn.hasNextLine()) {
                     msg = scannerIn.nextLine();
 
                     System.out.println(msg);
 
-                    if(msg.contains(Message.START_MATCH)&&clients.size()<2)
-                    {
-                        sendBack(prw,Message.NOT_ENOUGH_CLIENTS);
-                    }else {
+                    if (msg.contains(Message.START_MATCH) && clients.size() < 2) {
+                        sendBack(prw, Message.NOT_ENOUGH_CLIENTS);
+                    } else {
 
                         sendToAll(prw, msg);
                     }
@@ -89,9 +93,11 @@ public class Server extends Thread {
 
         for (PrintWriter pw : clients) {
             bwS = (PrintWriter) pw;
+
             if (!(prwSaida == bwS)) {
                 pw.println(msg);
             }
+
         }
     }
 
@@ -151,8 +157,7 @@ public class Server extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else
-        {
+        } else {
             serverGui.close();
         }
 

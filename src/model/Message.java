@@ -24,6 +24,7 @@ public class Message {
     public static final String SERVER_TERMINATION = "exit_server" ;
     public static final String CLIENT_TERMINATION = "exit_client" ;
     public static final String NOT_ENOUGH_CLIENTS = "not_enough_clients";
+    public static final String ALL_ENTERED = "all_entered";
 
 
     String type;
@@ -146,5 +147,9 @@ public class Message {
     public boolean isNotNoughClients() {
 
         return message.equals(Message.NOT_ENOUGH_CLIENTS);
+    }
+
+    public boolean isAllEntered() {
+        return  message.equals(Message.ALL_ENTERED);
     }
 }
