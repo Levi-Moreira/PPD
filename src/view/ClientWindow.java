@@ -247,7 +247,13 @@ public class ClientWindow implements ActionListener, ClientView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!hasGameStarted) {
-                    mPresenter.warnStartMach();
+                    int piece;
+
+                    if (rbBlack.isSelected())
+                        piece = Board.PIECE_COLOR_BLACK;
+                    else
+                        piece = Board.PIECE_COLOR_RED;
+                    mPresenter.warnStartMach(piece);
                     jbStartGame.setText("End Turn");
                     hasGameStarted = true;
                     hasPartnerGivenUp = false;
@@ -340,18 +346,23 @@ public class ClientWindow implements ActionListener, ClientView {
     }
 
     @Override
-    public void setGameStarted() {
+    public void setGameStarted(int piece) {
         hasGameStarted = true;
         jbStartGame.setText("End Turn");
         jbStartGame.setEnabled(false);
         isYourTurn = false;
+        if (piece == Board.PIECE_COLOR_RED)
+            rbRed.setSelected(true);
+        else
+            rbBlack.setSelected(true);
+        disablePieceSelectors();
     }
 
     @Override
-    public void addPlayerToSpace(int i, int playerNumber) {
+    public void addPlayerToSpace(int i, int playerNumber, int pieceColor) {
         //buttons.get(i).setText(playerNumber + "");
 
-        if (playerNumber == 1) {
+        if (pieceColor == Board.PIECE_COLOR_RED) {
             buttons.get(i).setIcon(iconRed);
         } else {
             buttons.get(i).setIcon(iconBlack);
@@ -365,11 +376,11 @@ public class ClientWindow implements ActionListener, ClientView {
     }
 
     @Override
-    public void move(int start, int end, int playerNumber) {
+    public void move(int start, int end, int playerNumber, int pieceColor) {
         //buttons.get(start).setText("Vazio");
         buttons.get(start).setIcon(null);
         //buttons.get(end).setText(playerNumber + "");
-        if (playerNumber == 1) {
+        if (pieceColor == Board.PIECE_COLOR_RED) {
             buttons.get(end).setIcon(iconRed);
         } else {
             buttons.get(end).setIcon(iconBlack);
@@ -476,6 +487,12 @@ public class ClientWindow implements ActionListener, ClientView {
         restoreTurnOptions();
     }
 
+    @Override
+    public void disablePieceSelectors() {
+        rbBlack.setEnabled(false);
+        rbRed.setEnabled(false);
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
@@ -495,6 +512,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbSend.setEnabled(en);
         rbBlack.setEnabled(en);
         rbRed.setEnabled(en);
+        jbFinishGame.setEnabled(en);
     }
 
     private void restoreTurnOptions() {

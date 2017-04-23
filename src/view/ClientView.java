@@ -18,13 +18,13 @@ public interface ClientView {
 
     void setYourTurn();
 
-    void setGameStarted();
+    void setGameStarted(int piece);
 
-    void addPlayerToSpace(int i, int playerNumber);
+    void addPlayerToSpace(int i, int playerNumber, int pieceColor);
 
     void showMyPiecesNumber(int s);
 
-    void move(int start, int end, int playerNumber);
+    void move(int start, int end, int playerNumber,int pieceColor);
 
     void warnPartnerLeft(String partnerName);
 
@@ -49,4 +49,6 @@ public interface ClientView {
     void serverLeft();
 
     void returnToUnconnectedState();
+
+    void disablePieceSelectors();
 }

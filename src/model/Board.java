@@ -7,6 +7,9 @@ public class Board {
 
     public static final int TOTAL_PIECES = 4;
 
+    public static final int PIECE_COLOR_BLACK = 1;
+    public static final int PIECE_COLOR_RED = 2;
+
     private int playerNumber;
 
     private int[] board;
@@ -17,6 +20,7 @@ public class Board {
 
     private int lostPieces;
 
+    private int myPieceColor = -1;
 
     private int playedPieces;
 
@@ -32,6 +36,14 @@ public class Board {
         capturedPieces = 0;
         playedPieces = 0;
 
+    }
+
+    public int getMyPieceColor() {
+        return myPieceColor;
+    }
+
+    public void setMyPieceColor(int myPieceColor) {
+        this.myPieceColor = myPieceColor;
     }
 
     public int getPlayerNumber() {
@@ -301,5 +313,9 @@ public class Board {
             }
         }
         return res;
+    }
+
+    public int getOtherPlayerPieceColor() {
+        return (myPieceColor == PIECE_COLOR_BLACK) ? PIECE_COLOR_RED : PIECE_COLOR_BLACK;
     }
 }

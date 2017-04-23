@@ -62,11 +62,11 @@ public class ModelIO {
         presenter.showConnectionError();
     }
 
-    public void warnStartMatch() {
+    public void warnStartMatch(int piece) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
-        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, "");
+        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, piece+"");
 
         String json = gson.toJson(msg, type);
 

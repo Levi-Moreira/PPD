@@ -74,8 +74,11 @@ public class Presenter {
         String subtype = mRcv.getSubtype();
         switch (subtype) {
             case Message.START_MATCH:
-                myGui.setGameStarted();
+                int piece = Integer.parseInt(mRcv.getMessage());
+                int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
+                myGui.setGameStarted(myPiece);
                 myGui.setTurnPlayer("Oponente");
+                board.setMyPieceColor(myPiece);
                 break;
             case Message.END_TURN:
                 myGui.setYourTurn();
@@ -84,14 +87,14 @@ public class Presenter {
                 space = Integer.parseInt(mRcv.getMessage());
                 player = Integer.parseInt(mRcv.getPlayer());
                 board.setPlayerAtSpace(space, player);
-                myGui.addPlayerToSpace(space, player);
+                myGui.addPlayerToSpace(space, player, board.getOtherPlayerPieceColor());
                 break;
             case Message.SUBTYPE_GAME_MOVE:
                 start = Integer.parseInt(mRcv.getStart_move());
                 end = Integer.parseInt(mRcv.getEnd_mode());
                 player = Integer.parseInt(mRcv.getPlayer());
                 board.movePlayer(start, end, player);
-                myGui.move(start, end, player);
+                myGui.move(start, end, player, board.getOtherPlayerPieceColor());
                 break;
             case Message.CLIENT_TERMINATION:
                 partnerName = mRcv.getSender();
@@ -149,16 +152,18 @@ public class Presenter {
         myGui.showConnectionError();
     }
 
-    public void warnStartMach() {
-        model.warnStartMatch();
+    public void warnStartMach(int piece) {
+        board.setMyPieceColor(piece);
+        model.warnStartMatch(piece);
         myGui.setYourTurn();
         clientConnected();
+        myGui.disablePieceSelectors();
     }
 
     public boolean addToSpace(int i) {
 
         if (board.addSelfToSpace(i)) {
-            myGui.addPlayerToSpace(i, board.getPlayerNumber());
+            myGui.addPlayerToSpace(i, board.getPlayerNumber(), board.getMyPieceColor());
             myGui.showMyPiecesNumber(board.getMypieces());
             model.addToSpace(i, board.getPlayerNumber());
             return true;
@@ -186,7 +191,7 @@ public class Presenter {
     public boolean tryToMove(int[] move) {
         if (board.isMoveAllowed(move[0], move[1])) {
             board.movePlayer(move[0], move[1], board.getPlayerNumber());
-            myGui.move(move[0], move[1], board.getPlayerNumber());
+            myGui.move(move[0], move[1], board.getPlayerNumber(), board.getMyPieceColor());
             model.move(move[0], move[1], board.getPlayerNumber());
             return true;
         } else {
