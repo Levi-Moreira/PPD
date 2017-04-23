@@ -25,7 +25,10 @@
             <children>
               <component id="91f60" class="javax.swing.JTextArea" binding="taOutput">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <font name="Montserrat" size="16"/>
+                  <lineWrap value="true"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

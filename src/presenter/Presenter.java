@@ -42,7 +42,7 @@ public class Presenter {
             int playerNUmber = Integer.parseInt(mRcv.getMessage());
             startUpBoard(playerNUmber);
         } else {
-            myGui.receivedMessage(mRcv.getSender() + " diz-> " + mRcv.getMessage());
+            myGui.receivedMessage(mRcv.getSender() + " diz -> " + mRcv.getMessage());
         }
     }
 

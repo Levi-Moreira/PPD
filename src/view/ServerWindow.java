@@ -46,7 +46,6 @@ public class ServerWindow implements ServerView {
     }
 
 
-
     @Override
     public void close() {
         System.exit(0);
@@ -76,6 +75,8 @@ public class ServerWindow implements ServerView {
         final JScrollPane scrollPane1 = new JScrollPane();
         jpOutput.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         taOutput = new JTextArea();
+        taOutput.setFont(new Font("Montserrat", taOutput.getFont().getStyle(), 16));
+        taOutput.setLineWrap(true);
         scrollPane1.setViewportView(taOutput);
     }
 

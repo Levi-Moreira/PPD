@@ -558,8 +558,8 @@
                 <properties>
                   <autoscrolls value="false"/>
                   <editable value="false"/>
-                  <font name="Montserrat"/>
-                  <lineWrap value="false"/>
+                  <font name="Montserrat" size="16"/>
+                  <lineWrap value="true"/>
                   <requestFocusEnabled value="true"/>
                   <rows value="5"/>
                 </properties>

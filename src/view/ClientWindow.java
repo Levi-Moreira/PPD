@@ -102,6 +102,16 @@ public class ClientWindow implements ActionListener, ClientView {
     private Icon iconBlack;
     private Icon iconRed;
 
+    Action sendMsgAction = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String msg = tfMsgmToSend.getText();
+            taReceiveArea.append("Você diz -> " + msg + "\n");
+            tfMsgmToSend.setText("");
+            presenter.sendMessage(msg);
+        }
+    };
+
 
     public ClientWindow(JFrame frame) {
         window = frame;
@@ -142,12 +152,6 @@ public class ClientWindow implements ActionListener, ClientView {
         });
 
 
-        jbRestartGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                presenter.askForResart();
-            }
-        });
     }
 
     private void addButtonsToArray() {
@@ -206,6 +210,14 @@ public class ClientWindow implements ActionListener, ClientView {
     }
 
     private void addActionListenerForButtons() {
+
+        jbRestartGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                presenter.askForResart();
+            }
+        });
+
         jbConnect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -220,14 +232,8 @@ public class ClientWindow implements ActionListener, ClientView {
         });
 
 
-        jbSend.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String msg = tfMsgmToSend.getText();
-                taReceiveArea.append("Mensagem Enviada:" + msg + "\n");
-                presenter.sendMessage(msg);
-            }
-        });
+        jbSend.addActionListener(sendMsgAction);
+        tfMsgmToSend.addActionListener(sendMsgAction);
 
         jbStartGame.addActionListener(new ActionListener() {
             @Override
@@ -751,8 +757,8 @@ public class ClientWindow implements ActionListener, ClientView {
         taReceiveArea = new JTextArea();
         taReceiveArea.setAutoscrolls(false);
         taReceiveArea.setEditable(false);
-        taReceiveArea.setFont(new Font("Montserrat", taReceiveArea.getFont().getStyle(), taReceiveArea.getFont().getSize()));
-        taReceiveArea.setLineWrap(false);
+        taReceiveArea.setFont(new Font("Montserrat", taReceiveArea.getFont().getStyle(), 16));
+        taReceiveArea.setLineWrap(true);
         taReceiveArea.setRequestFocusEnabled(true);
         taReceiveArea.setRows(5);
         scrollPane1.setViewportView(taReceiveArea);
