@@ -75,7 +75,7 @@ public class Presenter {
         switch (subtype) {
             case Message.START_MATCH:
                 myGui.setGameStarted();
-                myGui.setTurnPlayer(mRcv.getSender());
+                myGui.setTurnPlayer("Oponente");
                 break;
             case Message.END_TURN:
                 myGui.setYourTurn();
@@ -168,7 +168,7 @@ public class Presenter {
 
     public void endMyTurn() {
         model.endMyTurn();
-        myGui.setTurnPlayer("Outro");
+        myGui.setTurnPlayer("Oponente");
     }
 
     public boolean hasPieces() {
@@ -201,6 +201,8 @@ public class Presenter {
     public void restoreBoard() {
         board.restoreBoard();
         myGui.showMyPiecesNumber(board.getMypieces());
+        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
+        myGui.updateLostPiecesCount(board.getLostPieces());
     }
 
     public void askForResart() {

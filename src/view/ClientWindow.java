@@ -312,6 +312,7 @@ public class ClientWindow implements ActionListener, ClientView {
             buttons.get(i).setIcon(null);
             buttons.get(i).setText("");
         }
+
     }
 
 

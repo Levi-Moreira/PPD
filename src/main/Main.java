@@ -1,3 +1,5 @@
+package main;
+
 import view.ClientWindow;
 
 import javax.swing.*;

@@ -5,7 +5,7 @@ package model;
  */
 public class Board {
 
-    public static final int TOTAL_PIECES = 3;
+    public static final int TOTAL_PIECES = 5;
 
     private int playerNumber;
 
@@ -184,6 +184,7 @@ public class Board {
         mypieces = TOTAL_PIECES;
         capturedPieces = 0;
         playedPieces = 0;
+        lostPieces = 0;
 
     }
 
