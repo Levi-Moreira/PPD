@@ -118,6 +118,8 @@ public class ClientWindow implements ActionListener, ClientView {
     public ClientWindow(JFrame frame) {
         window = frame;
 
+        window.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
         iconBlack = createImageIcon("assets/black.png", "the black icon");
         iconRed = createImageIcon("assets/red.png", "the red icon");
         enableGameOptions(false);
@@ -308,6 +310,7 @@ public class ClientWindow implements ActionListener, ClientView {
     public void emptyBoard() {
         for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).setIcon(null);
+            buttons.get(i).setText("");
         }
     }
 

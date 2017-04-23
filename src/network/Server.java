@@ -194,14 +194,18 @@ public class Server extends Thread {
                 int i = JOptionPane.showConfirmDialog(null, "Quer realmente fechar a tela, os clientes não poderão mais se comunicar.");
                 if (i == 0) {
 
-                    if (servers != null) {
+                    if (servers.size()!=0) {
                         for (Server server : servers) {
                             try {
                                 server.exit();
+
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
                         }
+                    }else
+                    {
+                        System.exit(0);
                     }
 
                 }

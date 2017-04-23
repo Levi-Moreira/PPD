@@ -20,7 +20,7 @@ public class ServerWindow implements ServerView {
     public ServerWindow(JFrame wid) {
         window = wid;
 
-
+        window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     @Override
