@@ -5,7 +5,7 @@ package model;
  */
 public class Board {
 
-    public static final int TOTAL_PIECES = 5;
+    public static final int TOTAL_PIECES = 4;
 
     private int playerNumber;
 

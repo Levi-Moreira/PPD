@@ -43,7 +43,7 @@ public class Presenter {
             switch (mRcv.getMessage()) {
                 case Message.NOT_ENOUGH_CLIENTS:
                     myGui.connectionMessage("Espere o seu oponente se conectar.");
-                    myGui.returnNotStartedStae();
+                    myGui.returnNotStartedState();
                     break;
                 case Message.ALL_ENTERED:
                     myGui.setAllEntered();
@@ -235,6 +235,11 @@ public class Presenter {
         myGui.performCapture(piece);
         myGui.updateCapturedPiecesCount(board.getCapturedPieces());
         model.performRemoval(piece);
+
+        if (board.hasCapturedAll()) {
+            model.anounceWin();
+            myGui.anounceYouWin();
+        }
     }
 
     public boolean hasCapture(int[] move) {

@@ -42,7 +42,7 @@ public interface ClientView {
 
     void anounceYouLost();
 
-    void returnNotStartedStae();
+    void returnNotStartedState();
 
     void setAllEntered();
 
