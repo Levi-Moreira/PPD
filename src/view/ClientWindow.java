@@ -139,7 +139,7 @@ public class ClientWindow implements ActionListener, ClientView {
         mWindow.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 if (!hasAllEntered) System.exit(0);
-                if (!hasPartnerGivenUp) {
+                if (!hasPartnerGivenUp && hasGameStarted) {
                     int i = JOptionPane.showConfirmDialog(null, "Se você fechar a tela, estará desistindo desta partida");
                     if (i == 0) {
                         mPresenter.terminateClient();
