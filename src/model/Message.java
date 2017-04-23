@@ -25,6 +25,7 @@ public class Message {
     public static final String CLIENT_TERMINATION = "exit_client" ;
     public static final String NOT_ENOUGH_CLIENTS = "not_enough_clients";
     public static final String ALL_ENTERED = "all_entered";
+    public static final String SERVER_LEFT = "server_left";
 
 
     String type;

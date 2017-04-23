@@ -45,4 +45,6 @@ public interface ClientView {
     void returnNotStartedStae();
 
     void setAllEntered();
+
+    void serverLeft();
 }

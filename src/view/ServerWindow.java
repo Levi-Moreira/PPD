@@ -21,17 +21,6 @@ public class ServerWindow implements ServerView {
         window = wid;
 
 
-        window.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-
-                int i = JOptionPane.showConfirmDialog(null, "Quer realmente fechar a tela, os clientes não poderão mais se comunicar.");
-                if (i == 0) {
-
-                    System.exit(0);
-                }
-
-            }
-        });
     }
 
     @Override

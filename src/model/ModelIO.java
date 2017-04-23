@@ -26,6 +26,7 @@ public class ModelIO {
     public void startUpClient(String clientName) {
         this.clientName = clientName;
         client = new Client(this);
+        client.connect();
     }
 
 
@@ -183,5 +184,9 @@ public class ModelIO {
 
         client.sendMessage(json);
 
+    }
+
+    public void closeClient() {
+        client.close();
     }
 }

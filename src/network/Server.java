@@ -7,6 +7,8 @@ import view.ClientWindow;
 import view.ServerWindow;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.ServerSocket;
@@ -115,6 +117,23 @@ public class Server extends Thread {
 
     }
 
+    public void exit() throws IOException {
+
+
+        if (clients.size() == 1) {
+            sendBack(clients.get(0), Message.SERVER_LEFT);
+
+        }
+
+        if (clients.size() == 2) {
+            sendBack(clients.get(0), Message.SERVER_LEFT);
+            sendBack(clients.get(1), Message.SERVER_LEFT);
+        }
+
+        keepAlive = false;
+        System.exit(0);
+    }
+
     public static void main(String[] args) {
 
         try {
@@ -123,7 +142,10 @@ public class Server extends Thread {
             e.printStackTrace();
         }
 
+        ArrayList<Server> servers = new ArrayList<>();
+
         JFrame frame = new JFrame("PPD-Server");
+        setUpServerExit(frame, servers);
         ServerWindow serverGui = new ServerWindow(frame);
         frame.setContentPane(serverGui.$$$getRootComponent$$$());
         frame.setSize(400, 700);
@@ -149,6 +171,7 @@ public class Server extends Thread {
                         serverGui.printToArea("Cliente conectado");
                         Server t = new Server(socket);
                         t.start();
+                        servers.add(t);
                         serverGui.printToArea("Cliente conectados: " + clientsNumber);
                     }
                 }
@@ -161,6 +184,30 @@ public class Server extends Thread {
             serverGui.close();
         }
 
+    }
+
+    private static void setUpServerExit(JFrame frame, ArrayList<Server> servers) {
+
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+
+                int i = JOptionPane.showConfirmDialog(null, "Quer realmente fechar a tela, os clientes não poderão mais se comunicar.");
+                if (i == 0) {
+
+                    if (servers != null) {
+                        for (Server server : servers) {
+                            try {
+                                server.exit();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        });
     }
 
 

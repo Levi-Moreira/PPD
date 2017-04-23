@@ -39,20 +39,26 @@ public class Presenter {
 
     public void receivedChatMessage(Message mRcv) {
         if (mRcv.isFromServer()) {
-            if(mRcv.isNotNoughClients())
-            {
-               myGui.connectionMessage("Espere o seu oponente se conectar.");
-               myGui.returnNotStartedStae();
-            }else
-            {
-                if(mRcv.isAllEntered())
-                {
+
+            switch (mRcv.getMessage()) {
+                case Message.NOT_ENOUGH_CLIENTS:
+                    myGui.connectionMessage("Espere o seu oponente se conectar.");
+                    myGui.returnNotStartedStae();
+                    break;
+                case Message.ALL_ENTERED:
                     myGui.setAllEntered();
-                }else {
+                    break;
+                case Message.SERVER_LEFT:
+                    model.closeClient();
+                    myGui.serverLeft();
+                    myGui.returnNotStartedStae();
+                    break;
+                default:
                     int playerNUmber = Integer.parseInt(mRcv.getMessage());
                     startUpBoard(playerNUmber);
-                }
+                    break;
             }
+
         } else {
             myGui.receivedMessage(mRcv.getSender() + " diz -> " + mRcv.getMessage());
         }
@@ -146,7 +152,7 @@ public class Presenter {
     public void warnStartMach() {
         model.warnStartMatch();
         myGui.setYourTurn();
-       clientConnected();
+        clientConnected();
     }
 
     public boolean addToSpace(int i) {

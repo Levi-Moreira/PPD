@@ -28,26 +28,7 @@ public class Client extends Thread {
     public Client(ModelIO model) {
 
         this.model = model;
-        try {
-            socket = new Socket(host, port);
-            model.clientConnected();
-            System.out.println("Conectado....");
-            ou = socket.getOutputStream();
 
-
-            prw = new PrintWriter(ou, true);
-            prw.println("ClientName");
-            this.start();
-
-
-        } catch (Exception e) {
-            System.out.print("clientconstructor:");
-            System.out.println(e);
-            e.printStackTrace();
-            if (e instanceof ConnectException) {
-                model.showConnectionError();
-            }
-        }
 
     }
 
@@ -84,6 +65,40 @@ public class Client extends Thread {
     }
 
     public void terminane() {
+        keepAlive = false;
+        try {
+            socket.close();
+            prw.close();
+            ou.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void connect()
+    {
+        try {
+            socket = new Socket(host, port);
+            model.clientConnected();
+            System.out.println("Conectado....");
+            ou = socket.getOutputStream();
+
+
+            prw = new PrintWriter(ou, true);
+            prw.println("ClientName");
+            this.start();
+
+
+        } catch (Exception e) {
+            System.out.print("clientconstructor:");
+            System.out.println(e);
+            e.printStackTrace();
+            if (e instanceof ConnectException) {
+                model.showConnectionError();
+            }
+        }
+    }
+    public void close() {
         keepAlive = false;
         try {
             socket.close();

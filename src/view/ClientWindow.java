@@ -447,6 +447,11 @@ public class ClientWindow implements ActionListener, ClientView {
         allEntered = true;
     }
 
+    @Override
+    public void serverLeft() {
+        jlConnectionMessages.setText("Servidor saiu.");
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
