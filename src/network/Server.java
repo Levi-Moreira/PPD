@@ -65,7 +65,13 @@ public class Server extends Thread {
 
                     System.out.println(msg);
 
-                    sendToAll(prw, msg);
+                    if(msg.contains(Message.START_MATCH)&&clients.size()<2)
+                    {
+                        sendBack(prw,Message.NOT_ENOUGH_CLIENTS);
+                    }else {
+
+                        sendToAll(prw, msg);
+                    }
 
                 }
 

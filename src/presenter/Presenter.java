@@ -39,8 +39,15 @@ public class Presenter {
 
     public void receivedChatMessage(Message mRcv) {
         if (mRcv.isFromServer()) {
-            int playerNUmber = Integer.parseInt(mRcv.getMessage());
-            startUpBoard(playerNUmber);
+            if(mRcv.isNotNoughClients())
+            {
+               myGui.connectionMessage("Espere o seu oponente se conectar.");
+               myGui.returnNotStartedStae();
+            }else
+            {
+                int playerNUmber = Integer.parseInt(mRcv.getMessage());
+                startUpBoard(playerNUmber);
+            }
         } else {
             myGui.receivedMessage(mRcv.getSender() + " diz -> " + mRcv.getMessage());
         }
@@ -134,6 +141,7 @@ public class Presenter {
     public void warnStartMach() {
         model.warnStartMatch();
         myGui.setYourTurn();
+       clientConnected();
     }
 
     public boolean addToSpace(int i) {

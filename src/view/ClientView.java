@@ -41,4 +41,6 @@ public interface ClientView {
     void anounceYouWin();
 
     void anounceYouLost();
+
+    void returnNotStartedStae();
 }

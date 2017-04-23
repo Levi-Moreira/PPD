@@ -23,6 +23,7 @@ public class Message {
 
     public static final String SERVER_TERMINATION = "exit_server" ;
     public static final String CLIENT_TERMINATION = "exit_client" ;
+    public static final String NOT_ENOUGH_CLIENTS = "not_enough_clients";
 
 
     String type;
@@ -142,4 +143,8 @@ public class Message {
         return message.equals(END_TURN);
     }
 
+    public boolean isNotNoughClients() {
+
+        return message.equals(Message.NOT_ENOUGH_CLIENTS);
+    }
 }

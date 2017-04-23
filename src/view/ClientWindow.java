@@ -432,6 +432,13 @@ public class ClientWindow implements ActionListener, ClientView {
         restoreBoard();
     }
 
+    @Override
+    public void returnNotStartedStae() {
+        jbStartGame.setText("Start Game");
+        hasGameStarted = false;
+        partnerGaveUp = false;
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
