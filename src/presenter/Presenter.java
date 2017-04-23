@@ -51,7 +51,7 @@ public class Presenter {
                 case Message.SERVER_LEFT:
                     model.closeClient();
                     myGui.serverLeft();
-                    myGui.returnNotStartedStae();
+                    myGui.returnToUnconnectedState();
                     break;
                 default:
                     int playerNUmber = Integer.parseInt(mRcv.getMessage());

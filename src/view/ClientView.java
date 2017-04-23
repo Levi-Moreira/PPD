@@ -47,4 +47,6 @@ public interface ClientView {
     void setAllEntered();
 
     void serverLeft();
+
+    void returnToUnconnectedState();
 }

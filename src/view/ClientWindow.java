@@ -140,7 +140,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
         window.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                if (!allEntered)  System.exit(0);
+                if (!allEntered) System.exit(0);
                 if (!partnerGaveUp) {
                     int i = JOptionPane.showConfirmDialog(null, "Se você fechar a tela, estará desistindo desta partida");
                     if (i == 0) {
@@ -307,7 +307,7 @@ public class ClientWindow implements ActionListener, ClientView {
     @Override
     public void emptyBoard() {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).setText("");
+            buttons.get(i).setIcon(null);
         }
     }
 
@@ -452,6 +452,16 @@ public class ClientWindow implements ActionListener, ClientView {
         jlConnectionMessages.setText("Servidor saiu.");
     }
 
+    @Override
+    public void returnToUnconnectedState() {
+        allEntered = false;
+        emptyBoard();
+        enableConnectionOptions(true);
+        enableGameOptions(false);
+        presenter.restoreBoard();
+        restoreTurnOptions();
+    }
+
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
@@ -468,6 +478,13 @@ public class ClientWindow implements ActionListener, ClientView {
         jbRestartGame.setEnabled(en);
         jbYield.setEnabled(en);
         jbSend.setEnabled(en);
+    }
+
+    private void restoreTurnOptions() {
+        isYourTurn = false;
+        jlTurn.setText("Controle de Turno");
+        jbAddPiece.setEnabled(false);
+        jbStartGame.setText("Start Game");
     }
 
     @Override
