@@ -11,9 +11,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.lang.reflect.Type;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 /**
@@ -156,10 +157,15 @@ public class Server extends Thread {
         if (opt == 0) {
             int clientsNumber = 0;
             try {
+
                 serverSocket = new ServerSocket(port);
                 clients = new ArrayList<PrintWriter>();
 
-
+                serverGui.printToArea("Conectado com os seguintes endereços: \n");
+                Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+                for (NetworkInterface netint : Collections.list(nets))
+                    displayInterfaceInformation(netint, serverGui);
+                serverGui.printToArea("Conectado a porta: " + port + "\n");
                 while (true) {
 
                     if (clientsNumber < 2) {
@@ -186,6 +192,16 @@ public class Server extends Thread {
 
     }
 
+    static void displayInterfaceInformation(NetworkInterface netint, ServerWindow serverGui) throws SocketException {
+
+        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+            if (inetAddress != null && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress())
+                serverGui.printToArea("IP Address: " + inetAddress + "\n");
+        }
+
+    }
+
     private static void setUpServerExit(JFrame frame, ArrayList<Server> servers) {
 
         frame.addWindowListener(new WindowAdapter() {
@@ -194,7 +210,7 @@ public class Server extends Thread {
                 int i = JOptionPane.showConfirmDialog(null, "Quer realmente fechar a tela, os clientes não poderão mais se comunicar.");
                 if (i == 0) {
 
-                    if (servers.size()!=0) {
+                    if (servers.size() != 0) {
                         for (Server server : servers) {
                             try {
                                 server.exit();
@@ -203,8 +219,7 @@ public class Server extends Thread {
                                 e1.printStackTrace();
                             }
                         }
-                    }else
-                    {
+                    } else {
                         System.exit(0);
                     }
 
