@@ -126,12 +126,10 @@ public class Presenter {
                 break;
             case Message.FINISH_GAME:
                 int openentPieces = Integer.parseInt(mRcv.getMessage());
-                if (board.getFinishSituation(openentPieces)==Board.SITUATION_TIE)
-                {
+                if (board.getFinishSituation(openentPieces) == Board.SITUATION_TIE) {
                     model.anounceTie();
                     myGui.anounceTie();
-                }else
-                {
+                } else {
                     model.anounceNotTie();
                 }
                 break;
@@ -140,18 +138,14 @@ public class Presenter {
                 break;
             case Message.NOTTIE:
                 int situtation = board.getAfterTieSituation();
-                if(situtation==Board.SITUATION_WON)
-                {
+                if (situtation == Board.SITUATION_WON) {
                     model.anounceWin();
                     myGui.anounceYouWin();
-                }else
-                {
-                    if(situtation==Board.SITUATION_LOST)
-                    {
+                } else {
+                    if (situtation == Board.SITUATION_LOST) {
                         model.anounceLost();
                         myGui.anounceYouLost();
-                    }else
-                    {
+                    } else {
                         model.anounceTie();
                         myGui.anounceTie();
                     }
@@ -302,6 +296,10 @@ public class Presenter {
 
     public void finishGame() {
 
-        model.finishGame((board.getPlayerNumber()-board.getLostPieces()));
+        model.finishGame((board.getPlayerNumber() - board.getLostPieces()));
+    }
+
+    public void startUpClient(String clientName, String ip, int port) {
+        model.startUpClient(clientName, ip, port);
     }
 }

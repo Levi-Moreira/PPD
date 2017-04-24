@@ -240,7 +240,25 @@ public class ClientWindow implements ActionListener, ClientView {
             public void actionPerformed(ActionEvent e) {
 
                 if (!tfName.getText().isEmpty()) {
-                    mPresenter.startUpClient(tfName.getText());
+                    if (cbPlayLocal.isSelected())
+                        mPresenter.startUpClient(tfName.getText());
+                    else {
+                        if (tfIpAddress.getText().isEmpty() || tfPort.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Insira os dados do servidor: IP e Porta");
+                        } else {
+                            int port = -1;
+                            try {
+                                port = Integer.parseInt(tfPort.getText());
+                            } catch (NumberFormatException ne) {
+                            }
+
+                            if (validIP(tfIpAddress.getText()) && port != -1)
+                                mPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port);
+                            else
+                                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Porta ou IP inválidos");
+
+                        }
+                    }
                 } else
                     JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Por favor, insira seu nome");
 
@@ -668,6 +686,33 @@ public class ClientWindow implements ActionListener, ClientView {
         } else {
             System.err.println("Couldn't find file: " + path);
             return null;
+        }
+    }
+
+    public static boolean validIP(String ip) {
+        try {
+            if (ip == null || ip.isEmpty()) {
+                return false;
+            }
+
+            String[] parts = ip.split("\\.");
+            if (parts.length != 4) {
+                return false;
+            }
+
+            for (String s : parts) {
+                int i = Integer.parseInt(s);
+                if ((i < 0) || (i > 255)) {
+                    return false;
+                }
+            }
+            if (ip.endsWith(".")) {
+                return false;
+            }
+
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
         }
     }
 

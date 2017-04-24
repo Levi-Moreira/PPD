@@ -239,4 +239,10 @@ public class ModelIO {
 
         client.sendMessage(json);
     }
+
+    public void startUpClient(String clientName, String ip, int port) {
+        this.clientName = clientName;
+        client = new Client(this, ip, port);
+        client.connect();
+    }
 }

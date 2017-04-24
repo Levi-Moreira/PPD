@@ -202,7 +202,7 @@ public class Server extends Thread {
 
     }
 
-    private static void setUpServerExit(JFrame frame, ArrayList<Server> servers) {
+    private static void setUpServerExit(JFrame frame, final ArrayList<Server> servers) {
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

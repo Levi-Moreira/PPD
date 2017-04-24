@@ -25,10 +25,21 @@ public class Client extends Thread {
 
     private PrintWriter prw;
 
+    private boolean remote;
+
     public Client(ModelIO model) {
 
         this.model = model;
+        remote = false;
 
+
+    }
+
+    public Client(ModelIO modelIO, String ip, int port) {
+        remote = true;
+        this.model = modelIO;
+        host = ip;
+        this.port = port;
 
     }
 
@@ -75,8 +86,7 @@ public class Client extends Thread {
         }
     }
 
-    public void connect()
-    {
+    public void connect() {
         try {
             socket = new Socket(host, port);
             model.clientConnected();
@@ -98,6 +108,7 @@ public class Client extends Thread {
             }
         }
     }
+
     public void close() {
         keepAlive = false;
         try {
