@@ -1,6 +1,6 @@
 package network;
 
-import model.ModelIO;
+import model.ModelNetworkIO;
 
 import java.io.*;
 import java.net.ConnectException;
@@ -19,7 +19,7 @@ public class Client extends Thread {
 
     private boolean keepAlive = true;
 
-    private ModelIO model;
+    private ModelNetworkIO model;
 
     private OutputStream ou;
 
@@ -27,7 +27,7 @@ public class Client extends Thread {
 
     private boolean remote;
 
-    public Client(ModelIO model) {
+    public Client(ModelNetworkIO model) {
 
         this.model = model;
         remote = false;
@@ -35,9 +35,9 @@ public class Client extends Thread {
 
     }
 
-    public Client(ModelIO modelIO, String ip, int port) {
+    public Client(ModelNetworkIO modelNetworkIO, String ip, int port) {
         remote = true;
-        this.model = modelIO;
+        this.model = modelNetworkIO;
         host = ip;
         this.port = port;
 

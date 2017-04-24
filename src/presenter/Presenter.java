@@ -1,7 +1,7 @@
 package presenter;
 
 import model.Board;
-import model.ModelIO;
+import model.ModelNetworkIO;
 import model.Message;
 import view.ClientView;
 
@@ -12,14 +12,14 @@ public class Presenter {
 
     private ClientView myGui;
 
-    private ModelIO model;
+    private ModelNetworkIO model;
 
     private Board board;
 
 
     public Presenter(ClientView myGui) {
         this.myGui = myGui;
-        model = new ModelIO(this);
+        model = new ModelNetworkIO(this);
     }
 
     public void startUpClient(String clientName) {
@@ -230,7 +230,7 @@ public class Presenter {
     }
 
     public void terminateClient() {
-        model.terminateCLient();
+        model.terminateClient();
     }
 
     public void restoreBoard() {

@@ -8,33 +8,57 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 /**
- * Created by ellca on 14/04/2017.
+ * Intefaces the communication between the lower level client and the upper lever presenter
  */
-public class ModelIO {
+public class ModelNetworkIO {
 
+    //the lower level client
     private Client client;
-    private Client serverThread;
 
+    //the upper level presenter
     private Presenter presenter;
 
     private String clientName;
 
-    public ModelIO(Presenter presenter) {
+    //constructor
+    public ModelNetworkIO(Presenter presenter) {
         this.presenter = presenter;
     }
 
+    /**
+     * Start up a client for local communication
+     * @param clientName the name of the client
+     */
     public void startUpClient(String clientName) {
         this.clientName = clientName;
         client = new Client(this);
         client.connect();
     }
 
+    /**
+     * Start up the client for a remote communication
+     * @param clientName the name of the client
+     * @param ip the ip address of the server
+     * @param port the port in the server where the app lives
+     */
+    public void startUpClient(String clientName, String ip, int port) {
+        this.clientName = clientName;
+        client = new Client(this, ip, port);
+        client.connect();
+    }
 
+    /**
+     * Anounces to the preseneter that the client is connected
+     */
     public void clientConnected() {
         presenter.clientConnected();
     }
 
 
+    /**
+     * Encapsulates a message in a json package with a type chat
+     * @param text the raw msg to be sent
+     */
     public void sendChatMessage(String text) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -46,6 +70,10 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+    /**
+     * When a message was received from the network, change it to an object Message
+     * @param mRcv the received json
+     */
     public void receivedMessage(String mRcv) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -53,26 +81,37 @@ public class ModelIO {
 
         Message msg = gson.fromJson(mRcv, Message.class);
 
+        //ask the presenter to treat the message
         if (msg != null)
             presenter.receivedMessage(msg);
     }
 
 
+    /**
+     * Anounces to the presenter that there was a connection error
+     */
     public void showConnectionError() {
         presenter.showConnectionError();
     }
 
-    public void warnStartMatch(int piece) {
+    /**
+     * Create a start game message
+     * @param pieceColour the colour of the piece chosen by the starting player
+     */
+    public void warnStartMatch(int pieceColour) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
-        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, piece+"");
+        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, pieceColour+"");
 
         String json = gson.toJson(msg, type);
 
         client.sendMessage(json);
     }
 
+    /**
+     * Create an end turn message
+     */
     public void endMyTurn() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -85,12 +124,17 @@ public class ModelIO {
 
     }
 
-    public void addToSpace(int i, int playerNumber) {
+    /**
+     * Creates an add to space message
+     * @param space the space to which the piece needs to be added
+     * @param playerNumber the player number to add to te space
+     */
+    public void addToSpace(int space, int playerNumber) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_ADD, clientName, i + "", playerNumber + "");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_ADD, clientName, space + "", playerNumber + "");
 
         String json = gson.toJson(msg, type);
 
@@ -98,6 +142,12 @@ public class ModelIO {
     }
 
 
+    /**
+     * Creates a move message
+     * @param start start position of the move
+     * @param end end position of the move
+     * @param playerNumber playerNumber associated with the move
+     */
     public void move(int start, int end, int playerNumber) {
 
         Gson gson = new Gson();
@@ -111,7 +161,10 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
-    public void terminateCLient() {
+    /**
+     * Generates a terminate client message
+     */
+    public void terminateClient() {
 
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -125,6 +178,9 @@ public class ModelIO {
         client.terminane();
     }
 
+    /**
+     * Generates a ask for restart message, the end user will be asked to restart the game
+     */
     public void askForRestart() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -137,6 +193,9 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+    /**
+     * Generates a message accepting the restart of the game
+     */
     public void sendAcceptRestartMessage() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -149,6 +208,11 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+
+    /**
+     * Generates a capture message
+     * @param capturedPos the position where the capture happened
+     */
     public void performCapture(int capturedPos) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -161,18 +225,25 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
-    public void performRemoval(int piece) {
+    /**
+     * Generates a removal message
+     * @param removePos the position where the removal happened
+     */
+    public void performRemoval(int removePos) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_REMOVE, clientName, piece + "");
+        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_REMOVE, clientName, removePos + "");
 
         String json = gson.toJson(msg, type);
 
         client.sendMessage(json);
     }
 
+    /**
+     * Generates an anounce win message
+     */
     public void anounceWin() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -186,10 +257,17 @@ public class ModelIO {
 
     }
 
+    /**
+     * Closes this client
+     */
     public void closeClient() {
         client.close();
     }
 
+    /**
+     * Generates a message to anounce the ending of a game
+     * @param piecesOnBoard the number of pieces this user have on his board
+     */
     public void finishGame(int piecesOnBoard) {
 
         Gson gson = new Gson();
@@ -203,6 +281,9 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+    /**
+     * Generates a message to announce that a tie happened
+     */
     public void anounceTie() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -215,6 +296,9 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+    /**
+     * Generates a message to announce that there was no tie
+     */
     public void anounceNotTie() {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
@@ -227,6 +311,9 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
+    /**
+     * Generates a message to anounce that his player lost
+     */
     public void anounceLost() {
 
         Gson gson = new Gson();
@@ -240,9 +327,5 @@ public class ModelIO {
         client.sendMessage(json);
     }
 
-    public void startUpClient(String clientName, String ip, int port) {
-        this.clientName = clientName;
-        client = new Client(this, ip, port);
-        client.connect();
-    }
+
 }
