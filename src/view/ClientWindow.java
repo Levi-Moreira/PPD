@@ -11,9 +11,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by ellca on 12/04/2017.
+ * Class that creates and manages the view of the client
  */
 public class ClientWindow implements ActionListener, ClientView {
+
+    //screen elements
     private JButton space1;
     private JButton space26;
     private JButton space7;
@@ -62,7 +64,6 @@ public class ClientWindow implements ActionListener, ClientView {
     private JLabel jlPort;
     private JTextField tfName;
     private JButton jbRestartGame;
-
     private JLabel jlTurn;
     private JButton jbStartGame;
     private JPanel jpStatus;
@@ -79,30 +80,38 @@ public class ClientWindow implements ActionListener, ClientView {
     private JRadioButton rbBlack;
     private JButton jbFinishGame;
 
+    //main window
     private JFrame mWindow;
 
+    //the presenter
     private Presenter mPresenter;
 
-    private boolean isBlockedForAdding = false;
-    private boolean hasGameStarted = false;
-    private boolean isYourTurn = false;
-    private boolean shouldEndTurn = false;
-    private boolean hasStartedMove = false;
-    private boolean hasFinishedMove = false;
-    private boolean hasPartnerGivenUp = false;
-    private boolean hasCapturedOnce = false;
-    private boolean isBlockedForElimination = false;
-    private boolean hasAllEntered = false;
+    //helper flags
+    private boolean isBlockedForAdding = false; //inicates if clik should be blocked due to an adding piece action
+    private boolean hasGameStarted = false; //indicates if a game has started
+    private boolean isYourTurn = false; //indicates if it is this players turn
+    private boolean shouldEndTurn = false; //indicate if a player has executed all allowed momvements and if he should end his turn
+    private boolean hasStartedMove = false; //indicates if a move has started (clicked in the beginign space)
+    private boolean hasFinishedMove = false; //indicates if a movement has finished
+    private boolean hasPartnerGivenUp = false; //indicates if partner left game
+    private boolean hasCapturedOnce = false; //indicates if he capture at least one piece in a turn
+    private boolean isBlockedForElimination = false; //block clicks for elimination
+    private boolean hasAllEntered = false; //indicates if all players have entered the room
 
+    //holds the buttons in an array for easier access
     private ArrayList<JButton> buttons = new ArrayList<>();
 
+    //holds the space moves
     private int[] move = new int[2];
 
+    //holds the image for the icons
     private Icon iconBlack;
     private Icon iconRed;
 
-    int lastPositionAFterCapture = -1;
+    //the last position the player was in after a capture
+    private int lastPositionAFterCapture = -1;
 
+    //an action to send a chat message
     Action sendMsgAction = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -114,16 +123,27 @@ public class ClientWindow implements ActionListener, ClientView {
     };
 
 
+    //constructor
     public ClientWindow(JFrame frame) {
         mWindow = frame;
 
+        //set up window action
         mWindow.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        //setup icons
         iconBlack = createImageIcon("assets/black.png", "the black icon");
         iconRed = createImageIcon("assets/red.png", "the red icon");
+
+        //disable game options until connection happens
         enableGameOptions(false);
+
+        //add action listener for certain buttons
         addActionListenerForButtons();
+
+        //add board buttons to the array for easier access
         addButtonsToArray();
+
+        //add action listener for the board button
         addActionListenerForBoardButtons();
 
         cbPlayLocal.addItemListener(new ItemListener() {
@@ -143,7 +163,7 @@ public class ClientWindow implements ActionListener, ClientView {
             public void windowClosing(WindowEvent e) {
                 if (!hasAllEntered) System.exit(0);
                 if (!hasPartnerGivenUp && hasGameStarted) {
-                    int i = JOptionPane.showConfirmDialog(null, "Se você fechar a tela, estará desistindo desta partida");
+                    int i = JOptionPane.showConfirmDialog(null, "If you close this screen, you'll give up this match");
                     if (i == 0) {
                         mPresenter.terminateClient();
                         System.exit(0);
@@ -171,6 +191,9 @@ public class ClientWindow implements ActionListener, ClientView {
         });
     }
 
+    /**
+     * Add all board buttons to the array for easier access
+     */
     private void addButtonsToArray() {
         buttons.add(space1);
         buttons.add(space2);
@@ -204,6 +227,9 @@ public class ClientWindow implements ActionListener, ClientView {
         buttons.add(space30);
     }
 
+    /**
+     * Add action listener for board buttons, this class implements the action listener
+     */
     private void addActionListenerForBoardButtons() {
 
         for (int i = 0; i < buttons.size(); i++) {
@@ -212,10 +238,18 @@ public class ClientWindow implements ActionListener, ClientView {
 
     }
 
-    private boolean tryAddingToSpace(int i) {
-        return mPresenter.addToSpace(i);
+    /**
+     * Tries to add a piece to a given space
+     * @param space the space to which the adding will happen
+     * @return true if sucessfully
+     */
+    private boolean tryAddingToSpace(int space) {
+        return mPresenter.addToSpace(space);
     }
 
+    /**
+     * Finish adding a piece
+     */
     private void finishedAdding() {
         shouldEndTurn = true;
         isBlockedForAdding = false;
@@ -226,6 +260,9 @@ public class ClientWindow implements ActionListener, ClientView {
 
     }
 
+    /**
+     * Add action listener for some buttons on the screen
+     */
     private void addActionListenerForButtons() {
 
         jbRestartGame.addActionListener(new ActionListener() {
@@ -244,7 +281,7 @@ public class ClientWindow implements ActionListener, ClientView {
                         mPresenter.startUpClient(tfName.getText());
                     else {
                         if (tfIpAddress.getText().isEmpty() || tfPort.getText().isEmpty()) {
-                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Insira os dados do servidor: IP e Porta");
+                            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Type in the server information: IP and Port");
                         } else {
                             int port = -1;
                             try {
@@ -255,12 +292,12 @@ public class ClientWindow implements ActionListener, ClientView {
                             if (validIP(tfIpAddress.getText()) && port != -1)
                                 mPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port);
                             else
-                                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Porta ou IP inválidos");
+                                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Invalid Port or IP");
 
                         }
                     }
                 } else
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Por favor, insira seu nome");
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Please, type in your name");
 
 
             }
@@ -268,6 +305,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
 
         jbSend.addActionListener(sendMsgAction);
+
         tfMsgmToSend.addActionListener(sendMsgAction);
 
         jbStartGame.addActionListener(new ActionListener() {
@@ -300,7 +338,7 @@ public class ClientWindow implements ActionListener, ClientView {
             public void actionPerformed(ActionEvent e) {
 
                 if (shouldEndTurn) {
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Max number of moves reached. Please end your turn.");
                 } else {
                     if (isBlockedForAdding) {
                         isBlockedForAdding = false;
@@ -317,18 +355,27 @@ public class ClientWindow implements ActionListener, ClientView {
 
     private void createUIComponents() {
 
-
     }
 
+    /**
+     * Starts this up
+     */
     public void startUp() {
         mPresenter = new Presenter(this);
     }
 
+    /**
+     * Show a message for the connection
+     * @param msg the message
+     */
     @Override
     public void connectionMessage(String msg) {
         jlConnectionMessages.setText(msg);
     }
 
+    /**
+     * When a user is connected
+     */
     @Override
     public void onUserConnected() {
 
@@ -336,16 +383,26 @@ public class ClientWindow implements ActionListener, ClientView {
         enableGameOptions(true);
     }
 
+    /**
+     * When a chat message is received
+     * @param mRcv the message received
+     */
     @Override
     public void receivedMessage(String mRcv) {
         taReceiveArea.append(mRcv + "\n");
     }
 
+    /**
+     * When a connection error happens
+     */
     @Override
     public void showConnectionError() {
-        jlConnectionMessages.setText("Servidor indisponível");
+        jlConnectionMessages.setText("Server down");
     }
 
+    /**
+     * Clears the board
+     */
     @Override
     public void emptyBoard() {
         for (int i = 0; i < buttons.size(); i++) {
@@ -356,19 +413,26 @@ public class ClientWindow implements ActionListener, ClientView {
     }
 
 
+    /**
+     * Set turn  for a certain player. Show necessary things on the screen.
+     * @param sender
+     */
     @Override
     public void setTurnPlayer(String sender) {
 
-        jlTurn.setText("É a vez de: " + sender);
+        jlTurn.setText("Turn: " + sender);
         jbStartGame.setEnabled(false);
         jbAddPiece.setEnabled(false);
         jbFinishGame.setEnabled(false);
         isYourTurn = false;
     }
 
+    /**
+     * Set your turn
+     */
     @Override
     public void setYourTurn() {
-        jlTurn.setText("É a sua vez");
+        jlTurn.setText("Your turn");
         jbStartGame.setEnabled(true);
         if (mPresenter.hasPieces())
             jbAddPiece.setEnabled(true);
@@ -376,6 +440,10 @@ public class ClientWindow implements ActionListener, ClientView {
         jbFinishGame.setEnabled(true);
     }
 
+    /**
+     * Changes the UI to relfelct a start of a fame
+     * @param piece the piece color of this user
+     */
     @Override
     public void setGameStarted(int piece) {
         hasGameStarted = true;
@@ -389,6 +457,13 @@ public class ClientWindow implements ActionListener, ClientView {
         disablePieceSelectors();
     }
 
+
+    /**
+     * Adds a player to a certain space
+     * @param i the space
+     * @param playerNumber player number
+     * @param pieceColor piece color
+     */
     @Override
     public void addPlayerToSpace(int i, int playerNumber, int pieceColor) {
         //buttons.get(i).setText(playerNumber + "");
@@ -400,12 +475,23 @@ public class ClientWindow implements ActionListener, ClientView {
         }
     }
 
+    /**
+     * Updates the piece count in the screen
+     * @param hand the amount of pieces in your hand
+     */
     @Override
     public void showMyPiecesNumber(int hand) {
         jlHandPieces.setText(hand + "");
         jlPlayedPieces.setText((Board.TOTAL_PIECES - hand) + "");
     }
 
+    /**
+     * Shows a move in the screen
+     * @param start start space
+     * @param end end space
+     * @param playerNumber player number
+     * @param pieceColor piece color
+     */
     @Override
     public void move(int start, int end, int playerNumber, int pieceColor) {
         //buttons.get(start).setText("Vazio");
@@ -418,17 +504,25 @@ public class ClientWindow implements ActionListener, ClientView {
         }
     }
 
+    /**
+     * SHows a message anoucning that the partner left
+     * @param partnerName the partnet name
+     */
     @Override
     public void warnPartnerLeft(String partnerName) {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Seu parceiro " + partnerName + " abandonou o jogo, você venceu!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Player " + partnerName + " has left the match, you won!");
         hasPartnerGivenUp = true;
         restoreBoard();
         mPresenter.restoreBoard();
     }
 
+    /**
+     * Show message stating the partner asked for a reset
+     * @param partnerName the partner name
+     */
     @Override
     public void partnerAskForRestart(String partnerName) {
-        int dialogResult = JOptionPane.showConfirmDialog($$$getRootComponent$$$(), "Seu oponente " + partnerName + " está solicitando o recomeço da partida. Você aceita?");
+        int dialogResult = JOptionPane.showConfirmDialog($$$getRootComponent$$$(), "Player " + partnerName + " is requesting a restart. Do you accept?");
         if (dialogResult == JOptionPane.YES_OPTION) {
             mPresenter.acceptRestart();
         } else {
@@ -437,6 +531,9 @@ public class ClientWindow implements ActionListener, ClientView {
 
     }
 
+    /**
+     * Restarts the board
+     */
     @Override
     public void restoreBoard() {
         emptyBoard();
@@ -460,6 +557,10 @@ public class ClientWindow implements ActionListener, ClientView {
 
     }
 
+    /**
+     * Performs a capture
+     * @param capturedPos the position captured
+     */
     @Override
     public void performCapture(int capturedPos) {
         //buttons.get(capturedPos).setText("Vazio");
@@ -479,7 +580,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     @Override
     public void anounceYouWin() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Parabéns, você venceu!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Congratulations, you won!");
         mPresenter.restoreBoard();
         restoreBoard();
 
@@ -487,7 +588,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     @Override
     public void anounceYouLost() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Desculpe, você perdeu!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Sorry, you lost!");
         mPresenter.restoreBoard();
         restoreBoard();
     }
@@ -504,11 +605,17 @@ public class ClientWindow implements ActionListener, ClientView {
         hasAllEntered = true;
     }
 
+    /**
+     * ANoucne the leaving of the server
+     */
     @Override
     public void serverLeft() {
-        jlConnectionMessages.setText("Servidor saiu.");
+        jlConnectionMessages.setText("Server down.");
     }
 
+    /**
+     * Reset the connection state
+     */
     @Override
     public void returnToUnconnectedState() {
         hasAllEntered = false;
@@ -519,19 +626,29 @@ public class ClientWindow implements ActionListener, ClientView {
         restoreTurnOptions();
     }
 
+    /**
+     * Disable piece selectors
+     */
     @Override
     public void disablePieceSelectors() {
         rbBlack.setEnabled(false);
         rbRed.setEnabled(false);
     }
 
+    /**
+     * Anounce a tie on the screen
+     */
     @Override
     public void anounceTie() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Empate declarado!");
+        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "It's a tie!");
         mPresenter.restoreBoard();
         restoreBoard();
     }
 
+    /**
+     * Enable the connection options
+     * @param en
+     */
     private void enableConnectionOptions(boolean en) {
         jpIpInfo.setEnabled(en);
         tfPort.setEnabled(en);
@@ -544,6 +661,10 @@ public class ClientWindow implements ActionListener, ClientView {
 
     }
 
+    /**
+     * Enables the game options
+     * @param en
+     */
     private void enableGameOptions(boolean en) {
         jbStartGame.setEnabled(en);
         jbRestartGame.setEnabled(en);
@@ -554,14 +675,21 @@ public class ClientWindow implements ActionListener, ClientView {
         jbFinishGame.setEnabled(en);
     }
 
+    /**
+     * Clear the options in the controle de turno screen
+     */
     private void restoreTurnOptions() {
         isYourTurn = false;
-        jlTurn.setText("Controle de Turno");
+        jlTurn.setText("Turn control");
         jbAddPiece.setEnabled(false);
         jbStartGame.setText("Start Game");
         jbFinishGame.setEnabled(false);
     }
 
+    /**
+     * Catches all button cliks on the board buttons
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -578,6 +706,10 @@ public class ClientWindow implements ActionListener, ClientView {
         }
     }
 
+    /**
+     * If an elimination is not happening
+     * @param buttonPos the position clicked by the user
+     */
     private void onNotEliminating(int buttonPos) {
         if (hasCapturedOnce && !mPresenter.canStillCapture()) {
             shouldEndTurn = true;
@@ -588,30 +720,38 @@ public class ClientWindow implements ActionListener, ClientView {
                 if (tryAddingToSpace(buttonPos))
                     finishedAdding();
                 else
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço ocupado. Escolha outro.");
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "This space is busy. Choose another one.");
             } else {
 
                 tryToMove(buttonPos);
             }
         } else {
-            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Você já realizou o número máximo de ações por jogada. Encerre sua vez.");
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Max number of moves reached. Please end your turn.");
         }
     }
 
+    /**
+     * When elimination is on
+     * @param buttonPos the position clicked by the user
+     */
     private void onEliminating(int buttonPos) {
         if (!mPresenter.isSpaceEmpty(buttonPos)) {
             if (!mPresenter.isSpaceMine(buttonPos)) {
                 mPresenter.removePiece(buttonPos);
                 isBlockedForElimination = false;
             } else {
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do oponente.");
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Select another player's piece.");
             }
         } else {
-            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço vazio! Selecione uma peça do oponente.");
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Space empty! Select another player's piece.");
         }
     }
 
 
+    /**
+     * Tries to move from a location
+     * @param space the startiing space
+     */
     private void tryToMove(int space) {
         if (!hasStartedMove) {
             if (hasCapturedOnce && mPresenter.checkCapturePossibility(space))
@@ -620,7 +760,7 @@ public class ClientWindow implements ActionListener, ClientView {
                 if (!hasCapturedOnce)
                     onNotStartedMove(space);
                 else
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movement not allowed.");
             }
         } else {
             onStartedMove(space);
@@ -632,6 +772,10 @@ public class ClientWindow implements ActionListener, ClientView {
         }
     }
 
+    /**
+     * When a move hasnet started yet
+     * @param space the space where will start
+     */
     private void onNotStartedMove(int space) {
         if (mPresenter.isSpaceMine(space)) {
             move[0] = space;
@@ -640,10 +784,14 @@ public class ClientWindow implements ActionListener, ClientView {
         } else {
             hasStartedMove = false;
             if (!mPresenter.isSpaceEmpty(space))
-                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Esta peça não é sua.");
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "This piece is not yours.");
         }
     }
 
+    /**
+     * When a move has started
+     * @param space the space where started
+     */
     private void onStartedMove(int space) {
         if (mPresenter.isSpaceEmpty(space)) {
             move[1] = space;
@@ -651,10 +799,13 @@ public class ClientWindow implements ActionListener, ClientView {
             hasFinishedMove = true;
         } else {
             hasStartedMove = false;
-            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Espaço não é vazio.");
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Space not empty.");
         }
     }
 
+    /**
+     * When finished a move
+     */
     private void onFinishedMove() {
         if (mPresenter.tryToMove(move)) {
             hasStartedMove = false;
@@ -664,7 +815,7 @@ public class ClientWindow implements ActionListener, ClientView {
                 mPresenter.performCapture(move);
                 hasCapturedOnce = true;
                 if (mPresenter.oponentHasPiecesOnBoard()) {
-                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Selecione uma peça do adversário para eliminar.");
+                    JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Select an oponent's piece to be removed.");
                     isBlockedForElimination = true;
                 }
             } else {
@@ -674,10 +825,16 @@ public class ClientWindow implements ActionListener, ClientView {
         } else {
             hasStartedMove = false;
             hasFinishedMove = false;
-            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movimento inválido.");
+            JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Movement not allowed.");
         }
     }
 
+    /**
+     * Tries to create an image icon
+     * @param path the path of the file
+     * @param description a description
+     * @return an image icon if created, null if not
+     */
     protected ImageIcon createImageIcon(String path,
                                         String description) {
         URL imgURL = getClass().getResource(path);
@@ -689,6 +846,11 @@ public class ClientWindow implements ActionListener, ClientView {
         }
     }
 
+    /**
+     * Validates an ip string
+     * @param ip the ip string
+     * @return true if it is a valid ip
+     */
     public static boolean validIP(String ip) {
         try {
             if (ip == null || ip.isEmpty()) {
