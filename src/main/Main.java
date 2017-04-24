@@ -18,7 +18,7 @@ public class Main {
         }
 
         //start up the frame that will hold the main window
-        JFrame frame = new JFrame("PPD");
+        JFrame frame = new JFrame("YOTÉ");
 
         //start up the main window
         ClientWindow myGui = new ClientWindow(frame);

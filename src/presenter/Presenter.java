@@ -78,7 +78,7 @@ public class Presenter {
                 int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
                 myGui.setGameStarted(myPiece);
                 myGui.setTurnPlayer("Oponente");
-                board.setMyPieceColor(myPiece);
+                board.setmMyPiecesColor(myPiece);
                 break;
             case Message.END_TURN:
                 myGui.setYourTurn();
@@ -112,13 +112,13 @@ public class Presenter {
                 int capturedPos = Integer.parseInt(mRcv.getMessage());
                 board.performCapture(capturedPos);
                 myGui.performCapture(capturedPos);
-                myGui.updateLostPiecesCount(board.getLostPieces());
+                myGui.updateLostPiecesCount(board.getmLostPiecesCount());
                 break;
             case Message.SUBTYPE_GAME_REMOVE:
                 int removedPos = Integer.parseInt(mRcv.getMessage());
                 board.performLost(removedPos);
                 myGui.performCapture(removedPos);
-                myGui.updateLostPiecesCount(board.getLostPieces());
+                myGui.updateLostPiecesCount(board.getmLostPiecesCount());
                 break;
             case Message.ANOUNCE_WIN:
                 if (board.hasLostAll() || board.isLoser())
@@ -137,7 +137,7 @@ public class Presenter {
                 myGui.anounceTie();
                 break;
             case Message.NOTTIE:
-                int situtation = board.getAfterTieSituation();
+                int situtation = board.getAfterNotTieSituation();
                 if (situtation == Board.SITUATION_WON) {
                     model.anounceWin();
                     myGui.anounceYouWin();
@@ -175,7 +175,7 @@ public class Presenter {
     private void startUpBoard(int playerNUmber) {
         board = new Board(playerNUmber);
         myGui.emptyBoard();
-        myGui.showMyPiecesNumber(board.getMypieces());
+        myGui.showMyPiecesNumber(board.getmMyPieceCount());
     }
 
     public void showConnectionError() {
@@ -183,7 +183,7 @@ public class Presenter {
     }
 
     public void warnStartMach(int piece) {
-        board.setMyPieceColor(piece);
+        board.setmMyPiecesColor(piece);
         model.warnStartMatch(piece);
         myGui.setYourTurn();
         clientConnected();
@@ -193,9 +193,9 @@ public class Presenter {
     public boolean addToSpace(int i) {
 
         if (board.addSelfToSpace(i)) {
-            myGui.addPlayerToSpace(i, board.getPlayerNumber(), board.getMyPieceColor());
-            myGui.showMyPiecesNumber(board.getMypieces());
-            model.addToSpace(i, board.getPlayerNumber());
+            myGui.addPlayerToSpace(i, board.getmPlayerNumber(), board.getmMyPiecesColor());
+            myGui.showMyPiecesNumber(board.getmMyPieceCount());
+            model.addToSpace(i, board.getmPlayerNumber());
             return true;
         } else
             return false;
@@ -220,9 +220,9 @@ public class Presenter {
 
     public boolean tryToMove(int[] move) {
         if (board.isMoveAllowed(move[0], move[1])) {
-            board.movePlayer(move[0], move[1], board.getPlayerNumber());
-            myGui.move(move[0], move[1], board.getPlayerNumber(), board.getMyPieceColor());
-            model.move(move[0], move[1], board.getPlayerNumber());
+            board.movePlayer(move[0], move[1], board.getmPlayerNumber());
+            myGui.move(move[0], move[1], board.getmPlayerNumber(), board.getmMyPiecesColor());
+            model.move(move[0], move[1], board.getmPlayerNumber());
             return true;
         } else {
             return false;
@@ -235,9 +235,9 @@ public class Presenter {
 
     public void restoreBoard() {
         board.restoreBoard();
-        myGui.showMyPiecesNumber(board.getMypieces());
-        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
-        myGui.updateLostPiecesCount(board.getLostPieces());
+        myGui.showMyPiecesNumber(board.getmMyPieceCount());
+        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
+        myGui.updateLostPiecesCount(board.getmLostPiecesCount());
     }
 
     public void askForResart() {
@@ -256,7 +256,7 @@ public class Presenter {
     public void performCapture(int[] move) {
         int capturedPos = board.performCapture(move[0], move[1]);
         myGui.performCapture(capturedPos);
-        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
+        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
         model.performCapture(capturedPos);
 
         if (board.hasCapturedAll()) {
@@ -268,7 +268,7 @@ public class Presenter {
     public void removePiece(int piece) {
         board.performRemoval(piece);
         myGui.performCapture(piece);
-        myGui.updateCapturedPiecesCount(board.getCapturedPieces());
+        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
         model.performRemoval(piece);
 
         if (board.hasCapturedAll()) {
@@ -296,7 +296,7 @@ public class Presenter {
 
     public void finishGame() {
 
-        model.finishGame((board.getPlayerNumber() - board.getLostPieces()));
+        model.finishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
     }
 
     public void startUpClient(String clientName, String ip, int port) {
