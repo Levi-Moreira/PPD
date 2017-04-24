@@ -8,13 +8,13 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- * Created by ellca on 14/04/2017.
+ * Client class that generates the main communication hub
  */
 public class Client extends Thread {
 
-    static String host = "";
-    static int port = 9090;
-    Socket socket = null;
+    private static String host = "";
+    private static int port = 9090;
+    private Socket socket = null;
 
 
     private boolean keepAlive = true;
@@ -27,6 +27,7 @@ public class Client extends Thread {
 
     private boolean remote;
 
+    //constructor for local connections
     public Client(ModelNetworkIO model) {
 
         this.model = model;
@@ -35,6 +36,7 @@ public class Client extends Thread {
 
     }
 
+    //constructor for remote connection
     public Client(ModelNetworkIO modelNetworkIO, String ip, int port) {
         remote = true;
         this.model = modelNetworkIO;
@@ -43,6 +45,9 @@ public class Client extends Thread {
 
     }
 
+    /**
+     * Thread run
+     */
     public void run() {
         try {
             this.listen();
@@ -53,28 +58,37 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * Waits for an incoming message
+     * @throws IOException
+     */
     public void listen() throws IOException {
 
         InputStream in = socket.getInputStream();
-        //InputStreamReader inr = new InputStreamReader(in);
-        //BufferedReader bfr = new BufferedReader(inr);
 
         Scanner scannerIn = new Scanner(in);
         String msg = "";
 
         while (keepAlive)
-
+            //pass the json string to the model for decodification
             if (scannerIn.hasNextLine()) {
                 msg = scannerIn.nextLine();
                 model.receivedMessage(msg);
             }
     }
 
+    /**
+     * Sends a pessage through the socket
+     * @param msg the json string
+     */
     public void sendMessage(String msg) {
         prw.println(msg);
 
     }
 
+    /**
+     * Severe connection completly
+     */
     public void terminane() {
         keepAlive = false;
         try {
@@ -86,6 +100,9 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * Start uo the socket and connect to the server
+     */
     public void connect() {
         try {
             socket = new Socket(host, port);
@@ -109,6 +126,9 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * Close this client, but leave thread running so it can be restarted
+     */
     public void close() {
         keepAlive = false;
         try {
