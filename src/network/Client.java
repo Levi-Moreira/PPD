@@ -21,9 +21,9 @@ public class Client extends Thread {
 
     private ModelNetworkIO model;
 
-    private OutputStream ou;
+    private OutputStream outputStream;
 
-    private PrintWriter prw;
+    private PrintWriter printWriter;
 
     private boolean remote;
 
@@ -82,7 +82,7 @@ public class Client extends Thread {
      * @param msg the json string
      */
     public void sendMessage(String msg) {
-        prw.println(msg);
+        printWriter.println(msg);
 
     }
 
@@ -93,8 +93,8 @@ public class Client extends Thread {
         keepAlive = false;
         try {
             socket.close();
-            prw.close();
-            ou.close();
+            printWriter.close();
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,11 +108,11 @@ public class Client extends Thread {
             socket = new Socket(host, port);
             model.clientConnected();
             System.out.println("Conectado....");
-            ou = socket.getOutputStream();
+            outputStream = socket.getOutputStream();
 
 
-            prw = new PrintWriter(ou, true);
-            prw.println("ClientName");
+            printWriter = new PrintWriter(outputStream, true);
+            printWriter.println("ClientName");
             this.start();
 
 
@@ -133,8 +133,8 @@ public class Client extends Thread {
         keepAlive = false;
         try {
             socket.close();
-            prw.close();
-            ou.close();
+            printWriter.close();
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
