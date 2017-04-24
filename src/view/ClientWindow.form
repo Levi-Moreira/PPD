@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="view.ClientWindow">
-  <grid id="27dc6" binding="jpMain" layout-manager="GridLayoutManager" row-count="7" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="jpMain" layout-manager="GridLayoutManager" row-count="7" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1169" height="1052"/>
+      <xy x="20" y="20" width="1361" height="1052"/>
     </constraints>
     <properties>
       <name value="PPD - Sockets"/>
@@ -31,9 +31,9 @@
               <component id="bea96" class="javax.swing.JButton" binding="space26">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -43,9 +43,9 @@
               <component id="ccbea" class="javax.swing.JButton" binding="space6">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -55,9 +55,9 @@
               <component id="c0b74" class="javax.swing.JButton" binding="space21">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -67,9 +67,9 @@
               <component id="2f0cf" class="javax.swing.JButton" binding="space16">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -79,9 +79,9 @@
               <component id="688eb" class="javax.swing.JButton" binding="space11">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -91,9 +91,9 @@
               <component id="f4c63" class="javax.swing.JButton" binding="space2">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -103,9 +103,9 @@
               <component id="e6856" class="javax.swing.JButton" binding="space7">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -115,9 +115,9 @@
               <component id="a5a03" class="javax.swing.JButton" binding="space12">
                 <constraints>
                   <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -127,9 +127,9 @@
               <component id="2cec5" class="javax.swing.JButton" binding="space22">
                 <constraints>
                   <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -139,9 +139,9 @@
               <component id="1898" class="javax.swing.JButton" binding="space27">
                 <constraints>
                   <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -151,9 +151,9 @@
               <component id="9d1cd" class="javax.swing.JButton" binding="space3">
                 <constraints>
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -163,9 +163,9 @@
               <component id="b4548" class="javax.swing.JButton" binding="space13">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -175,9 +175,9 @@
               <component id="19d16" class="javax.swing.JButton" binding="space18">
                 <constraints>
                   <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -187,9 +187,9 @@
               <component id="336a0" class="javax.swing.JButton" binding="space23">
                 <constraints>
                   <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -199,9 +199,9 @@
               <component id="c649" class="javax.swing.JButton" binding="space28">
                 <constraints>
                   <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -211,9 +211,9 @@
               <component id="663cb" class="javax.swing.JButton" binding="space4">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -223,9 +223,9 @@
               <component id="443ac" class="javax.swing.JButton" binding="space5">
                 <constraints>
                   <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -235,9 +235,9 @@
               <component id="88e0b" class="javax.swing.JButton" binding="space9">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -247,9 +247,9 @@
               <component id="d6f88" class="javax.swing.JButton" binding="space10">
                 <constraints>
                   <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -259,9 +259,9 @@
               <component id="15abe" class="javax.swing.JButton" binding="space14">
                 <constraints>
                   <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -271,9 +271,9 @@
               <component id="ac11e" class="javax.swing.JButton" binding="space15">
                 <constraints>
                   <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -283,9 +283,9 @@
               <component id="89633" class="javax.swing.JButton" binding="space19">
                 <constraints>
                   <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -295,9 +295,9 @@
               <component id="5eb05" class="javax.swing.JButton" binding="space20">
                 <constraints>
                   <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -307,9 +307,9 @@
               <component id="e462a" class="javax.swing.JButton" binding="space24">
                 <constraints>
                   <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -319,9 +319,9 @@
               <component id="450e7" class="javax.swing.JButton" binding="space25">
                 <constraints>
                   <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -331,9 +331,9 @@
               <component id="c0988" class="javax.swing.JButton" binding="space29">
                 <constraints>
                   <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -343,9 +343,9 @@
               <component id="18f39" class="javax.swing.JButton" binding="space30">
                 <constraints>
                   <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -355,9 +355,9 @@
               <component id="575c8" class="javax.swing.JButton" binding="space8">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -367,9 +367,9 @@
               <component id="9f8ca" class="javax.swing.JButton" binding="space1">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -379,9 +379,9 @@
               <component id="51e02" class="javax.swing.JButton" binding="space17">
                 <constraints>
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="140" height="80"/>
-                    <preferred-size width="140" height="80"/>
-                    <maximum-size width="140" height="80"/>
+                    <minimum-size width="140" height="70"/>
+                    <preferred-size width="140" height="70"/>
+                    <maximum-size width="140" height="70"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -527,7 +527,7 @@
       <grid id="8210" binding="jpChatArea" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="5" column="1" row-span="2" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="2" row-span="2" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="etched" title="Chat Area" title-justification="2">
@@ -577,18 +577,9 @@
           </component>
         </children>
       </grid>
-      <component id="c5b73" class="javax.swing.JLabel" binding="jlTurn">
-        <constraints>
-          <grid row="0" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <font name="Montserrat SemiBold" size="22"/>
-          <text value="Controle de turno"/>
-        </properties>
-      </component>
       <component id="75d50" class="javax.swing.JButton" binding="jbRestartGame">
         <constraints>
-          <grid row="4" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+          <grid row="4" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="167" height="8"/>
           </grid>
         </constraints>
@@ -599,17 +590,42 @@
       </component>
       <component id="2b815" class="javax.swing.JButton" binding="jbStartGame">
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Montserrat"/>
           <text value="Start Game"/>
         </properties>
       </component>
-      <grid id="e45cf" binding="jpStatus" layout-manager="GridLayoutManager" row-count="2" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <component id="51ac" class="javax.swing.JRadioButton" binding="rbRed">
+        <constraints>
+          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Red"/>
+        </properties>
+      </component>
+      <component id="eb989" class="javax.swing.JRadioButton" binding="rbBlack">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Black"/>
+        </properties>
+      </component>
+      <component id="15897" class="javax.swing.JButton" binding="jbFinishGame">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Montserrat"/>
+          <text value="Finish Game"/>
+        </properties>
+      </component>
+      <grid id="e45cf" binding="jpStatus" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none" title="Game Status" title-justification="2">
@@ -619,10 +635,10 @@
           <grid id="e8d33" binding="jpPieces" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-            <border type="none" title="Not Played Pieces">
+            <border type="none" title="Not Played">
               <font name="Montserrat" size="18"/>
             </border>
             <children>
@@ -637,55 +653,13 @@
               </component>
             </children>
           </grid>
-          <grid id="26462" binding="jpCaptured" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none" title="Captured Pieces">
-              <font name="Montserrat" size="18"/>
-            </border>
-            <children>
-              <component id="2e48a" class="javax.swing.JLabel" binding="jlCapturedPieces">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font name="Montserrat"/>
-                  <text value="0"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
-          <grid id="ce796" binding="jpPlayedPieces" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none" title="Played Pieces">
-              <font name="Montserrat" size="18"/>
-            </border>
-            <children>
-              <component id="c572f" class="javax.swing.JLabel" binding="jlPlayedPieces">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font name="Montserrat"/>
-                  <text value="0"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
           <grid id="203f3" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-            <border type="none" title="Lost Pieces">
+            <border type="none" title="Lost ">
               <font name="Montserrat" size="18"/>
             </border>
             <children>
@@ -700,9 +674,51 @@
               </component>
             </children>
           </grid>
+          <grid id="ce796" binding="jpPlayedPieces" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Played ">
+              <font name="Montserrat" size="18"/>
+            </border>
+            <children>
+              <component id="c572f" class="javax.swing.JLabel" binding="jlPlayedPieces">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Montserrat"/>
+                  <text value="0"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="26462" binding="jpCaptured" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none" title="Captured ">
+              <font name="Montserrat" size="18"/>
+            </border>
+            <children>
+              <component id="2e48a" class="javax.swing.JLabel" binding="jlCapturedPieces">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font name="Montserrat"/>
+                  <text value="0"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
           <component id="8af1b" class="javax.swing.JButton" binding="jbAddPiece">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <enabled value="false"/>
@@ -712,38 +728,22 @@
           </component>
         </children>
       </grid>
-      <component id="51ac" class="javax.swing.JRadioButton" binding="rbRed">
+      <component id="c5b73" class="javax.swing.JLabel" binding="jlTurn">
         <constraints>
-          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Red"/>
+          <font name="Montserrat SemiBold" size="22"/>
+          <text value="Controle de turno"/>
         </properties>
       </component>
       <component id="710c4" class="javax.swing.JLabel">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Montserrat"/>
           <text value="Piece color"/>
-        </properties>
-      </component>
-      <component id="eb989" class="javax.swing.JRadioButton" binding="rbBlack">
-        <constraints>
-          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Black"/>
-        </properties>
-      </component>
-      <component id="15897" class="javax.swing.JButton" binding="jbFinishGame">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <font name="Montserrat"/>
-          <text value="Finish Game"/>
         </properties>
       </component>
     </children>

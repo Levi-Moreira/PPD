@@ -20,7 +20,7 @@ public class Main {
         ClientWindow myGui = new ClientWindow(frame);
         frame.setContentPane(myGui.$$$getRootComponent$$$());
         frame.setSize(1300, 1000);
-        frame.setResizable(false);
+        //frame.setResizable(false);
         frame.setVisible(true);
         myGui.startUp();
 
