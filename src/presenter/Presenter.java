@@ -6,153 +6,198 @@ import model.Message;
 import view.ClientView;
 
 /**
- * Created by ellca on 14/04/2017.
+ * Class the controls the communication between the UI and the Network
  */
 public class Presenter {
 
-    private ClientView myGui;
+    private ClientView UI;
 
-    private ModelNetworkIO model;
+    private ModelNetworkIO modelIO;
 
     private Board board;
 
 
-    public Presenter(ClientView myGui) {
-        this.myGui = myGui;
-        model = new ModelNetworkIO(this);
+    //constructor
+    public Presenter(ClientView UI) {
+        this.UI = UI;
+        modelIO = new ModelNetworkIO(this);
     }
 
+    /**
+     * Start up a client for a local connection
+     *
+     * @param clientName the client name
+     */
     public void startUpClient(String clientName) {
-        model.startUpClient(clientName);
+        modelIO.startUpClient(clientName);
     }
 
+    /**
+     * Start up a client for a remote connection
+     *
+     * @param clientName the client name
+     * @param ip         the ip address of the server
+     * @param port       the port number of the server
+     */
+    public void startUpClient(String clientName, String ip, int port) {
+        modelIO.startUpClient(clientName, ip, port);
+    }
 
+    /**
+     * Starts up the board abstraction
+     *
+     * @param playerNUmber the number of this player
+     */
+    private void startUpBoard(int playerNUmber) {
+        board = new Board(playerNUmber);
+        UI.emptyBoard();
+        UI.showMyPiecesNumber(board.getmMyPieceCount());
+    }
+
+    /**
+     * Prints to the UI the message that the client is connecte
+     */
     public void clientConnected() {
-        myGui.connectionMessage("Conectado");
-        myGui.onUserConnected();
+        UI.connectionMessage("Connected");
+        UI.onUserConnected();
     }
 
 
+    /**
+     * Sends a Chat message
+     *
+     * @param text the message to be sent
+     */
     public void sendMessage(String text) {
-        model.sendChatMessage(text);
+        modelIO.sendChatMessage(text);
     }
 
-    public void receivedChatMessage(Message mRcv) {
-        if (mRcv.isFromServer()) {
+    /**
+     * Treats the received chat Message
+     *
+     * @param messageReceived the object message
+     */
+    public void receivedChatMessage(Message messageReceived) {
+        if (messageReceived.isFromServer()) {
 
-            switch (mRcv.getMessage()) {
+            switch (messageReceived.getMessage()) {
                 case Message.NOT_ENOUGH_CLIENTS:
-                    myGui.connectionMessage("Espere o seu oponente se conectar.");
-                    myGui.returnNotStartedState();
+                    UI.connectionMessage("Wait for the other player.");
+                    UI.returnNotStartedState();
                     break;
                 case Message.ALL_ENTERED:
-                    myGui.setAllEntered();
+                    UI.setAllEntered();
                     break;
                 case Message.SERVER_LEFT:
-                    model.closeClient();
-                    myGui.serverLeft();
-                    myGui.returnToUnconnectedState();
+                    modelIO.closeClient();
+                    UI.serverLeft();
+                    UI.returnToUnconnectedState();
                     break;
                 default:
-                    int playerNUmber = Integer.parseInt(mRcv.getMessage());
+                    int playerNUmber = Integer.parseInt(messageReceived.getMessage());
                     startUpBoard(playerNUmber);
                     break;
             }
 
         } else {
-            myGui.receivedMessage(mRcv.getSender() + " diz -> " + mRcv.getMessage());
+            UI.receivedMessage(messageReceived.getSender() + " says -> " + messageReceived.getMessage());
         }
     }
 
-    public void receivedGameMessage(Message mRcv) {
+    /**
+     * Treats the received game message
+     *
+     * @param messageReceived the received message
+     */
+    public void receivedGameMessage(Message messageReceived) {
         int space;
         int player;
         int start;
         int end;
         String partnerName;
 
-        String subtype = mRcv.getSubtype();
+        String subtype = messageReceived.getSubtype();
         switch (subtype) {
             case Message.START_MATCH:
-                int piece = Integer.parseInt(mRcv.getMessage());
+                int piece = Integer.parseInt(messageReceived.getMessage());
                 int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
-                myGui.setGameStarted(myPiece);
-                myGui.setTurnPlayer("Oponente");
-                board.setmMyPiecesColor(myPiece);
+                UI.setGameStarted(myPiece);
+                UI.setTurnPlayer("Other Player");
+                board.setmMyPiecesColour(myPiece);
                 break;
             case Message.END_TURN:
-                myGui.setYourTurn();
+                UI.setYourTurn();
                 break;
             case Message.SUBTYPE_GAME_ADD:
-                space = Integer.parseInt(mRcv.getMessage());
-                player = Integer.parseInt(mRcv.getPlayer());
+                space = Integer.parseInt(messageReceived.getMessage());
+                player = Integer.parseInt(messageReceived.getPlayer());
                 board.setPlayerAtSpace(space, player);
-                myGui.addPlayerToSpace(space, player, board.getOtherPlayerPieceColor());
+                UI.addPlayerToSpace(space, player, board.getOtherPlayerPieceColor());
                 break;
             case Message.SUBTYPE_GAME_MOVE:
-                start = Integer.parseInt(mRcv.getStart_move());
-                end = Integer.parseInt(mRcv.getEnd_mode());
-                player = Integer.parseInt(mRcv.getPlayer());
+                start = Integer.parseInt(messageReceived.getStart_move());
+                end = Integer.parseInt(messageReceived.getEnd_mode());
+                player = Integer.parseInt(messageReceived.getPlayer());
                 board.movePlayer(start, end, player);
-                myGui.move(start, end, player, board.getOtherPlayerPieceColor());
+                UI.move(start, end, player, board.getOtherPlayerPieceColor());
                 break;
             case Message.CLIENT_TERMINATION:
-                partnerName = mRcv.getSender();
-                myGui.warnPartnerLeft(partnerName);
+                partnerName = messageReceived.getSender();
+                UI.warnPartnerLeft(partnerName);
                 break;
             case Message.ASK_RESTART_GAME:
-                partnerName = mRcv.getSender();
-                myGui.partnerAskForRestart(partnerName);
+                partnerName = messageReceived.getSender();
+                UI.partnerAskForRestart(partnerName);
                 break;
             case Message.ACCEPT_RESTART_GAME:
                 restoreBoard();
-                myGui.restoreBoard();
+                UI.restoreBoard();
                 break;
             case Message.SUBTYPE_GAME_CAPTURE:
-                int capturedPos = Integer.parseInt(mRcv.getMessage());
+                int capturedPos = Integer.parseInt(messageReceived.getMessage());
                 board.performCapture(capturedPos);
-                myGui.performCapture(capturedPos);
-                myGui.updateLostPiecesCount(board.getmLostPiecesCount());
+                UI.performCapture(capturedPos);
+                UI.updateLostPiecesCount(board.getmLostPiecesCount());
                 break;
             case Message.SUBTYPE_GAME_REMOVE:
-                int removedPos = Integer.parseInt(mRcv.getMessage());
+                int removedPos = Integer.parseInt(messageReceived.getMessage());
                 board.performLost(removedPos);
-                myGui.performCapture(removedPos);
-                myGui.updateLostPiecesCount(board.getmLostPiecesCount());
+                UI.performCapture(removedPos);
+                UI.updateLostPiecesCount(board.getmLostPiecesCount());
                 break;
             case Message.ANOUNCE_WIN:
                 if (board.hasLostAll() || board.isLoser())
-                    myGui.anounceYouLost();
+                    UI.anounceYouLost();
                 break;
             case Message.FINISH_GAME:
-                int openentPieces = Integer.parseInt(mRcv.getMessage());
+                int openentPieces = Integer.parseInt(messageReceived.getMessage());
                 if (board.getFinishSituation(openentPieces) == Board.SITUATION_TIE) {
-                    model.anounceTie();
-                    myGui.anounceTie();
+                    modelIO.anounceTie();
+                    UI.anounceTie();
                 } else {
-                    model.anounceNotTie();
+                    modelIO.anounceNotTie();
                 }
                 break;
             case Message.TIE:
-                myGui.anounceTie();
+                UI.anounceTie();
                 break;
             case Message.NOTTIE:
                 int situtation = board.getAfterNotTieSituation();
                 if (situtation == Board.SITUATION_WON) {
-                    model.anounceWin();
-                    myGui.anounceYouWin();
+                    modelIO.anounceWin();
+                    UI.anounceYouWin();
                 } else {
                     if (situtation == Board.SITUATION_LOST) {
-                        model.anounceLost();
-                        myGui.anounceYouLost();
+                        modelIO.anounceLost();
+                        UI.anounceYouLost();
                     } else {
-                        model.anounceTie();
-                        myGui.anounceTie();
+                        modelIO.anounceTie();
+                        UI.anounceTie();
                     }
                 }
                 break;
             case Message.ANOUNCE_LOST:
-                myGui.anounceYouWin();
+                UI.anounceYouWin();
                 break;
 
 
@@ -160,146 +205,217 @@ public class Presenter {
 
     }
 
-    public void receivedMessage(Message mRcv) {
+    /**
+     * When a message is received from the network
+     *
+     * @param messageReceived the message object
+     */
+    public void receivedMessage(Message messageReceived) {
 
-        if (mRcv.isChat()) {
-            receivedChatMessage(mRcv);
+        if (messageReceived.isChat()) {
+            receivedChatMessage(messageReceived);
 
         } else {
-            receivedGameMessage(mRcv);
-
-
+            receivedGameMessage(messageReceived);
         }
     }
 
-    private void startUpBoard(int playerNUmber) {
-        board = new Board(playerNUmber);
-        myGui.emptyBoard();
-        myGui.showMyPiecesNumber(board.getmMyPieceCount());
-    }
 
+    /**
+     * Print connection error to UI
+     */
     public void showConnectionError() {
-        myGui.showConnectionError();
+        UI.showConnectionError();
     }
 
-    public void warnStartMach(int piece) {
-        board.setmMyPiecesColor(piece);
-        model.warnStartMatch(piece);
-        myGui.setYourTurn();
+    /**
+     * Warns the begining of a game to the other player
+     * @param pieceColour the colour of the player's piece
+     */
+    public void warnStartMach(int pieceColour) {
+        board.setmMyPiecesColour(pieceColour);
+        modelIO.warnStartMatch(pieceColour);
+        UI.setYourTurn();
         clientConnected();
-        myGui.disablePieceSelectors();
+        UI.disablePieceSelectors();
     }
 
-    public boolean addToSpace(int i) {
+    /**
+     * Add this player to a space
+     * @param space the space to add to
+     * @return true if it was successful
+     */
+    public boolean addToSpace(int space) {
 
-        if (board.addSelfToSpace(i)) {
-            myGui.addPlayerToSpace(i, board.getmPlayerNumber(), board.getmMyPiecesColor());
-            myGui.showMyPiecesNumber(board.getmMyPieceCount());
-            model.addToSpace(i, board.getmPlayerNumber());
+        if (board.addSelfToSpace(space)) {
+            UI.addPlayerToSpace(space, board.getmPlayerNumber(), board.getmMyPiecesColor());
+            UI.showMyPiecesNumber(board.getmMyPieceCount());
+            modelIO.addToSpace(space, board.getmPlayerNumber());
             return true;
         } else
             return false;
     }
 
+    /**
+     * End this player's turn
+     */
     public void endMyTurn() {
-        model.endMyTurn();
-        myGui.setTurnPlayer("Oponente");
+        modelIO.endMyTurn();
+        UI.setTurnPlayer("Other Player");
     }
 
+    /**
+     * Checks if this player still has pieces
+     * @return true if so
+     */
     public boolean hasPieces() {
         return board.stillHavePieces();
     }
 
+    /**
+     * Checks if a space belngs to this player
+     * @param space the space to be cosnidered
+     * @return true if so
+     */
     public boolean isSpaceMine(int space) {
         return board.isSpaceMine(space);
     }
 
+    /**
+     * Checks if a space is empty
+     * @param space the space to be considred
+     * @return true if so
+     */
     public boolean isSpaceEmpty(int space) {
         return board.isSpaceEmpty(space);
     }
 
+    /**
+     * Try to perform a move
+     * @param move the move in a 2D array
+     * @return true if possible
+     */
     public boolean tryToMove(int[] move) {
         if (board.isMoveAllowed(move[0], move[1])) {
             board.movePlayer(move[0], move[1], board.getmPlayerNumber());
-            myGui.move(move[0], move[1], board.getmPlayerNumber(), board.getmMyPiecesColor());
-            model.move(move[0], move[1], board.getmPlayerNumber());
+            UI.move(move[0], move[1], board.getmPlayerNumber(), board.getmMyPiecesColor());
+            modelIO.move(move[0], move[1], board.getmPlayerNumber());
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * Definetly closes this client
+     */
     public void terminateClient() {
-        model.terminateClient();
+        modelIO.terminateClient();
     }
 
+    /**
+     * Restarts the board
+     */
     public void restoreBoard() {
         board.restoreBoard();
-        myGui.showMyPiecesNumber(board.getmMyPieceCount());
-        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
-        myGui.updateLostPiecesCount(board.getmLostPiecesCount());
+        UI.showMyPiecesNumber(board.getmMyPieceCount());
+        UI.updateCapturedPiecesCount(board.getmCapturePiecesCount());
+        UI.updateLostPiecesCount(board.getmLostPiecesCount());
     }
 
+    /**
+     * Ask for a rest to the other user
+     */
     public void askForResart() {
-        model.askForRestart();
+        modelIO.askForRestart();
     }
 
     public void refuseRestart() {
     }
 
+    /**
+     * Accepts the restart
+     */
     public void acceptRestart() {
         restoreBoard();
-        myGui.restoreBoard();
-        model.sendAcceptRestartMessage();
+        UI.restoreBoard();
+        modelIO.sendAcceptRestartMessage();
     }
 
+    /**
+     * Performs a capture
+     * @param move the move representing the capture
+     */
     public void performCapture(int[] move) {
         int capturedPos = board.performCapture(move[0], move[1]);
-        myGui.performCapture(capturedPos);
-        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
-        model.performCapture(capturedPos);
+        UI.performCapture(capturedPos);
+        UI.updateCapturedPiecesCount(board.getmCapturePiecesCount());
+        modelIO.performCapture(capturedPos);
 
         if (board.hasCapturedAll()) {
-            model.anounceWin();
-            myGui.anounceYouWin();
+            modelIO.anounceWin();
+            UI.anounceYouWin();
         }
     }
 
-    public void removePiece(int piece) {
-        board.performRemoval(piece);
-        myGui.performCapture(piece);
-        myGui.updateCapturedPiecesCount(board.getmCapturePiecesCount());
-        model.performRemoval(piece);
+    /**
+     * Removes a space form the board
+     * @param space the space where the space lives
+     */
+    public void removePiece(int space) {
+        board.performRemoval(space);
+        UI.performCapture(space);
+        UI.updateCapturedPiecesCount(board.getmCapturePiecesCount());
+        modelIO.performRemoval(space);
 
         if (board.hasCapturedAll()) {
-            model.anounceWin();
-            myGui.anounceYouWin();
+            modelIO.anounceWin();
+            UI.anounceYouWin();
         }
     }
 
+    /**
+     * Checks if a capture is possible in a move
+     * @param move the move
+     * @return true if so
+     */
     public boolean hasCapture(int[] move) {
         return board.isCapturePossible(move[0], move[1]);
     }
 
+    /**
+     * Checks if the user can still capture
+     * @return
+     */
     public boolean canStillCapture() {
 
         return board.isCaptureGenerallyPossible();
     }
 
+    /**
+     * Checks if the oponent has pieces on the board
+     * @return
+     */
     public boolean oponentHasPiecesOnBoard() {
         return board.oponentHasPiecesOnBoard();
     }
 
+    /**
+     * Checks if the capture is possible form a certain space
+     * @param space the space to start the move
+     * @return
+     */
     public boolean checkCapturePossibility(int space) {
         return board.checkCapturePossibility(space);
     }
 
+    /**
+     * Ask for the game to be finished
+     */
     public void finishGame() {
 
-        model.finishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
+        modelIO.finishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
     }
 
-    public void startUpClient(String clientName, String ip, int port) {
-        model.startUpClient(clientName, ip, port);
-    }
+
 }

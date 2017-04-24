@@ -70,7 +70,7 @@ public class Board {
         return mMyPiecesColor;
     }
 
-    public void setmMyPiecesColor(int mMyPiecesColor) {
+    public void setmMyPiecesColour(int mMyPiecesColor) {
         this.mMyPiecesColor = mMyPiecesColor;
     }
 
