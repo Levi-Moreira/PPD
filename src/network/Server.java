@@ -3,6 +3,7 @@ package network;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.entities.Message;
+import model.io.ServerNetworkModel;
 import view.ServerWindow;
 
 import javax.swing.*;
@@ -24,21 +25,20 @@ public class Server extends Thread {
     private boolean keepAlive = true;
 
     //holds the clients
-    private static ArrayList<PrintWriter> clients =  new ArrayList<>();
-
-
+    private static ArrayList<PrintWriter> clients = new ArrayList<>();
 
     private Socket socket = null;
-
-
 
     private InputStream inputStream;
     private Scanner scannerIn;
 
+    private ServerNetworkModel model;
+
 
     //constructor
-    public Server(Socket socket) {
+    public Server(Socket socket, ServerNetworkModel model) {
         this.socket = socket;
+        this.model = model;
 
         try {
             inputStream = socket.getInputStream();
@@ -100,8 +100,9 @@ public class Server extends Thread {
 
     /**
      * Send a message to all clients but the sender
+     *
      * @param prwSaida the sender
-     * @param msg the message
+     * @param msg      the message
      * @throws IOException
      */
     public void sendToAll(PrintWriter prwSaida, String msg) throws IOException {
@@ -119,26 +120,21 @@ public class Server extends Thread {
 
     /**
      * Sends a message back to the sender
+     *
      * @param prwSaida the sender
-     * @param msg the message
+     * @param msg      the message
      * @throws IOException
      */
     public void sendBack(PrintWriter prwSaida, String msg) throws IOException {
 
-        Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-
-        Message message = new Message(Message.TYPE_CHAT, Message.SENDER_SERVER, msg);
-
-        String json = gson.toJson(message, type);
-
+        String json = model.assembleServerMessage(msg);
         prwSaida.println(json);
 
     }
 
     /**
      * Closes the server and warn the clients of this
+     *
      * @throws IOException
      */
     public void exit() throws IOException {
