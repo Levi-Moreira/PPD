@@ -1,4 +1,4 @@
-package model;
+package model.entities;
 
 /**
  * Class that will be parsed into json string to enable communication

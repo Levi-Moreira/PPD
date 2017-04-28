@@ -1,6 +1,6 @@
 package network;
 
-import model.ClientNetworkModel;
+import model.io.ClientNetworkModel;
 
 import java.io.*;
 import java.net.ConnectException;

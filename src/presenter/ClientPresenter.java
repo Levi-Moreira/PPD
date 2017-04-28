@@ -1,8 +1,8 @@
 package presenter;
 
-import model.Board;
-import model.ClientNetworkModel;
-import model.Message;
+import model.entities.Board;
+import model.io.ClientNetworkModel;
+import model.entities.Message;
 import view.ClientView;
 
 /**

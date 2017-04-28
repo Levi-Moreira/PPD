@@ -2,7 +2,7 @@ package network;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import model.Message;
+import model.entities.Message;
 import view.ServerWindow;
 
 import javax.swing.*;
@@ -24,13 +24,13 @@ public class Server extends Thread {
     private boolean keepAlive = true;
 
     //holds the clients
-    private static ArrayList<PrintWriter> clients;
+    private static ArrayList<PrintWriter> clients =  new ArrayList<>();
 
-    private static ServerSocket serverSocket = null;
+
 
     private Socket socket = null;
 
-    private static int port = 9090;
+
 
     private InputStream inputStream;
     private Scanner scannerIn;
@@ -157,117 +157,5 @@ public class Server extends Thread {
         keepAlive = false;
         System.exit(0);
     }
-
-
-    /**
-     * MainClient for server, it lives separate from the client
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        //change the look and feel to look better
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"); //Windows Look and feel
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<Server> servers = new ArrayList<>();
-
-        JFrame frame = new JFrame("PPD-Server");
-        setUpServerExit(frame, servers);
-        ServerWindow serverGui = new ServerWindow(frame);
-        frame.setContentPane(serverGui.$$$getRootComponent$$$());
-        frame.setSize(400, 700);
-        frame.setResizable(false);
-        frame.setVisible(true);
-
-        int opt = JOptionPane.showConfirmDialog(frame, "Start up server?");
-        if (opt == 0) {
-            int clientsNumber = 0;
-            try {
-
-                serverSocket = new ServerSocket(port);
-                clients = new ArrayList<PrintWriter>();
-
-                serverGui.printToArea("Server is bound to the following addresses: \n");
-                Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-                for (NetworkInterface netint : Collections.list(nets))
-                    displayInterfaceInformation(netint, serverGui);
-                serverGui.printToArea("Connected to the port: " + port + "\n");
-                while (true) {
-
-                    if (clientsNumber < 2) {
-                        //System.out.println("Esperando por conecões");
-                        serverGui.printToArea("Waiting clients...");
-                        Socket socket = serverSocket.accept();
-                        clientsNumber++;
-                        //System.out.println("Cliente conectado");
-                        serverGui.printToArea("Client connected!");
-                        Server t = new Server(socket);
-                        t.start();
-                        servers.add(t);
-                        serverGui.printToArea("Connected clients: " + clientsNumber);
-                    }
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            serverGui.close();
-        }
-
-    }
-
-    /**
-     * Used to show the interfaces so the user can know to which he can connect
-     * @param netint
-     * @param serverGui
-     * @throws SocketException
-     */
-    static void displayInterfaceInformation(NetworkInterface netint, ServerWindow serverGui) throws SocketException {
-
-        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
-        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-            if (inetAddress != null && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress())
-                serverGui.printToArea("IP Address: " + inetAddress + "\n");
-        }
-
-    }
-
-    /**
-     * Prepares the server for closing
-     * @param frame
-     * @param servers
-     */
-    private static void setUpServerExit(JFrame frame, final ArrayList<Server> servers) {
-
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-
-                int i = JOptionPane.showConfirmDialog(null, "Do you really want to close this window? Clients will no longer be able to interact.");
-                if (i == 0) {
-
-                    if (servers.size() != 0) {
-                        for (Server server : servers) {
-                            try {
-                                server.exit();
-
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
-                        }
-                    } else {
-                        System.exit(0);
-                    }
-
-                }
-
-            }
-        });
-    }
-
 
 }

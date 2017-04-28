@@ -1,5 +1,6 @@
-package model;
+package model.io;
 
+import model.entities.Message;
 import network.Client;
 import presenter.ClientPresenter;
 import com.google.gson.Gson;

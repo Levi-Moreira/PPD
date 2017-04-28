@@ -1,11 +1,19 @@
 package view;
 
+import presenter.ServerPresenter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 /**
  * Created by ellca on 22/04/2017.
@@ -17,11 +25,14 @@ public class ServerWindow implements ServerView {
     boolean start = false;
     JFrame window;
 
+    private ServerPresenter presenter;
+
     public ServerWindow(JFrame wid) {
         window = wid;
-
         window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        presenter = new ServerPresenter(this);
     }
+
 
     @Override
     public boolean getStart() {
@@ -35,9 +46,31 @@ public class ServerWindow implements ServerView {
     }
 
 
+    /**
+     * Used to show the interfaces so the user can know to which he can connect
+     *
+     * @param netint
+     * @param serverGui
+     * @throws SocketException
+     */
+    public void displayInterfaceInformation(NetworkInterface netint, ServerWindow serverGui) throws SocketException {
+
+        Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+        for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+            if (inetAddress != null && !inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress())
+                this.printToArea("IP Address: " + inetAddress + "\n");
+        }
+
+    }
+
+
     @Override
     public void close() {
         System.exit(0);
+    }
+
+    public void startUpServer(Socket socket) {
+        presenter.startUpServer(socket);
     }
 
     {

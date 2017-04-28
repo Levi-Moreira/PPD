@@ -1,4 +1,4 @@
-package model;
+package model.entities;
 
 /**
  * Abstraction of a board. It holds the state of the board in the local instance of the client.

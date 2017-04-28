@@ -1,7 +1,7 @@
 package view;
 
 import presenter.ClientPresenter;
-import model.Board;
+import model.entities.Board;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
