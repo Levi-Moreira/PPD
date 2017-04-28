@@ -1,28 +1,28 @@
 package model;
 
 import network.Client;
-import presenter.Presenter;
+import presenter.ClientPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
 /**
- * Intefaces the communication between the lower level client and the upper lever presenter
+ * Intefaces the communication between the lower level client and the upper lever clientPresenter
  */
-public class ModelNetworkIO {
+public class ClientNetworkModel {
 
     //the lower level client
     private Client client;
 
-    //the upper level presenter
-    private Presenter presenter;
+    //the upper level clientPresenter
+    private ClientPresenter clientPresenter;
 
     private String clientName;
 
     //constructor
-    public ModelNetworkIO(Presenter presenter) {
-        this.presenter = presenter;
+    public ClientNetworkModel(ClientPresenter clientPresenter) {
+        this.clientPresenter = clientPresenter;
     }
 
     /**
@@ -51,7 +51,7 @@ public class ModelNetworkIO {
      * Anounces to the preseneter that the client is connected
      */
     public void clientConnected() {
-        presenter.clientConnected();
+        clientPresenter.clientConnected();
     }
 
 
@@ -81,17 +81,17 @@ public class ModelNetworkIO {
 
         Message msg = gson.fromJson(mRcv, Message.class);
 
-        //ask the presenter to treat the message
+        //ask the clientPresenter to treat the message
         if (msg != null)
-            presenter.receivedMessage(msg);
+            clientPresenter.receivedMessage(msg);
     }
 
 
     /**
-     * Anounces to the presenter that there was a connection error
+     * Anounces to the clientPresenter that there was a connection error
      */
     public void showConnectionError() {
-        presenter.showConnectionError();
+        clientPresenter.showConnectionError();
     }
 
     /**

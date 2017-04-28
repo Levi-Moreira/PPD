@@ -160,7 +160,7 @@ public class Server extends Thread {
 
 
     /**
-     * Main for server, it lives separate from the client
+     * MainClient for server, it lives separate from the client
      * @param args
      */
     public static void main(String[] args) {

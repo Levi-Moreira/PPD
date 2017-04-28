@@ -7,7 +7,7 @@ import javax.swing.*;
 /**
  * Main entry point for the client
  */
-public class Main {
+public class MainClient {
     public static void main(String[] args) {
 
         //change the look and feel to a better experience

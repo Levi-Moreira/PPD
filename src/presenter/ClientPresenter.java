@@ -1,26 +1,26 @@
 package presenter;
 
 import model.Board;
-import model.ModelNetworkIO;
+import model.ClientNetworkModel;
 import model.Message;
 import view.ClientView;
 
 /**
  * Class the controls the communication between the UI and the Network
  */
-public class Presenter {
+public class ClientPresenter {
 
     private ClientView UI;
 
-    private ModelNetworkIO modelIO;
+    private ClientNetworkModel modelIO;
 
     private Board board;
 
 
     //constructor
-    public Presenter(ClientView UI) {
+    public ClientPresenter(ClientView UI) {
         this.UI = UI;
-        modelIO = new ModelNetworkIO(this);
+        modelIO = new ClientNetworkModel(this);
     }
 
     /**

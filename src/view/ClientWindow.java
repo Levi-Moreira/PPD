@@ -1,6 +1,6 @@
 package view;
 
-import presenter.Presenter;
+import presenter.ClientPresenter;
 import model.Board;
 
 import javax.swing.*;
@@ -84,7 +84,7 @@ public class ClientWindow implements ActionListener, ClientView {
     private JFrame mWindow;
 
     //the presenter
-    private Presenter mPresenter;
+    private ClientPresenter mClientPresenter;
 
     //helper flags
     private boolean isBlockedForAdding = false; //inicates if clik should be blocked due to an adding piece action
@@ -116,9 +116,9 @@ public class ClientWindow implements ActionListener, ClientView {
         @Override
         public void actionPerformed(ActionEvent e) {
             String msg = tfMsgmToSend.getText();
-            taReceiveArea.append("Você diz -> " + msg + "\n");
+            taReceiveArea.append("You say -> " + msg + "\n");
             tfMsgmToSend.setText("");
-            mPresenter.sendMessage(msg);
+            mClientPresenter.sendMessage(msg);
         }
     };
 
@@ -165,11 +165,11 @@ public class ClientWindow implements ActionListener, ClientView {
                 if (!hasPartnerGivenUp && hasGameStarted) {
                     int i = JOptionPane.showConfirmDialog(null, "If you close this screen, you'll give up this match");
                     if (i == 0) {
-                        mPresenter.terminateClient();
+                        mClientPresenter.terminateClient();
                         System.exit(0);
                     }
                 } else {
-                    mPresenter.terminateClient();
+                    mClientPresenter.terminateClient();
                     System.exit(0);
                 }
             }
@@ -185,7 +185,7 @@ public class ClientWindow implements ActionListener, ClientView {
             public void actionPerformed(ActionEvent e) {
                 if (hasGameStarted)
                     if (isYourTurn) {
-                        mPresenter.finishGame();
+                        mClientPresenter.finishGame();
                     }
             }
         });
@@ -244,7 +244,7 @@ public class ClientWindow implements ActionListener, ClientView {
      * @return true if sucessfully
      */
     private boolean tryAddingToSpace(int space) {
-        return mPresenter.addToSpace(space);
+        return mClientPresenter.addToSpace(space);
     }
 
     /**
@@ -268,7 +268,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbRestartGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mPresenter.askForResart();
+                mClientPresenter.askForResart();
             }
         });
 
@@ -278,7 +278,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
                 if (!tfName.getText().isEmpty()) {
                     if (cbPlayLocal.isSelected())
-                        mPresenter.startUpClient(tfName.getText());
+                        mClientPresenter.startUpClient(tfName.getText());
                     else {
                         if (tfIpAddress.getText().isEmpty() || tfPort.getText().isEmpty()) {
                             JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Type in the server information: IP and Port");
@@ -290,7 +290,7 @@ public class ClientWindow implements ActionListener, ClientView {
                             }
 
                             if (validIP(tfIpAddress.getText()) && port != -1)
-                                mPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port);
+                                mClientPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port);
                             else
                                 JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Invalid Port or IP");
 
@@ -320,12 +320,12 @@ public class ClientWindow implements ActionListener, ClientView {
                         piece = Board.PIECE_COLOR_RED;
                         rbRed.setSelected(true);
                     }
-                    mPresenter.warnStartMach(piece);
+                    mClientPresenter.warnStartMach(piece);
                     jbStartGame.setText("End Turn");
                     hasGameStarted = true;
                     hasPartnerGivenUp = false;
                 } else {
-                    mPresenter.endMyTurn();
+                    mClientPresenter.endMyTurn();
                     shouldEndTurn = false;
                     hasCapturedOnce = false;
                     lastPositionAFterCapture = -1;
@@ -361,7 +361,7 @@ public class ClientWindow implements ActionListener, ClientView {
      * Starts this up
      */
     public void startUp() {
-        mPresenter = new Presenter(this);
+        mClientPresenter = new ClientPresenter(this);
     }
 
     /**
@@ -434,7 +434,7 @@ public class ClientWindow implements ActionListener, ClientView {
     public void setYourTurn() {
         jlTurn.setText("Your turn");
         jbStartGame.setEnabled(true);
-        if (mPresenter.hasPieces())
+        if (mClientPresenter.hasPieces())
             jbAddPiece.setEnabled(true);
         isYourTurn = true;
         jbFinishGame.setEnabled(true);
@@ -513,7 +513,7 @@ public class ClientWindow implements ActionListener, ClientView {
         JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Player " + partnerName + " has left the match, you won!");
         hasPartnerGivenUp = true;
         restoreBoard();
-        mPresenter.restoreBoard();
+        mClientPresenter.restoreBoard();
     }
 
     /**
@@ -524,9 +524,9 @@ public class ClientWindow implements ActionListener, ClientView {
     public void partnerAskForRestart(String partnerName) {
         int dialogResult = JOptionPane.showConfirmDialog($$$getRootComponent$$$(), "Player " + partnerName + " is requesting a restart. Do you accept?");
         if (dialogResult == JOptionPane.YES_OPTION) {
-            mPresenter.acceptRestart();
+            mClientPresenter.acceptRestart();
         } else {
-            mPresenter.refuseRestart();
+            mClientPresenter.refuseRestart();
         }
 
     }
@@ -581,7 +581,7 @@ public class ClientWindow implements ActionListener, ClientView {
     @Override
     public void anounceYouWin() {
         JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Congratulations, you won!");
-        mPresenter.restoreBoard();
+        mClientPresenter.restoreBoard();
         restoreBoard();
 
     }
@@ -589,7 +589,7 @@ public class ClientWindow implements ActionListener, ClientView {
     @Override
     public void anounceYouLost() {
         JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Sorry, you lost!");
-        mPresenter.restoreBoard();
+        mClientPresenter.restoreBoard();
         restoreBoard();
     }
 
@@ -622,7 +622,7 @@ public class ClientWindow implements ActionListener, ClientView {
         emptyBoard();
         enableConnectionOptions(true);
         enableGameOptions(false);
-        mPresenter.restoreBoard();
+        mClientPresenter.restoreBoard();
         restoreTurnOptions();
     }
 
@@ -641,7 +641,7 @@ public class ClientWindow implements ActionListener, ClientView {
     @Override
     public void anounceTie() {
         JOptionPane.showMessageDialog($$$getRootComponent$$$(), "It's a tie!");
-        mPresenter.restoreBoard();
+        mClientPresenter.restoreBoard();
         restoreBoard();
     }
 
@@ -711,7 +711,7 @@ public class ClientWindow implements ActionListener, ClientView {
      * @param buttonPos the position clicked by the user
      */
     private void onNotEliminating(int buttonPos) {
-        if (hasCapturedOnce && !mPresenter.canStillCapture()) {
+        if (hasCapturedOnce && !mClientPresenter.canStillCapture()) {
             shouldEndTurn = true;
         }
 
@@ -735,9 +735,9 @@ public class ClientWindow implements ActionListener, ClientView {
      * @param buttonPos the position clicked by the user
      */
     private void onEliminating(int buttonPos) {
-        if (!mPresenter.isSpaceEmpty(buttonPos)) {
-            if (!mPresenter.isSpaceMine(buttonPos)) {
-                mPresenter.removePiece(buttonPos);
+        if (!mClientPresenter.isSpaceEmpty(buttonPos)) {
+            if (!mClientPresenter.isSpaceMine(buttonPos)) {
+                mClientPresenter.removePiece(buttonPos);
                 isBlockedForElimination = false;
             } else {
                 JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Select another player's piece.");
@@ -754,7 +754,7 @@ public class ClientWindow implements ActionListener, ClientView {
      */
     private void tryToMove(int space) {
         if (!hasStartedMove) {
-            if (hasCapturedOnce && mPresenter.checkCapturePossibility(space))
+            if (hasCapturedOnce && mClientPresenter.checkCapturePossibility(space))
                 onNotStartedMove(space);
             else {
                 if (!hasCapturedOnce)
@@ -777,13 +777,13 @@ public class ClientWindow implements ActionListener, ClientView {
      * @param space the space where will start
      */
     private void onNotStartedMove(int space) {
-        if (mPresenter.isSpaceMine(space)) {
+        if (mClientPresenter.isSpaceMine(space)) {
             move[0] = space;
             hasStartedMove = true;
             jbAddPiece.setEnabled(false);
         } else {
             hasStartedMove = false;
-            if (!mPresenter.isSpaceEmpty(space))
+            if (!mClientPresenter.isSpaceEmpty(space))
                 JOptionPane.showMessageDialog($$$getRootComponent$$$(), "This piece is not yours.");
         }
     }
@@ -793,7 +793,7 @@ public class ClientWindow implements ActionListener, ClientView {
      * @param space the space where started
      */
     private void onStartedMove(int space) {
-        if (mPresenter.isSpaceEmpty(space)) {
+        if (mClientPresenter.isSpaceEmpty(space)) {
             move[1] = space;
             lastPositionAFterCapture = space;
             hasFinishedMove = true;
@@ -807,14 +807,14 @@ public class ClientWindow implements ActionListener, ClientView {
      * When finished a move
      */
     private void onFinishedMove() {
-        if (mPresenter.tryToMove(move)) {
+        if (mClientPresenter.tryToMove(move)) {
             hasStartedMove = false;
             hasFinishedMove = false;
 
-            if (mPresenter.hasCapture(move)) {
-                mPresenter.performCapture(move);
+            if (mClientPresenter.hasCapture(move)) {
+                mClientPresenter.performCapture(move);
                 hasCapturedOnce = true;
-                if (mPresenter.oponentHasPiecesOnBoard()) {
+                if (mClientPresenter.oponentHasPiecesOnBoard()) {
                     JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Select an oponent's piece to be removed.");
                     isBlockedForElimination = true;
                 }
