@@ -24,7 +24,7 @@ public class ServerPresenter {
         modelIO = new ServerNetworkModel(this);
     }
 
-    public void startUpServer(Socket socket) {
-        modelIO.startUpServer(socket);
+    public void startUpServer() {
+        modelIO.startUpServer();
     }
 }

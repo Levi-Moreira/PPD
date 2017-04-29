@@ -69,8 +69,8 @@ public class ServerWindow implements ServerView {
         System.exit(0);
     }
 
-    public void startUpServer(Socket socket) {
-        presenter.startUpServer(socket);
+    public void startUpServer() {
+        presenter.startUpServer();
     }
 
     {

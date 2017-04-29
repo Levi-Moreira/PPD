@@ -5,84 +5,49 @@ import model.io.ClientNetworkModel;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
-import java.util.Scanner;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Client class that generates the main communication hub
  */
-public class Client extends Thread {
-
-    private static String host = "";
-    private static int port = 9090;
-    private Socket socket = null;
+public class Client extends UnicastRemoteObject implements IClient, Runnable {
 
 
-    private boolean keepAlive = true;
-
+    private final IServer server;
     private ClientNetworkModel model;
 
-    private OutputStream outputStream;
-
-    private PrintWriter printWriter;
-
-    private boolean remote;
 
     //constructor for local connections
-    public Client(ClientNetworkModel model) {
+    public Client(IServer server, ClientNetworkModel model) throws RemoteException {
+        super();
 
         this.model = model;
-        remote = false;
+        this.server = server;
 
 
     }
 
-    //constructor for remote connection
-    public Client(ClientNetworkModel clientNetworkModel, String ip, int port) {
-        remote = true;
-        this.model = clientNetworkModel;
-        host = ip;
-        this.port = port;
-
+    @Override
+    public void receiveMessage(String msg) {
+        model.receivedMessage(msg);
     }
 
     /**
      * Thread run
      */
     public void run() {
-        try {
-            this.listen();
-        } catch (Exception e) {
-            System.out.print("clientlistener:");
-            System.out.println(e);
 
-        }
     }
 
-    /**
-     * Waits for an incoming message
-     * @throws IOException
-     */
-    public void listen() throws IOException {
-
-        InputStream in = socket.getInputStream();
-
-        Scanner scannerIn = new Scanner(in);
-        String msg = "";
-
-        while (keepAlive)
-            //pass the json string to the model for decodification
-            if (scannerIn.hasNextLine()) {
-                msg = scannerIn.nextLine();
-                model.receivedMessage(msg);
-            }
-    }
 
     /**
      * Sends a pessage through the socket
+     *
      * @param msg the json string
      */
-    public void sendMessage(String msg) {
-        printWriter.println(msg);
+    public void sendMessage(String msg) throws RemoteException {
+        server.receiveMessage(this, msg);
 
     }
 
@@ -90,53 +55,36 @@ public class Client extends Thread {
      * Severe connection completly
      */
     public void terminane() {
-        keepAlive = false;
-        try {
-            socket.close();
-            printWriter.close();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
      * Start uo the socket and connect to the server
      */
     public void connect() {
+
+        model.clientConnected();
+        System.out.println("Conectado....");
+
         try {
-            socket = new Socket(host, port);
-            model.clientConnected();
-            System.out.println("Conectado....");
-            outputStream = socket.getOutputStream();
-
-
-            printWriter = new PrintWriter(outputStream, true);
-            printWriter.println("ClientName");
-            this.start();
-
-
-        } catch (Exception e) {
-            System.out.print("clientconstructor:");
-            System.out.println(e);
+            server.registerClient(this);
+        } catch (RemoteException e) {
             e.printStackTrace();
-            if (e instanceof ConnectException) {
-                model.showConnectionError();
-            }
+            model.showConnectionError();
         }
+
+
     }
 
     /**
      * Close this client, but leave thread running so it can be restarted
      */
     public void close() {
-        keepAlive = false;
         try {
-            socket.close();
-            printWriter.close();
-            outputStream.close();
-        } catch (IOException e) {
+            server.disconnectClient(this);
+        } catch (RemoteException e) {
             e.printStackTrace();
+            model.showConnectionError();
         }
     }
 }

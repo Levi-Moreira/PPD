@@ -20,11 +20,12 @@ import java.util.Enumeration;
  */
 public class MainServer {
 
-    private static ServerSocket serverSocket = null;
-    private static int port = 9090;
+
+    private static int port = 1099;
 
     /**
      * MainClient for server, it lives separate from the client
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -51,30 +52,14 @@ public class MainServer {
             int clientsNumber = 0;
             try {
 
-                serverSocket = new ServerSocket(port);
-
-
                 serverGui.printToArea("Server is bound to the following addresses: \n");
                 Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
                 for (NetworkInterface netint : Collections.list(nets))
                     serverGui.displayInterfaceInformation(netint, serverGui);
                 serverGui.printToArea("Connected to the port: " + port + "\n");
-                while (true) {
 
-                    if (clientsNumber < 2) {
-                        //System.out.println("Esperando por conecões");
-                        serverGui.printToArea("Waiting clients...");
-                        Socket socket = serverSocket.accept();
-                        clientsNumber++;
-                        //System.out.println("Cliente conectado");
-                        serverGui.printToArea("Client connected!");
-                        //Server t = new Server(socket);
-                        //t.start();
-                        //servers.add(t);
-                        serverGui.startUpServer(socket);
-                        serverGui.printToArea("Connected clients: " + clientsNumber);
-                    }
-                }
+
+                serverGui.startUpServer();
 
 
             } catch (IOException e) {
@@ -88,6 +73,7 @@ public class MainServer {
 
     /**
      * Prepares the server for closing
+     *
      * @param frame
      * @param servers
      */

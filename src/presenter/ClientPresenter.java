@@ -5,6 +5,8 @@ import model.io.ClientNetworkModel;
 import model.entities.Message;
 import view.ClientView;
 
+import java.net.MalformedURLException;
+
 /**
  * Class the controls the communication between the UI and the Network
  */
@@ -29,7 +31,12 @@ public class ClientPresenter {
      * @param clientName the client name
      */
     public void startUpClient(String clientName) {
-        modelIO.startUpClient(clientName);
+        try {
+            modelIO.startUpClient(clientName, "", -1, false);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            showConnectionError();
+        }
     }
 
     /**
@@ -40,7 +47,13 @@ public class ClientPresenter {
      * @param port       the port number of the server
      */
     public void startUpClient(String clientName, String ip, int port) {
-        modelIO.startUpClient(clientName, ip, port);
+
+        try {
+            modelIO.startUpClient(clientName, ip, port, true);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            showConnectionError();
+        }
     }
 
     /**
@@ -230,6 +243,7 @@ public class ClientPresenter {
 
     /**
      * Warns the begining of a game to the other player
+     *
      * @param pieceColour the colour of the player's piece
      */
     public void warnStartMach(int pieceColour) {
@@ -242,6 +256,7 @@ public class ClientPresenter {
 
     /**
      * Add this player to a space
+     *
      * @param space the space to add to
      * @return true if it was successful
      */
@@ -266,6 +281,7 @@ public class ClientPresenter {
 
     /**
      * Checks if this player still has pieces
+     *
      * @return true if so
      */
     public boolean hasPieces() {
@@ -274,6 +290,7 @@ public class ClientPresenter {
 
     /**
      * Checks if a space belngs to this player
+     *
      * @param space the space to be cosnidered
      * @return true if so
      */
@@ -283,6 +300,7 @@ public class ClientPresenter {
 
     /**
      * Checks if a space is empty
+     *
      * @param space the space to be considred
      * @return true if so
      */
@@ -292,6 +310,7 @@ public class ClientPresenter {
 
     /**
      * Try to perform a move
+     *
      * @param move the move in a 2D array
      * @return true if possible
      */
@@ -344,6 +363,7 @@ public class ClientPresenter {
 
     /**
      * Performs a capture
+     *
      * @param move the move representing the capture
      */
     public void performCapture(int[] move) {
@@ -360,6 +380,7 @@ public class ClientPresenter {
 
     /**
      * Removes a space form the board
+     *
      * @param space the space where the space lives
      */
     public void removePiece(int space) {
@@ -376,6 +397,7 @@ public class ClientPresenter {
 
     /**
      * Checks if a capture is possible in a move
+     *
      * @param move the move
      * @return true if so
      */
@@ -385,6 +407,7 @@ public class ClientPresenter {
 
     /**
      * Checks if the user can still capture
+     *
      * @return
      */
     public boolean canStillCapture() {
@@ -394,6 +417,7 @@ public class ClientPresenter {
 
     /**
      * Checks if the oponent has pieces on the board
+     *
      * @return
      */
     public boolean oponentHasPiecesOnBoard() {
@@ -402,6 +426,7 @@ public class ClientPresenter {
 
     /**
      * Checks if the capture is possible form a certain space
+     *
      * @param space the space to start the move
      * @return
      */

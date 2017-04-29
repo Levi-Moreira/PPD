@@ -3,13 +3,16 @@ package model.io;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.entities.Message;
-import network.Client;
+
 import network.Server;
-import presenter.ClientPresenter;
+
 import presenter.ServerPresenter;
 
 import java.lang.reflect.Type;
-import java.net.Socket;
+import java.net.MalformedURLException;
+
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
@@ -29,9 +32,21 @@ public class ServerNetworkModel {
         this.serverPresenter = serverPresenter;
     }
 
-    public void startUpServer(Socket socket) {
-        Server server = new Server(socket, this);
-        server.start();
+    public void startUpServer() {
+        Server server = null;
+        try {
+            server = new Server(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+
+        }
+        try {
+            Naming.rebind("IServer",server);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         mServers.add(server);
 
     }

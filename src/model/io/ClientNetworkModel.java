@@ -2,11 +2,16 @@ package model.io;
 
 import model.entities.Message;
 import network.Client;
+import network.IServer;
 import presenter.ClientPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 /**
  * Intefaces the communication between the lower level client and the upper lever clientPresenter
@@ -26,26 +31,36 @@ public class ClientNetworkModel {
         this.clientPresenter = clientPresenter;
     }
 
-    /**
-     * Start up a client for local communication
-     * @param clientName the name of the client
-     */
-    public void startUpClient(String clientName) {
-        this.clientName = clientName;
-        client = new Client(this);
-        client.connect();
-    }
 
     /**
      * Start up the client for a remote communication
+     *
      * @param clientName the name of the client
-     * @param ip the ip address of the server
-     * @param port the port in the server where the app lives
+     * @param ip         the ip address of the server
+     * @param port       the port in the server where the app lives
      */
-    public void startUpClient(String clientName, String ip, int port) {
+    public void startUpClient(String clientName, String ip, int port, boolean remote) throws  MalformedURLException {
         this.clientName = clientName;
-        client = new Client(this, ip, port);
-        client.connect();
+
+        if (!remote) {
+            String serverURL = "rmi://localhost/IServer";
+            IServer server = null;
+            try {
+                server = (IServer) Naming.lookup(serverURL);
+            } catch (NotBoundException e) {
+                e.printStackTrace();
+                showConnectionError();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                showConnectionError();
+            }
+            try {
+                client = new Client(server, this);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            client.connect();
+        }
     }
 
     /**
@@ -58,6 +73,7 @@ public class ClientNetworkModel {
 
     /**
      * Encapsulates a message in a json package with a type chat
+     *
      * @param text the raw msg to be sent
      */
     public void sendChatMessage(String text) {
@@ -68,11 +84,16 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * When a message was received from the network, change it to an object Message
+     *
      * @param mRcv the received json
      */
     public void receivedMessage(String mRcv) {
@@ -97,17 +118,22 @@ public class ClientNetworkModel {
 
     /**
      * Create a start game message
+     *
      * @param pieceColour the colour of the piece chosen by the starting player
      */
     public void warnStartMatch(int pieceColour) {
         Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
-        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, pieceColour+"");
+        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, pieceColour + "");
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -121,13 +147,18 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
     /**
      * Creates an add to space message
-     * @param space the space to which the piece needs to be added
+     *
+     * @param space        the space to which the piece needs to be added
      * @param playerNumber the player number to add to te space
      */
     public void addToSpace(int space, int playerNumber) {
@@ -139,14 +170,19 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 
     /**
      * Creates a move message
-     * @param start start position of the move
-     * @param end end position of the move
+     *
+     * @param start        start position of the move
+     * @param end          end position of the move
      * @param playerNumber playerNumber associated with the move
      */
     public void move(int start, int end, int playerNumber) {
@@ -159,7 +195,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -175,7 +215,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         client.terminane();
     }
 
@@ -191,7 +235,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -206,12 +254,17 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 
     /**
      * Generates a capture message
+     *
      * @param capturedPos the position where the capture happened
      */
     public void performCapture(int capturedPos) {
@@ -223,11 +276,16 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Generates a removal message
+     *
      * @param removePos the position where the removal happened
      */
     public void performRemoval(int removePos) {
@@ -239,7 +297,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -254,7 +316,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -267,6 +333,7 @@ public class ClientNetworkModel {
 
     /**
      * Generates a message to anounce the ending of a game
+     *
      * @param piecesOnBoard the number of pieces this user have on his board
      */
     public void finishGame(int piecesOnBoard) {
@@ -275,11 +342,15 @@ public class ClientNetworkModel {
         Type type = new TypeToken<Message>() {
         }.getType();
 
-        Message msg = new Message(Message.TYPE_GAME, Message.FINISH_GAME, clientName, piecesOnBoard+"");
+        Message msg = new Message(Message.TYPE_GAME, Message.FINISH_GAME, clientName, piecesOnBoard + "");
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -294,7 +365,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -309,7 +384,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -325,7 +404,11 @@ public class ClientNetworkModel {
 
         String json = gson.toJson(msg, type);
 
-        client.sendMessage(json);
+        try {
+            client.sendMessage(json);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 

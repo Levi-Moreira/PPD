@@ -12,6 +12,8 @@ import java.awt.event.WindowEvent;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -20,117 +22,23 @@ import java.util.Scanner;
 /**
  * The server class for the yote game
  */
-public class Server extends Thread {
-
-    private boolean keepAlive = true;
+public class Server extends UnicastRemoteObject implements IServer {
 
     //holds the clients
-    private static ArrayList<PrintWriter> clients = new ArrayList<>();
+    private static ArrayList<IClient> clients;
 
-    private Socket socket = null;
-
-    private InputStream inputStream;
-    private Scanner scannerIn;
 
     private ServerNetworkModel model;
 
 
     //constructor
-    public Server(Socket socket, ServerNetworkModel model) {
-        this.socket = socket;
+    public Server(ServerNetworkModel model) throws RemoteException {
+        super();
+
         this.model = model;
-
-        try {
-            inputStream = socket.getInputStream();
-            scannerIn = new Scanner(inputStream);
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        clients = new ArrayList<>();
     }
 
-    /**
-     * Thread run
-     */
-    public void run() {
-        try {
-
-            //start up the connection for writing
-            String msg;
-            OutputStream ou = socket.getOutputStream();
-            PrintWriter prw = new PrintWriter(ou, true);
-
-            //add client to acess list
-            clients.add(prw);
-            msg = scannerIn.nextLine();
-
-            //send to the recenlty connected client its playerNumber
-            sendBack(prw, clients.size() + "");
-
-            //anounce that all clients are connected
-            if (clients.size() == 2) {
-                sendBack(clients.get(0), Message.ALL_ENTERED);
-                sendBack(clients.get(1), Message.ALL_ENTERED);
-            }
-
-            //receives messages and send them to the other client
-            while (keepAlive && msg != null) {
-                if (scannerIn.hasNextLine()) {
-                    msg = scannerIn.nextLine();
-                    System.out.println(msg);
-
-                    //if a client tries to start a match without all users connected, warn him
-                    if (msg.contains(Message.START_MATCH) && clients.size() < 2) {
-                        sendBack(prw, Message.NOT_ENOUGH_CLIENTS);
-                    } else {
-                        //normally send message to other client
-                        sendToAll(prw, msg);
-                    }
-
-                }
-
-            }
-
-        } catch (Exception e) {
-            System.out.print("ServerRun: ");
-            System.out.println(e);
-        }
-    }
-
-
-    /**
-     * Send a message to all clients but the sender
-     *
-     * @param prwSaida the sender
-     * @param msg      the message
-     * @throws IOException
-     */
-    public void sendToAll(PrintWriter prwSaida, String msg) throws IOException {
-        PrintWriter bwS;
-
-        for (PrintWriter pw : clients) {
-            bwS = (PrintWriter) pw;
-
-            if (!(prwSaida == bwS)) {
-                pw.println(msg);
-            }
-
-        }
-    }
-
-    /**
-     * Sends a message back to the sender
-     *
-     * @param prwSaida the sender
-     * @param msg      the message
-     * @throws IOException
-     */
-    public void sendBack(PrintWriter prwSaida, String msg) throws IOException {
-
-        String json = model.assembleServerMessage(msg);
-        prwSaida.println(json);
-
-    }
 
     /**
      * Closes the server and warn the clients of this
@@ -150,8 +58,49 @@ public class Server extends Thread {
             sendBack(clients.get(1), Message.SERVER_LEFT);
         }
 
-        keepAlive = false;
         System.exit(0);
     }
 
+
+    private void sendAll(IClient senderClient, String message) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.receiveMessage(message);
+        }
+    }
+
+
+    private void sendBack(IClient senderClient, String message) throws RemoteException {
+        String json = model.assembleServerMessage(message);
+        senderClient.receiveMessage(json);
+    }
+
+    @Override
+    public void receiveMessage(IClient senderClient, String msg) throws RemoteException {
+
+        System.out.println(msg);
+
+        //if a client tries to start a match without all users connected, warn him
+        if (msg.contains(Message.START_MATCH) && clients.size() < 2) {
+            sendBack(senderClient, Message.NOT_ENOUGH_CLIENTS);
+        } else {
+            //normally send message to other client
+            sendAll(senderClient, msg);
+        }
+    }
+
+    @Override
+    public void registerClient(IClient client) throws RemoteException {
+        clients.add(client);
+        sendBack(client, clients.size() + "");
+        if (clients.size() == 2) {
+            sendBack(clients.get(0), Message.ALL_ENTERED);
+            sendBack(clients.get(1), Message.ALL_ENTERED);
+        }
+    }
+
+    @Override
+    public void disconnectClient(IClient client) throws RemoteException {
+        clients.remove(client);
+    }
 }
