@@ -3,6 +3,7 @@ package presenter;
 import model.entities.Board;
 import model.io.ClientNetworkModel;
 import model.io.ServerNetworkModel;
+import network.Server;
 import view.ClientView;
 import view.ServerView;
 
@@ -24,7 +25,7 @@ public class ServerPresenter {
         modelIO = new ServerNetworkModel(this);
     }
 
-    public void startUpServer() {
-        modelIO.startUpServer();
+    public Server startUpServer() {
+        return modelIO.startUpServer();
     }
 }

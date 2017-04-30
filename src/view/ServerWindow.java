@@ -1,5 +1,6 @@
 package view;
 
+import network.Server;
 import presenter.ServerPresenter;
 
 import javax.swing.*;
@@ -69,8 +70,8 @@ public class ServerWindow implements ServerView {
         System.exit(0);
     }
 
-    public void startUpServer() {
-        presenter.startUpServer();
+    public Server startUpServer() {
+        return presenter.startUpServer();
     }
 
     {

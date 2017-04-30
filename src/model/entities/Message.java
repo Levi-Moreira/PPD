@@ -32,6 +32,7 @@ public class Message {
     public static final String FINISH_GAME = "finish_game";
     public static final String TIE = "tie";
     public static final String NOTTIE = "nottie";
+    public static final String FULL_ROOM = "full_room" ;
 
 
     //the fields in the json message

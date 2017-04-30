@@ -106,6 +106,11 @@ public class ClientPresenter {
                     UI.serverLeft();
                     UI.returnToUnconnectedState();
                     break;
+                case Message.FULL_ROOM:
+                    UI.connectionMessage("This room is already full. Try again later.");
+                    UI.restoreBoard();
+                    UI.returnToUnconnectedState();
+                    break;
                 default:
                     int playerNUmber = Integer.parseInt(messageReceived.getMessage());
                     startUpBoard(playerNUmber);

@@ -32,7 +32,7 @@ public class ServerNetworkModel {
         this.serverPresenter = serverPresenter;
     }
 
-    public void startUpServer() {
+    public Server startUpServer() {
         Server server = null;
         try {
             server = new Server(this);
@@ -48,6 +48,7 @@ public class ServerNetworkModel {
             e.printStackTrace();
         }
         mServers.add(server);
+        return server;
 
     }
 

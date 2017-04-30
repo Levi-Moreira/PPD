@@ -91,11 +91,17 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     @Override
     public void registerClient(IClient client) throws RemoteException {
-        clients.add(client);
-        sendBack(client, clients.size() + "");
-        if (clients.size() == 2) {
-            sendBack(clients.get(0), Message.ALL_ENTERED);
-            sendBack(clients.get(1), Message.ALL_ENTERED);
+
+        if (clients.size() < 2) {
+            clients.add(client);
+            sendBack(client, clients.size() + "");
+            if (clients.size() == 2) {
+                sendBack(clients.get(0), Message.ALL_ENTERED);
+                sendBack(clients.get(1), Message.ALL_ENTERED);
+            }
+        }else
+        {
+            sendBack(client,Message.FULL_ROOM);
         }
     }
 

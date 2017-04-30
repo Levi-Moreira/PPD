@@ -37,10 +37,10 @@ public class MainServer {
             e.printStackTrace();
         }
 
-        ArrayList<Server> servers = new ArrayList<>();
+        Server theServer = null;
 
         JFrame frame = new JFrame("PPD-Server");
-        setUpServerExit(frame, servers);
+
         ServerWindow serverGui = new ServerWindow(frame);
         frame.setContentPane(serverGui.$$$getRootComponent$$$());
         frame.setSize(400, 700);
@@ -59,8 +59,8 @@ public class MainServer {
                 serverGui.printToArea("Connected to the port: " + port + "\n");
 
 
-                serverGui.startUpServer();
-
+                theServer = serverGui.startUpServer();
+                setUpServerExit(frame, theServer);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,9 +75,9 @@ public class MainServer {
      * Prepares the server for closing
      *
      * @param frame
-     * @param servers
+     * @param server
      */
-    private static void setUpServerExit(JFrame frame, final ArrayList<Server> servers) {
+    private static void setUpServerExit(JFrame frame, final Server server) {
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -85,15 +85,14 @@ public class MainServer {
                 int i = JOptionPane.showConfirmDialog(null, "Do you really want to close this window? Clients will no longer be able to interact.");
                 if (i == 0) {
 
-                    if (servers.size() != 0) {
-                        for (Server server : servers) {
-                            try {
-                                server.exit();
+                    if (server != null) {
+                        try {
+                            server.exit();
 
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
                         }
+
                     } else {
                         System.exit(0);
                     }
