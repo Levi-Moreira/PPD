@@ -143,16 +143,9 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
      * @param playerNumber the player number to add to te space
      */
     public void addToSpace(int space, int playerNumber) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_ADD, clientName, space + "", playerNumber + "");
-
-        String json = gson.toJson(msg, type);
 
         try {
-            client.sendChatMessage(json);
+            server.requestAddToSpace(this, space, playerNumber);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -168,16 +161,9 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
      */
     public void move(int start, int end, int playerNumber) {
 
-        Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-
-        Message msg = new Message(Message.TYPE_GAME, Message.SUBTYPE_GAME_MOVE, clientName, playerNumber + "", start + "", end + "");
-
-        String json = gson.toJson(msg, type);
 
         try {
-            client.sendChatMessage(json);
+            server.requestPerformMove(this, start, end, playerNumber);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -444,5 +430,15 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
     @Override
     public void startTurn() throws RemoteException {
         clientPresenter.startTurn();
+    }
+
+    @Override
+    public void acceptAddToSpace(int space, int playerNumber) throws RemoteException {
+        clientPresenter.addPlayerToSpace(space, playerNumber);
+    }
+
+    @Override
+    public void performMove(int start, int end, int playerNumber) throws RemoteException {
+        clientPresenter.performMove(start, end, playerNumber);
     }
 }

@@ -87,7 +87,7 @@ public class ClientPresenter {
      *
      * @param text the message to be sent
      */
-    public void sendMessage(String text) {
+    public void sendChatMessage(String text) {
         modelIO.sendChatMessage(text);
     }
 
@@ -121,17 +121,9 @@ public class ClientPresenter {
 
                 break;
             case Message.SUBTYPE_GAME_ADD:
-                space = Integer.parseInt(messageReceived.getMessage());
-                player = Integer.parseInt(messageReceived.getPlayer());
-                board.setPlayerAtSpace(space, player);
-                UI.addPlayerToSpace(space, player, board.getOtherPlayerPieceColor());
+
                 break;
             case Message.SUBTYPE_GAME_MOVE:
-                start = Integer.parseInt(messageReceived.getStart_move());
-                end = Integer.parseInt(messageReceived.getEnd_mode());
-                player = Integer.parseInt(messageReceived.getPlayer());
-                board.movePlayer(start, end, player);
-                UI.move(start, end, player, board.getOtherPlayerPieceColor());
                 break;
             case Message.CLIENT_TERMINATION:
                 partnerName = messageReceived.getSender();
@@ -442,5 +434,16 @@ public class ClientPresenter {
 
     public void startTurn() {
         UI.setYourTurn();
+    }
+
+    public void addPlayerToSpace(int space, int playerNumber) {
+        board.setPlayerAtSpace(space, playerNumber);
+        UI.addPlayerToSpace(space, playerNumber, board.getOtherPlayerPieceColor());
+    }
+
+    public void performMove(int start, int end, int playerNumber) {
+        board.movePlayer(start, end, playerNumber);
+        UI.move(start, end, playerNumber, board.getOtherPlayerPieceColor());
+
     }
 }

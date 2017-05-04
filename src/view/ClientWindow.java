@@ -118,7 +118,7 @@ public class ClientWindow implements ActionListener, ClientView {
             String msg = tfMsgmToSend.getText();
             taReceiveArea.append("You say -> " + msg + "\n");
             tfMsgmToSend.setText("");
-            mClientPresenter.sendMessage(msg);
+            mClientPresenter.sendChatMessage(msg);
         }
     };
 

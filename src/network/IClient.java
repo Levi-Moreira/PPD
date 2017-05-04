@@ -27,4 +27,8 @@ public interface IClient extends Remote {
     void serverLeft()throws RemoteException;
 
     void startTurn()throws RemoteException;
+
+    void acceptAddToSpace(int space, int playerNumber) throws RemoteException;
+
+    void performMove(int start, int end, int playerNumber)throws RemoteException;
 }

@@ -102,5 +102,21 @@ public class Server extends UnicastRemoteObject implements IServer {
         }
     }
 
+    @Override
+    public void requestAddToSpace(IClient senderClient, int space, int playerNumber) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.acceptAddToSpace(space, playerNumber);
+        }
+    }
+
+    @Override
+    public void requestPerformMove(IClient senderClient, int start, int end, int playerNumber) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.performMove(start, end, playerNumber);
+        }
+    }
+
 
 }

@@ -21,4 +21,8 @@ public interface IServer extends Remote {
 
 
     void clientEndedTurn(IClient senderClient) throws RemoteException;
+
+    void requestAddToSpace(IClient senderClient, int space, int playerNumber) throws RemoteException;
+
+    void requestPerformMove(IClient senderClient, int start, int end, int playerNumber) throws RemoteException;
 }
