@@ -129,7 +129,7 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendChatMessage(json);
+            server.clientEndedTurn(this);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -201,7 +201,7 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-       // client.terminane();
+        // client.terminane();
     }
 
     /**
@@ -439,5 +439,10 @@ public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
     @Override
     public void serverLeft() {
         clientPresenter.signalServerLeft();
+    }
+
+    @Override
+    public void startTurn() throws RemoteException {
+        clientPresenter.startTurn();
     }
 }

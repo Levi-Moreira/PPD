@@ -25,4 +25,6 @@ public interface IClient extends Remote {
     void assignPlayerNumber(int size)throws RemoteException;
 
     void serverLeft()throws RemoteException;
+
+    void startTurn()throws RemoteException;
 }

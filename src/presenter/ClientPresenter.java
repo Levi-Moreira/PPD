@@ -118,7 +118,7 @@ public class ClientPresenter {
 
                 break;
             case Message.END_TURN:
-                UI.setYourTurn();
+
                 break;
             case Message.SUBTYPE_GAME_ADD:
                 space = Integer.parseInt(messageReceived.getMessage());
@@ -425,9 +425,9 @@ public class ClientPresenter {
     }
 
     public void signalServerLeft() {
-        modelIO.closeClient();
         UI.serverLeft();
         UI.returnToUnconnectedState();
+        modelIO.closeClient();
     }
 
     public void signalFullRoom() {
@@ -438,5 +438,9 @@ public class ClientPresenter {
 
     public void assignPlayerNumber(int playerNUmber) {
         startUpBoard(playerNUmber);
+    }
+
+    public void startTurn() {
+        UI.setYourTurn();
     }
 }

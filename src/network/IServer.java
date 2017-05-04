@@ -1,5 +1,7 @@
 package network;
 
+import model.io.ClientNetworkModel;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -18,4 +20,5 @@ public interface IServer extends Remote {
     void deliverGameStart(IClient client, int pieceColour) throws RemoteException;
 
 
+    void clientEndedTurn(IClient senderClient) throws RemoteException;
 }

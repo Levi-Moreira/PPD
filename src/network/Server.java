@@ -1,6 +1,7 @@
 package network;
 
 import model.entities.Message;
+import model.io.ClientNetworkModel;
 import model.io.ServerNetworkModel;
 
 import java.io.*;
@@ -91,6 +92,14 @@ public class Server extends UnicastRemoteObject implements IServer {
 
         }
 
+    }
+
+    @Override
+    public void clientEndedTurn(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.startTurn();
+        }
     }
 
 
