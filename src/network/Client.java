@@ -2,16 +2,13 @@ package network;
 
 import model.io.ClientNetworkModel;
 
-import java.io.*;
-import java.net.ConnectException;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Client class that generates the main communication hub
  */
-public class Client extends UnicastRemoteObject implements IClient, Runnable {
+public class Client extends UnicastRemoteObject implements IClient {
 
 
     private final IServer server;
@@ -29,15 +26,33 @@ public class Client extends UnicastRemoteObject implements IClient, Runnable {
     }
 
     @Override
-    public void receiveMessage(String msg) {
-        model.receivedMessage(msg);
+    public void receiveChatMessage(IClient sender, String msg) throws RemoteException {
+        model.recieveChatMessage(sender, msg);
     }
 
-    /**
-     * Thread run
-     */
-    public void run() {
+    @Override
+    public String getName() throws RemoteException {
+        return model.getName();
+    }
 
+    @Override
+    public void acceptGameStart(IClient senderClient, int pieceColour) {
+        model.startGame(pieceColour);
+    }
+
+    @Override
+    public void signalNotEnoughClients() {
+        model.signalNotEnoughClients();
+    }
+
+    @Override
+    public void allEntered() throws RemoteException {
+        model.signalAllEntered();
+    }
+
+    @Override
+    public void signalFullRoom() throws RemoteException {
+        model.signalFullRoom();
     }
 
 
@@ -46,8 +61,8 @@ public class Client extends UnicastRemoteObject implements IClient, Runnable {
      *
      * @param msg the json string
      */
-    public void sendMessage(String msg) throws RemoteException {
-        server.receiveMessage(this, msg);
+    public void sendChatMessage(String msg) throws RemoteException {
+        server.deliverChatMessage(this, msg);
 
     }
 
@@ -86,5 +101,9 @@ public class Client extends UnicastRemoteObject implements IClient, Runnable {
             e.printStackTrace();
             model.showConnectionError();
         }
+    }
+
+    public void requestStartMatch(int pieceColour) throws RemoteException {
+        server.deliverGameStart(this, pieceColour);
     }
 }

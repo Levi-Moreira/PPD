@@ -6,7 +6,21 @@ import java.rmi.RemoteException;
 /**
  * Created by ellca on 29/04/2017.
  */
-public interface IClient extends Remote{
+public interface IClient extends Remote {
 
-    void receiveMessage(String msg) throws RemoteException;
+
+
+    void receiveChatMessage(IClient sender, String msg) throws RemoteException;
+
+    String getName() throws RemoteException;
+
+    void acceptGameStart(IClient senderClient, int pieceColour)throws RemoteException;
+
+    void signalNotEnoughClients()throws RemoteException;
+
+    void allEntered() throws RemoteException;
+
+    void signalFullRoom()throws RemoteException;
+
+    void assignPlayerNumber(int size)throws RemoteException;
 }

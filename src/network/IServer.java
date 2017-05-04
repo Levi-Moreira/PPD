@@ -9,11 +9,13 @@ import java.rmi.RemoteException;
 public interface IServer extends Remote {
 
 
-    void receiveMessage(IClient senderClient, String msg) throws RemoteException;
+    void deliverChatMessage(IClient senderClient, String msg) throws RemoteException;
 
     void registerClient(IClient client) throws RemoteException;
 
     void disconnectClient(IClient client) throws RemoteException;
+
+    void deliverGameStart(IClient client, int pieceColour) throws RemoteException;
 
 
 }

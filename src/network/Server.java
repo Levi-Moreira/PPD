@@ -1,23 +1,12 @@
 package network;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import model.entities.Message;
 import model.io.ServerNetworkModel;
-import view.ServerWindow;
 
-import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
-import java.lang.reflect.Type;
-import java.net.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Scanner;
 
 /**
  * The server class for the yote game
@@ -64,18 +53,18 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     private void sendAll(IClient senderClient, String message) throws RemoteException {
         for (IClient client : clients) {
-            if (!client.equals(senderClient))
-                client.receiveMessage(message);
+            if (!client.equals(senderClient)) ;
+            //client.receiveMessage(message);
         }
     }
 
 
     private void sendBack(IClient senderClient, String message) throws RemoteException {
         String json = model.assembleServerMessage(message);
-        senderClient.receiveMessage(json);
+        //senderClient.receiveMessage(json);
     }
 
-    @Override
+
     public void receiveMessage(IClient senderClient, String msg) throws RemoteException {
 
         System.out.println(msg);
@@ -90,18 +79,25 @@ public class Server extends UnicastRemoteObject implements IServer {
     }
 
     @Override
+    public void deliverChatMessage(IClient senderClient, String msg) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.receiveChatMessage(senderClient, msg);
+        }
+    }
+
+    @Override
     public void registerClient(IClient client) throws RemoteException {
 
         if (clients.size() < 2) {
             clients.add(client);
-            sendBack(client, clients.size() + "");
+            client.assignPlayerNumber(clients.size());
             if (clients.size() == 2) {
-                sendBack(clients.get(0), Message.ALL_ENTERED);
-                sendBack(clients.get(1), Message.ALL_ENTERED);
+                clients.get(0).allEntered();
+                clients.get(1).allEntered();
             }
-        }else
-        {
-            sendBack(client,Message.FULL_ROOM);
+        } else {
+            client.signalFullRoom();
         }
     }
 
@@ -109,4 +105,21 @@ public class Server extends UnicastRemoteObject implements IServer {
     public void disconnectClient(IClient client) throws RemoteException {
         clients.remove(client);
     }
+
+    @Override
+    public void deliverGameStart(IClient senderClient, int pieceColour) throws RemoteException {
+
+        if (clients.size() < 2) {
+            senderClient.signalNotEnoughClients();
+        } else {
+            for (IClient client : clients) {
+                if (!client.equals(senderClient))
+                    client.acceptGameStart(senderClient, pieceColour);
+            }
+
+        }
+
+    }
+
+
 }

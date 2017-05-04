@@ -320,7 +320,7 @@ public class ClientWindow implements ActionListener, ClientView {
                         piece = Board.PIECE_COLOR_RED;
                         rbRed.setSelected(true);
                     }
-                    mClientPresenter.warnStartMach(piece);
+                    mClientPresenter.requestStartMatch(piece);
                     jbStartGame.setText("End Turn");
                     hasGameStarted = true;
                     hasPartnerGivenUp = false;

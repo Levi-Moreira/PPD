@@ -2,6 +2,7 @@ package model.io;
 
 import model.entities.Message;
 import network.Client;
+import network.IClient;
 import network.IServer;
 import presenter.ClientPresenter;
 import com.google.gson.Gson;
@@ -39,7 +40,7 @@ public class ClientNetworkModel {
      * @param ip         the ip address of the server
      * @param port       the port in the server where the app lives
      */
-    public void startUpClient(String clientName, String ip, int port, boolean remote) throws  MalformedURLException {
+    public void startUpClient(String clientName, String ip, int port, boolean remote) throws MalformedURLException {
         this.clientName = clientName;
 
         if (!remote) {
@@ -77,15 +78,15 @@ public class ClientNetworkModel {
      * @param text the raw msg to be sent
      */
     public void sendChatMessage(String text) {
-        Gson gson = new Gson();
+       /* Gson gson = new Gson();
         Type type = new TypeToken<Message>() {
         }.getType();
         Message msg = new Message(Message.TYPE_CHAT, clientName, text);
 
-        String json = gson.toJson(msg, type);
+        String json = gson.toJson(msg, type);*/
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(text);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -104,8 +105,8 @@ public class ClientNetworkModel {
         Message msg = gson.fromJson(mRcv, Message.class);
 
         //ask the clientPresenter to treat the message
-        if (msg != null)
-            clientPresenter.receivedMessage(msg);
+        if (msg != null) ;
+        //clientPresenter.receivedMessage(msg);
     }
 
 
@@ -121,16 +122,9 @@ public class ClientNetworkModel {
      *
      * @param pieceColour the colour of the piece chosen by the starting player
      */
-    public void warnStartMatch(int pieceColour) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-        Message msg = new Message(Message.TYPE_GAME, Message.START_MATCH, clientName, pieceColour + "");
-
-        String json = gson.toJson(msg, type);
-
+    public void requestStartMatch(int pieceColour) {
         try {
-            client.sendMessage(json);
+            client.requestStartMatch(pieceColour);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -148,7 +142,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -171,7 +165,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -196,7 +190,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -216,7 +210,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -236,7 +230,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -255,7 +249,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -277,7 +271,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -298,7 +292,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -317,7 +311,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -347,7 +341,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -366,7 +360,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -385,7 +379,7 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -405,11 +399,39 @@ public class ClientNetworkModel {
         String json = gson.toJson(msg, type);
 
         try {
-            client.sendMessage(json);
+            client.sendChatMessage(json);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
     }
 
 
+    public void recieveChatMessage(IClient sender, String message) {
+
+        try {
+            clientPresenter.receivedChatMessage(sender, message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getName() {
+        return clientName;
+    }
+
+    public void startGame(int pieceColour) {
+        clientPresenter.startGame(pieceColour);
+    }
+
+    public void signalNotEnoughClients() {
+        clientPresenter.signalNotEnoughClients();
+    }
+
+    public void signalAllEntered() {
+        clientPresenter.signalAllEntered();
+    }
+
+    public void signalFullRoom() {
+        clientPresenter.signalFullRoom();
+    }
 }

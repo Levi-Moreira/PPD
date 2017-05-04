@@ -3,9 +3,11 @@ package presenter;
 import model.entities.Board;
 import model.io.ClientNetworkModel;
 import model.entities.Message;
+import network.IClient;
 import view.ClientView;
 
 import java.net.MalformedURLException;
+import java.rmi.RemoteException;
 
 /**
  * Class the controls the communication between the UI and the Network
@@ -90,36 +92,8 @@ public class ClientPresenter {
      *
      * @param messageReceived the object message
      */
-    public void receivedChatMessage(Message messageReceived) {
-        if (messageReceived.isFromServer()) {
-
-            switch (messageReceived.getMessage()) {
-                case Message.NOT_ENOUGH_CLIENTS:
-                    UI.connectionMessage("Wait for the other player.");
-                    UI.returnNotStartedState();
-                    break;
-                case Message.ALL_ENTERED:
-                    UI.setAllEntered();
-                    break;
-                case Message.SERVER_LEFT:
-                    modelIO.closeClient();
-                    UI.serverLeft();
-                    UI.returnToUnconnectedState();
-                    break;
-                case Message.FULL_ROOM:
-                    UI.connectionMessage("This room is already full. Try again later.");
-                    UI.restoreBoard();
-                    UI.returnToUnconnectedState();
-                    break;
-                default:
-                    int playerNUmber = Integer.parseInt(messageReceived.getMessage());
-                    startUpBoard(playerNUmber);
-                    break;
-            }
-
-        } else {
-            UI.receivedMessage(messageReceived.getSender() + " says -> " + messageReceived.getMessage());
-        }
+    public void receivedChatMessage(IClient sender, String messageReceived) throws RemoteException {
+        UI.receivedMessage(sender.getName() + " says -> " + messageReceived);
     }
 
     /**
@@ -137,11 +111,7 @@ public class ClientPresenter {
         String subtype = messageReceived.getSubtype();
         switch (subtype) {
             case Message.START_MATCH:
-                int piece = Integer.parseInt(messageReceived.getMessage());
-                int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
-                UI.setGameStarted(myPiece);
-                UI.setTurnPlayer("Other Player");
-                board.setmMyPiecesColour(myPiece);
+
                 break;
             case Message.END_TURN:
                 UI.setYourTurn();
@@ -223,21 +193,6 @@ public class ClientPresenter {
 
     }
 
-    /**
-     * When a message is received from the network
-     *
-     * @param messageReceived the message object
-     */
-    public void receivedMessage(Message messageReceived) {
-
-        if (messageReceived.isChat()) {
-            receivedChatMessage(messageReceived);
-
-        } else {
-            receivedGameMessage(messageReceived);
-        }
-    }
-
 
     /**
      * Print connection error to UI
@@ -251,9 +206,9 @@ public class ClientPresenter {
      *
      * @param pieceColour the colour of the player's piece
      */
-    public void warnStartMach(int pieceColour) {
+    public void requestStartMatch(int pieceColour) {
         board.setmMyPiecesColour(pieceColour);
-        modelIO.warnStartMatch(pieceColour);
+        modelIO.requestStartMatch(pieceColour);
         UI.setYourTurn();
         clientConnected();
         UI.disablePieceSelectors();
@@ -448,4 +403,36 @@ public class ClientPresenter {
     }
 
 
+    public void startGame(int pieceColour) {
+        int piece = pieceColour;
+        int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
+        UI.setGameStarted(myPiece);
+        UI.setTurnPlayer("Other Player");
+        board.setmMyPiecesColour(myPiece);
+    }
+
+    public void signalNotEnoughClients() {
+        UI.connectionMessage("Wait for the other player.");
+        UI.returnNotStartedState();
+    }
+
+    public void signalAllEntered() {
+        UI.setAllEntered();
+    }
+
+    public void signalServerLeft() {
+        modelIO.closeClient();
+        UI.serverLeft();
+        UI.returnToUnconnectedState();
+    }
+
+    public void signalFullRoom() {
+        UI.connectionMessage("This room is already full. Try again later.");
+        UI.restoreBoard();
+        UI.returnToUnconnectedState();
+    }
+
+    public void assignPlayerNumber(int playerNUmber) {
+        startUpBoard(playerNUmber);
+    }
 }
