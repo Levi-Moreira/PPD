@@ -24,7 +24,11 @@ public class ClientPresenter {
     //constructor
     public ClientPresenter(ClientView UI) {
         this.UI = UI;
-        modelIO = new ClientNetworkModel(this);
+        try {
+            modelIO = new ClientNetworkModel(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -208,10 +212,10 @@ public class ClientPresenter {
      */
     public void requestStartMatch(int pieceColour) {
         board.setmMyPiecesColour(pieceColour);
-        modelIO.requestStartMatch(pieceColour);
         UI.setYourTurn();
         clientConnected();
         UI.disablePieceSelectors();
+        modelIO.requestStartMatch(pieceColour);
     }
 
     /**

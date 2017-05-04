@@ -34,49 +34,21 @@ public class Server extends UnicastRemoteObject implements IServer {
      *
      * @throws IOException
      */
-    public void exit() throws IOException {
-
+    public void exit() throws RemoteException {
 
         if (clients.size() == 1) {
-            sendBack(clients.get(0), Message.SERVER_LEFT);
+            clients.get(0).serverLeft();
 
         }
 
         if (clients.size() == 2) {
-            sendBack(clients.get(0), Message.SERVER_LEFT);
-            sendBack(clients.get(1), Message.SERVER_LEFT);
+            clients.get(0).serverLeft();
+            clients.get(1).serverLeft();
         }
 
         System.exit(0);
     }
 
-
-    private void sendAll(IClient senderClient, String message) throws RemoteException {
-        for (IClient client : clients) {
-            if (!client.equals(senderClient)) ;
-            //client.receiveMessage(message);
-        }
-    }
-
-
-    private void sendBack(IClient senderClient, String message) throws RemoteException {
-        String json = model.assembleServerMessage(message);
-        //senderClient.receiveMessage(json);
-    }
-
-
-    public void receiveMessage(IClient senderClient, String msg) throws RemoteException {
-
-        System.out.println(msg);
-
-        //if a client tries to start a match without all users connected, warn him
-        if (msg.contains(Message.START_MATCH) && clients.size() < 2) {
-            sendBack(senderClient, Message.NOT_ENOUGH_CLIENTS);
-        } else {
-            //normally send message to other client
-            sendAll(senderClient, msg);
-        }
-    }
 
     @Override
     public void deliverChatMessage(IClient senderClient, String msg) throws RemoteException {

@@ -23,4 +23,6 @@ public interface IClient extends Remote {
     void signalFullRoom()throws RemoteException;
 
     void assignPlayerNumber(int size)throws RemoteException;
+
+    void serverLeft()throws RemoteException;
 }

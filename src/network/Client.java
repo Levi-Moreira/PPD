@@ -8,8 +8,8 @@ import java.rmi.server.UnicastRemoteObject;
 /**
  * Client class that generates the main communication hub
  */
-public class Client extends UnicastRemoteObject implements IClient {
-
+public class Client  {
+/*
 
     private final IServer server;
     private ClientNetworkModel model;
@@ -55,6 +55,16 @@ public class Client extends UnicastRemoteObject implements IClient {
         model.signalFullRoom();
     }
 
+    @Override
+    public void assignPlayerNumber(int number) throws RemoteException {
+        model.assignPlayerNumber(number);
+    }
+
+    @Override
+    public void serverLeft() throws RemoteException {
+        model.serverLeft();
+    }*/
+
 
     /**
      * Sends a pessage through the socket
@@ -62,21 +72,21 @@ public class Client extends UnicastRemoteObject implements IClient {
      * @param msg the json string
      */
     public void sendChatMessage(String msg) throws RemoteException {
-        server.deliverChatMessage(this, msg);
+
 
     }
 
     /**
      * Severe connection completly
      */
-    public void terminane() {
+/*    public void terminane() {
 
-    }
+    }*/
 
     /**
      * Start uo the socket and connect to the server
      */
-    public void connect() {
+/*    public void connect() {
 
         model.clientConnected();
         System.out.println("Conectado....");
@@ -89,21 +99,12 @@ public class Client extends UnicastRemoteObject implements IClient {
         }
 
 
-    }
+    }*/
 
-    /**
-     * Close this client, but leave thread running so it can be restarted
-     */
-    public void close() {
-        try {
-            server.disconnectClient(this);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-            model.showConnectionError();
-        }
-    }
 
-    public void requestStartMatch(int pieceColour) throws RemoteException {
-        server.deliverGameStart(this, pieceColour);
+
+    /*public void requestStartMatch(int pieceColour) throws RemoteException {
+
     }
+    */
 }

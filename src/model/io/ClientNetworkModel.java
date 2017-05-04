@@ -13,11 +13,12 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Intefaces the communication between the lower level client and the upper lever clientPresenter
  */
-public class ClientNetworkModel {
+public class ClientNetworkModel extends UnicastRemoteObject implements IClient {
 
     //the lower level client
     private Client client;
@@ -27,8 +28,11 @@ public class ClientNetworkModel {
 
     private String clientName;
 
+    private IServer server = null;
+
     //constructor
-    public ClientNetworkModel(ClientPresenter clientPresenter) {
+    public ClientNetworkModel(ClientPresenter clientPresenter) throws RemoteException {
+        super();
         this.clientPresenter = clientPresenter;
     }
 
@@ -48,6 +52,7 @@ public class ClientNetworkModel {
             IServer server = null;
             try {
                 server = (IServer) Naming.lookup(serverURL);
+                this.server = server;
             } catch (NotBoundException e) {
                 e.printStackTrace();
                 showConnectionError();
@@ -55,12 +60,16 @@ public class ClientNetworkModel {
                 e.printStackTrace();
                 showConnectionError();
             }
+
+            clientConnected();
+            System.out.println("Conectado....");
+
             try {
-                client = new Client(server, this);
+                server.registerClient(this);
             } catch (RemoteException e) {
                 e.printStackTrace();
+                showConnectionError();
             }
-            client.connect();
         }
     }
 
@@ -78,35 +87,12 @@ public class ClientNetworkModel {
      * @param text the raw msg to be sent
      */
     public void sendChatMessage(String text) {
-       /* Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-        Message msg = new Message(Message.TYPE_CHAT, clientName, text);
-
-        String json = gson.toJson(msg, type);*/
 
         try {
-            client.sendChatMessage(text);
+            server.deliverChatMessage(this, text);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * When a message was received from the network, change it to an object Message
-     *
-     * @param mRcv the received json
-     */
-    public void receivedMessage(String mRcv) {
-        Gson gson = new Gson();
-        Type type = new TypeToken<Message>() {
-        }.getType();
-
-        Message msg = gson.fromJson(mRcv, Message.class);
-
-        //ask the clientPresenter to treat the message
-        if (msg != null) ;
-        //clientPresenter.receivedMessage(msg);
     }
 
 
@@ -122,9 +108,10 @@ public class ClientNetworkModel {
      *
      * @param pieceColour the colour of the piece chosen by the starting player
      */
+
     public void requestStartMatch(int pieceColour) {
         try {
-            client.requestStartMatch(pieceColour);
+            server.deliverGameStart(this, pieceColour);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -214,7 +201,7 @@ public class ClientNetworkModel {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        client.terminane();
+       // client.terminane();
     }
 
     /**
@@ -322,7 +309,12 @@ public class ClientNetworkModel {
      * Closes this client
      */
     public void closeClient() {
-        client.close();
+        try {
+            server.disconnectClient(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            showConnectionError();
+        }
     }
 
     /**
@@ -406,10 +398,10 @@ public class ClientNetworkModel {
     }
 
 
-    public void recieveChatMessage(IClient sender, String message) {
-
+    @Override
+    public void receiveChatMessage(IClient sender, String msg) throws RemoteException {
         try {
-            clientPresenter.receivedChatMessage(sender, message);
+            clientPresenter.receivedChatMessage(sender, msg);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -419,19 +411,33 @@ public class ClientNetworkModel {
         return clientName;
     }
 
-    public void startGame(int pieceColour) {
+    @Override
+    public void acceptGameStart(IClient senderClient, int pieceColour) throws RemoteException {
         clientPresenter.startGame(pieceColour);
     }
 
+    @Override
     public void signalNotEnoughClients() {
         clientPresenter.signalNotEnoughClients();
     }
 
-    public void signalAllEntered() {
+    @Override
+    public void allEntered() throws RemoteException {
         clientPresenter.signalAllEntered();
     }
 
+    @Override
     public void signalFullRoom() {
         clientPresenter.signalFullRoom();
+    }
+
+    @Override
+    public void assignPlayerNumber(int number) {
+        clientPresenter.assignPlayerNumber(number);
+    }
+
+    @Override
+    public void serverLeft() {
+        clientPresenter.signalServerLeft();
     }
 }
