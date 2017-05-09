@@ -1,7 +1,5 @@
 package network;
 
-import model.entities.Message;
-import model.io.ClientNetworkModel;
 import model.io.ServerNetworkModel;
 
 import java.io.*;
@@ -115,6 +113,84 @@ public class Server extends UnicastRemoteObject implements IServer {
         for (IClient client : clients) {
             if (!client.equals(senderClient))
                 client.performMove(start, end, playerNumber);
+        }
+    }
+
+    @Override
+    public void askPerformCapture(IClient senderClient, int capturedPos) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.makeCapture(capturedPos);
+        }
+    }
+
+    @Override
+    public void terminateClient(IClient senderClient, String clientName) throws RemoteException {
+        clients.remove(senderClient);
+        clients.get(0).anouncePartnerLeft(clientName);
+    }
+
+    @Override
+    public void deliverAskForRestart(IClient senderClient, String partnerName) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.requestedRestart(partnerName);
+        }
+    }
+
+    @Override
+    public void deliverAcceptRestart(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.receiveAcceptRestart();
+        }
+    }
+
+    @Override
+    public void clientWon(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.won();
+        }
+    }
+
+    @Override
+    public void performRemoval(IClient senderClient, int removePos) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.removeSpace(removePos);
+        }
+    }
+
+    @Override
+    public void finishGame(IClient senderClient, int piecesOnBoard) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.askFinishGame(piecesOnBoard);
+        }
+    }
+
+    @Override
+    public void deliverAnounceTie(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.actOnAnnounceTie();
+        }
+    }
+
+    @Override
+    public void deliverAnounceNoTie(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.actOnAnnounceNoTie();
+        }
+    }
+
+    @Override
+    public void deliverAnounceLost(IClient senderClient) throws RemoteException {
+        for (IClient client : clients) {
+            if (!client.equals(senderClient))
+                client.lost();
         }
     }
 

@@ -1,13 +1,8 @@
 package presenter;
 
-import model.entities.Board;
-import model.io.ClientNetworkModel;
 import model.io.ServerNetworkModel;
 import network.Server;
-import view.ClientView;
 import view.ServerView;
-
-import java.net.Socket;
 
 /**
  * Created by ellca on 28/04/2017.

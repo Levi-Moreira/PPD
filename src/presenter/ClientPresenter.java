@@ -1,8 +1,7 @@
 package presenter;
 
 import model.entities.Board;
-import model.io.ClientNetworkModel;
-import model.entities.Message;
+import network.Client;
 import network.IClient;
 import view.ClientView;
 
@@ -16,7 +15,7 @@ public class ClientPresenter {
 
     private ClientView UI;
 
-    private ClientNetworkModel modelIO;
+    private Client client;
 
     private Board board;
 
@@ -25,7 +24,7 @@ public class ClientPresenter {
     public ClientPresenter(ClientView UI) {
         this.UI = UI;
         try {
-            modelIO = new ClientNetworkModel(this);
+            client = new Client(this);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -38,7 +37,7 @@ public class ClientPresenter {
      */
     public void startUpClient(String clientName) {
         try {
-            modelIO.startUpClient(clientName, "", -1, false);
+            client.startUpClient(clientName, "", -1, false);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             showConnectionError();
@@ -55,7 +54,7 @@ public class ClientPresenter {
     public void startUpClient(String clientName, String ip, int port) {
 
         try {
-            modelIO.startUpClient(clientName, ip, port, true);
+            client.startUpClient(clientName, ip, port, true);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             showConnectionError();
@@ -88,7 +87,7 @@ public class ClientPresenter {
      * @param text the message to be sent
      */
     public void sendChatMessage(String text) {
-        modelIO.sendChatMessage(text);
+        client.sendChatMessage(text);
     }
 
     /**
@@ -99,96 +98,6 @@ public class ClientPresenter {
     public void receivedChatMessage(IClient sender, String messageReceived) throws RemoteException {
         UI.receivedMessage(sender.getName() + " says -> " + messageReceived);
     }
-
-    /**
-     * Treats the received game message
-     *
-     * @param messageReceived the received message
-     */
-    public void receivedGameMessage(Message messageReceived) {
-        int space;
-        int player;
-        int start;
-        int end;
-        String partnerName;
-
-        String subtype = messageReceived.getSubtype();
-        switch (subtype) {
-            case Message.START_MATCH:
-
-                break;
-            case Message.END_TURN:
-
-                break;
-            case Message.SUBTYPE_GAME_ADD:
-
-                break;
-            case Message.SUBTYPE_GAME_MOVE:
-                break;
-            case Message.CLIENT_TERMINATION:
-                partnerName = messageReceived.getSender();
-                UI.warnPartnerLeft(partnerName);
-                break;
-            case Message.ASK_RESTART_GAME:
-                partnerName = messageReceived.getSender();
-                UI.partnerAskForRestart(partnerName);
-                break;
-            case Message.ACCEPT_RESTART_GAME:
-                restoreBoard();
-                UI.restoreBoard();
-                break;
-            case Message.SUBTYPE_GAME_CAPTURE:
-                int capturedPos = Integer.parseInt(messageReceived.getMessage());
-                board.performCapture(capturedPos);
-                UI.performCapture(capturedPos);
-                UI.updateLostPiecesCount(board.getmLostPiecesCount());
-                break;
-            case Message.SUBTYPE_GAME_REMOVE:
-                int removedPos = Integer.parseInt(messageReceived.getMessage());
-                board.performLost(removedPos);
-                UI.performCapture(removedPos);
-                UI.updateLostPiecesCount(board.getmLostPiecesCount());
-                break;
-            case Message.ANOUNCE_WIN:
-                if (board.hasLostAll() || board.isLoser())
-                    UI.anounceYouLost();
-                break;
-            case Message.FINISH_GAME:
-                int openentPieces = Integer.parseInt(messageReceived.getMessage());
-                if (board.getFinishSituation(openentPieces) == Board.SITUATION_TIE) {
-                    modelIO.anounceTie();
-                    UI.anounceTie();
-                } else {
-                    modelIO.anounceNotTie();
-                }
-                break;
-            case Message.TIE:
-                UI.anounceTie();
-                break;
-            case Message.NOTTIE:
-                int situtation = board.getAfterNotTieSituation();
-                if (situtation == Board.SITUATION_WON) {
-                    modelIO.anounceWin();
-                    UI.anounceYouWin();
-                } else {
-                    if (situtation == Board.SITUATION_LOST) {
-                        modelIO.anounceLost();
-                        UI.anounceYouLost();
-                    } else {
-                        modelIO.anounceTie();
-                        UI.anounceTie();
-                    }
-                }
-                break;
-            case Message.ANOUNCE_LOST:
-                UI.anounceYouWin();
-                break;
-
-
-        }
-
-    }
-
 
     /**
      * Print connection error to UI
@@ -202,12 +111,12 @@ public class ClientPresenter {
      *
      * @param pieceColour the colour of the player's piece
      */
-    public void requestStartMatch(int pieceColour) {
+    public void performStartMatch(int pieceColour) {
         board.setmMyPiecesColour(pieceColour);
         UI.setYourTurn();
         clientConnected();
         UI.disablePieceSelectors();
-        modelIO.requestStartMatch(pieceColour);
+        client.performStartMatch(pieceColour);
     }
 
     /**
@@ -216,12 +125,12 @@ public class ClientPresenter {
      * @param space the space to add to
      * @return true if it was successful
      */
-    public boolean addToSpace(int space) {
+    public boolean performAddToSpace(int space) {
 
         if (board.addSelfToSpace(space)) {
             UI.addPlayerToSpace(space, board.getmPlayerNumber(), board.getmMyPiecesColor());
             UI.showMyPiecesNumber(board.getmMyPieceCount());
-            modelIO.addToSpace(space, board.getmPlayerNumber());
+            client.performAddToSpace(space, board.getmPlayerNumber());
             return true;
         } else
             return false;
@@ -230,8 +139,8 @@ public class ClientPresenter {
     /**
      * End this player's turn
      */
-    public void endMyTurn() {
-        modelIO.endMyTurn();
+    public void performEndMyTurn() {
+        client.performEndMyTurn();
         UI.setTurnPlayer("Other Player");
     }
 
@@ -274,7 +183,7 @@ public class ClientPresenter {
         if (board.isMoveAllowed(move[0], move[1])) {
             board.movePlayer(move[0], move[1], board.getmPlayerNumber());
             UI.move(move[0], move[1], board.getmPlayerNumber(), board.getmMyPiecesColor());
-            modelIO.move(move[0], move[1], board.getmPlayerNumber());
+            client.move(move[0], move[1], board.getmPlayerNumber());
             return true;
         } else {
             return false;
@@ -285,7 +194,7 @@ public class ClientPresenter {
      * Definetly closes this client
      */
     public void terminateClient() {
-        modelIO.terminateClient();
+        client.terminateClient();
     }
 
     /**
@@ -301,8 +210,8 @@ public class ClientPresenter {
     /**
      * Ask for a rest to the other user
      */
-    public void askForResart() {
-        modelIO.askForRestart();
+    public void performResart() {
+        client.performResart();
     }
 
     public void refuseRestart() {
@@ -311,10 +220,10 @@ public class ClientPresenter {
     /**
      * Accepts the restart
      */
-    public void acceptRestart() {
+    public void performAcceptRestart() {
         restoreBoard();
         UI.restoreBoard();
-        modelIO.sendAcceptRestartMessage();
+        client.performAcceptRestart();
     }
 
     /**
@@ -326,10 +235,10 @@ public class ClientPresenter {
         int capturedPos = board.performCapture(move[0], move[1]);
         UI.performCapture(capturedPos);
         UI.updateCapturedPiecesCount(board.getmCapturePiecesCount());
-        modelIO.performCapture(capturedPos);
+        client.performCapture(capturedPos);
 
         if (board.hasCapturedAll()) {
-            modelIO.anounceWin();
+            client.anounceWin();
             UI.anounceYouWin();
         }
     }
@@ -339,14 +248,14 @@ public class ClientPresenter {
      *
      * @param space the space where the space lives
      */
-    public void removePiece(int space) {
+    public void performRemovePiece(int space) {
         board.performRemoval(space);
         UI.performCapture(space);
         UI.updateCapturedPiecesCount(board.getmCapturePiecesCount());
-        modelIO.performRemoval(space);
+        client.performRemovePiece(space);
 
         if (board.hasCapturedAll()) {
-            modelIO.anounceWin();
+            client.anounceWin();
             UI.anounceYouWin();
         }
     }
@@ -393,13 +302,13 @@ public class ClientPresenter {
     /**
      * Ask for the game to be finished
      */
-    public void finishGame() {
+    public void performFinishGame() {
 
-        modelIO.finishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
+        client.performFinishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
     }
 
 
-    public void startGame(int pieceColour) {
+    public void actOnStartGame(int pieceColour) {
         int piece = pieceColour;
         int myPiece = (piece == Board.PIECE_COLOR_RED) ? Board.PIECE_COLOR_BLACK : Board.PIECE_COLOR_RED;
         UI.setGameStarted(myPiece);
@@ -419,7 +328,7 @@ public class ClientPresenter {
     public void signalServerLeft() {
         UI.serverLeft();
         UI.returnToUnconnectedState();
-        modelIO.closeClient();
+        client.closeClient();
     }
 
     public void signalFullRoom() {
@@ -432,18 +341,81 @@ public class ClientPresenter {
         startUpBoard(playerNUmber);
     }
 
-    public void startTurn() {
+    public void actOnStartTurn() {
         UI.setYourTurn();
     }
 
-    public void addPlayerToSpace(int space, int playerNumber) {
+    public void actOnAddPlayerToSpace(int space, int playerNumber) {
         board.setPlayerAtSpace(space, playerNumber);
         UI.addPlayerToSpace(space, playerNumber, board.getOtherPlayerPieceColor());
     }
 
-    public void performMove(int start, int end, int playerNumber) {
+    public void actOnPerformMove(int start, int end, int playerNumber) {
         board.movePlayer(start, end, playerNumber);
         UI.move(start, end, playerNumber, board.getOtherPlayerPieceColor());
 
+    }
+
+    public void actOnCapture(int capturedPos) {
+        board.performCapture(capturedPos);
+        UI.performCapture(capturedPos);
+        UI.updateLostPiecesCount(board.getmLostPiecesCount());
+    }
+
+    public void anouncePartnerLeft(String clientName) {
+        UI.warnPartnerLeft(clientName);
+    }
+
+    public void actOnRestartRequest(String partnerName) {
+        UI.partnerAskForRestart(partnerName);
+    }
+
+    public void actOnAcceptedRestart() {
+        restoreBoard();
+        UI.restoreBoard();
+    }
+
+    public void otherClientWon() {
+        if (board.hasLostAll() || board.isLoser())
+            UI.anounceYouLost();
+    }
+
+    public void actOnRemoveSpace(int removePos) {
+        board.performLost(removePos);
+        UI.performCapture(removePos);
+        UI.updateLostPiecesCount(board.getmLostPiecesCount());
+    }
+
+    public void actOnFinishGame(int piecesOnBoard) {
+        if (board.getFinishSituation(piecesOnBoard) == Board.SITUATION_TIE) {
+            client.anounceTie();
+            UI.anounceTie();
+        } else {
+            client.anounceNotTie();
+        }
+    }
+
+    public void actOnAnnounceTie() {
+        UI.anounceTie();
+    }
+
+    public void actOnAnnounceNoTie() {
+        int situtation = board.getAfterNotTieSituation();
+        if (situtation == Board.SITUATION_WON) {
+            client.anounceWin();
+            UI.anounceYouWin();
+        } else {
+            if (situtation == Board.SITUATION_LOST) {
+                client.anounceLost();
+                UI.anounceYouLost();
+            } else {
+                client.anounceTie();
+                UI.anounceTie();
+            }
+        }
+    }
+
+    public void otherClientLost() {
+        UI.anounceYouWin();
     }
 }

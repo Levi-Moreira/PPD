@@ -185,7 +185,7 @@ public class ClientWindow implements ActionListener, ClientView {
             public void actionPerformed(ActionEvent e) {
                 if (hasGameStarted)
                     if (isYourTurn) {
-                        mClientPresenter.finishGame();
+                        mClientPresenter.performFinishGame();
                     }
             }
         });
@@ -244,7 +244,7 @@ public class ClientWindow implements ActionListener, ClientView {
      * @return true if sucessfully
      */
     private boolean tryAddingToSpace(int space) {
-        return mClientPresenter.addToSpace(space);
+        return mClientPresenter.performAddToSpace(space);
     }
 
     /**
@@ -268,7 +268,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbRestartGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mClientPresenter.askForResart();
+                mClientPresenter.performResart();
             }
         });
 
@@ -320,12 +320,12 @@ public class ClientWindow implements ActionListener, ClientView {
                         piece = Board.PIECE_COLOR_RED;
                         rbRed.setSelected(true);
                     }
-                    mClientPresenter.requestStartMatch(piece);
+                    mClientPresenter.performStartMatch(piece);
                     jbStartGame.setText("End Turn");
                     hasGameStarted = true;
                     hasPartnerGivenUp = false;
                 } else {
-                    mClientPresenter.endMyTurn();
+                    mClientPresenter.performEndMyTurn();
                     shouldEndTurn = false;
                     hasCapturedOnce = false;
                     lastPositionAFterCapture = -1;
@@ -524,7 +524,7 @@ public class ClientWindow implements ActionListener, ClientView {
     public void partnerAskForRestart(String partnerName) {
         int dialogResult = JOptionPane.showConfirmDialog($$$getRootComponent$$$(), "Player " + partnerName + " is requesting a restart. Do you accept?");
         if (dialogResult == JOptionPane.YES_OPTION) {
-            mClientPresenter.acceptRestart();
+            mClientPresenter.performAcceptRestart();
         } else {
             mClientPresenter.refuseRestart();
         }
@@ -737,7 +737,7 @@ public class ClientWindow implements ActionListener, ClientView {
     private void onEliminating(int buttonPos) {
         if (!mClientPresenter.isSpaceEmpty(buttonPos)) {
             if (!mClientPresenter.isSpaceMine(buttonPos)) {
-                mClientPresenter.removePiece(buttonPos);
+                mClientPresenter.performRemovePiece(buttonPos);
                 isBlockedForElimination = false;
             } else {
                 JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Select another player's piece.");
