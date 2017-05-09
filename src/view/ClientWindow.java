@@ -240,6 +240,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Tries to add a piece to a given space
+     *
      * @param space the space to which the adding will happen
      * @return true if sucessfully
      */
@@ -366,6 +367,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Show a message for the connection
+     *
      * @param msg the message
      */
     @Override
@@ -385,6 +387,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * When a chat message is received
+     *
      * @param mRcv the message received
      */
     @Override
@@ -415,6 +418,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Set turn  for a certain player. Show necessary things on the screen.
+     *
      * @param sender
      */
     @Override
@@ -442,6 +446,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Changes the UI to relfelct a start of a fame
+     *
      * @param piece the piece color of this user
      */
     @Override
@@ -460,9 +465,10 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Adds a player to a certain space
-     * @param i the space
+     *
+     * @param i            the space
      * @param playerNumber player number
-     * @param pieceColor piece color
+     * @param pieceColor   piece color
      */
     @Override
     public void addPlayerToSpace(int i, int playerNumber, int pieceColor) {
@@ -477,6 +483,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Updates the piece count in the screen
+     *
      * @param hand the amount of pieces in your hand
      */
     @Override
@@ -487,10 +494,11 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Shows a move in the screen
-     * @param start start space
-     * @param end end space
+     *
+     * @param start        start space
+     * @param end          end space
      * @param playerNumber player number
-     * @param pieceColor piece color
+     * @param pieceColor   piece color
      */
     @Override
     public void move(int start, int end, int playerNumber, int pieceColor) {
@@ -506,6 +514,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * SHows a message anoucning that the partner left
+     *
      * @param partnerName the partnet name
      */
     @Override
@@ -518,6 +527,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Show message stating the partner asked for a reset
+     *
      * @param partnerName the partner name
      */
     @Override
@@ -559,6 +569,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Performs a capture
+     *
      * @param capturedPos the position captured
      */
     @Override
@@ -640,13 +651,20 @@ public class ClientWindow implements ActionListener, ClientView {
      */
     @Override
     public void anounceTie() {
-        JOptionPane.showMessageDialog($$$getRootComponent$$$(), "It's a tie!");
+
+        Thread t = new Thread(new Runnable() {
+            public void run() {
+                JOptionPane.showMessageDialog($$$getRootComponent$$$(), "It's a tie!");
+            }
+        });
+        t.start();
         mClientPresenter.restoreBoard();
         restoreBoard();
     }
 
     /**
      * Enable the connection options
+     *
      * @param en
      */
     private void enableConnectionOptions(boolean en) {
@@ -663,6 +681,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Enables the game options
+     *
      * @param en
      */
     private void enableGameOptions(boolean en) {
@@ -688,6 +707,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Catches all button cliks on the board buttons
+     *
      * @param e
      */
     @Override
@@ -708,6 +728,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * If an elimination is not happening
+     *
      * @param buttonPos the position clicked by the user
      */
     private void onNotEliminating(int buttonPos) {
@@ -732,6 +753,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * When elimination is on
+     *
      * @param buttonPos the position clicked by the user
      */
     private void onEliminating(int buttonPos) {
@@ -750,6 +772,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Tries to move from a location
+     *
      * @param space the startiing space
      */
     private void tryToMove(int space) {
@@ -774,6 +797,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * When a move hasnet started yet
+     *
      * @param space the space where will start
      */
     private void onNotStartedMove(int space) {
@@ -790,6 +814,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * When a move has started
+     *
      * @param space the space where started
      */
     private void onStartedMove(int space) {
@@ -831,7 +856,8 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Tries to create an image icon
-     * @param path the path of the file
+     *
+     * @param path        the path of the file
      * @param description a description
      * @return an image icon if created, null if not
      */
@@ -848,6 +874,7 @@ public class ClientWindow implements ActionListener, ClientView {
 
     /**
      * Validates an ip string
+     *
      * @param ip the ip string
      * @return true if it is a valid ip
      */

@@ -90,9 +90,13 @@ public class Board {
         return mLostPiecesCount;
     }
 
+    public int getmPlayedPiecesCount() {
+        return mPlayedPiecesCount;
+    }
 
     /**
      * Checks if this player still has available pieces to play
+     *
      * @return true if so
      */
     public boolean stillHavePieces() {
@@ -105,6 +109,7 @@ public class Board {
 
     /**
      * Adds this player to a space
+     *
      * @param space the space to which add this client
      * @return true if space was empty and player was added, false otherwise
      */
@@ -121,7 +126,8 @@ public class Board {
 
     /**
      * Add a given player to a board space
-     * @param space the space to which the player will be added
+     *
+     * @param space  the space to which the player will be added
      * @param player the player number
      */
     public void setPlayerAtSpace(int space, int player) {
@@ -131,6 +137,7 @@ public class Board {
 
     /**
      * Checks if a space belongs to this client
+     *
      * @param space the space
      * @return true if so
      */
@@ -143,6 +150,7 @@ public class Board {
 
     /**
      * Checks if a space is empty
+     *
      * @param space the space to check
      * @return true if so
      */
@@ -158,8 +166,9 @@ public class Board {
     /**
      * Checks if a certain move is allowed. An allowed move is a vertical or horizonal one space jump
      * or a two space jump with a capture.
+     *
      * @param start space where moviment starts
-     * @param end space where moviment ends
+     * @param end   space where moviment ends
      * @return true if allowed
      */
     public boolean isMoveAllowed(int start, int end) {
@@ -191,8 +200,9 @@ public class Board {
 
     /**
      * Checks if a capture is possible
+     *
      * @param start start space
-     * @param end end space
+     * @param end   end space
      * @return true if there is a capture between start and end space, false otherwise
      */
     public boolean isCapturePossible(int start, int end) {
@@ -226,8 +236,9 @@ public class Board {
     /**
      * Makes the necessary changes to represent a move from a player. SImply empty start space
      * and fill end space with the player number.
-     * @param start the start position
-     * @param end the end position
+     *
+     * @param start        the start position
+     * @param end          the end position
      * @param playerNumber the player number
      */
     public void movePlayer(int start, int end, int playerNumber) {
@@ -251,8 +262,9 @@ public class Board {
 
     /**
      * Effectively capture a piece. Capturing client view.
+     *
      * @param start the start position of the piece
-     * @param end the end position of the piece
+     * @param end   the end position of the piece
      * @return the position of the captured piece
      */
     public int performCapture(int start, int end) {
@@ -270,6 +282,7 @@ public class Board {
 
     /**
      * Performs a capture. Captured client view.
+     *
      * @param pos the position of the capture.
      */
     public void performCapture(int pos) {
@@ -280,8 +293,9 @@ public class Board {
 
     /**
      * Discovers what is the position of the captured piece relative to the moviment end and start positions
+     *
      * @param start the moviment start position
-     * @param end the moviment end position
+     * @param end   the moviment end position
      * @return the position of the captured piece relative to these two
      */
     private int findOutPiecePosition(int start, int end) {
@@ -312,6 +326,7 @@ public class Board {
 
     /**
      * Checks if capture is possible begining in a given space
+     *
      * @param start the space from which a movement should begin to generate a capture
      * @return true if it is possible
      */
@@ -338,6 +353,7 @@ public class Board {
 
     /**
      * Check for the whole board to see if this client can still perform any captures
+     *
      * @return true if so
      */
     public boolean isCaptureGenerallyPossible() {
@@ -356,6 +372,7 @@ public class Board {
 
     /**
      * Removes a piece from a given space. Capturing client view.
+     *
      * @param piece the space in which the piece is
      */
     public void performRemoval(int piece) {
@@ -365,6 +382,7 @@ public class Board {
 
     /**
      * Removes a piece from a given space. Captured client view.
+     *
      * @param removedPos the space in which the piece is
      */
     public void performLost(int removedPos) {
@@ -374,6 +392,7 @@ public class Board {
 
     /**
      * CHeks if this player has captured all pieces from the oponent
+     *
      * @return true if so
      */
     public boolean hasCapturedAll() {
@@ -386,6 +405,7 @@ public class Board {
 
     /**
      * Checks if this plalyer has lost all pieces
+     *
      * @return
      */
     public boolean hasLostAll() {
@@ -397,6 +417,7 @@ public class Board {
 
     /**
      * Checks if oponent has any pieces on the board
+     *
      * @return
      */
     public boolean oponentHasPiecesOnBoard() {
@@ -413,6 +434,7 @@ public class Board {
 
     /**
      * Get the piece color from the oponent
+     *
      * @return a constant representing the piece color
      */
     public int getOtherPlayerPieceColor() {
@@ -422,6 +444,7 @@ public class Board {
 
     /**
      * Checks if the situation is of tie, win or lost
+     *
      * @param openentPieces the number of pieces of the oponent in the board
      * @return
      */
@@ -437,6 +460,7 @@ public class Board {
 
     /**
      * If a tie did not happens, check the situation again
+     *
      * @return
      */
     public int getAfterNotTieSituation() {
@@ -451,6 +475,7 @@ public class Board {
 
     /**
      * Checks if this player is a loser
+     *
      * @return true if so
      */
     public boolean isLoser() {

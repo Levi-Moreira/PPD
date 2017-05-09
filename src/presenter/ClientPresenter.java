@@ -140,8 +140,8 @@ public class ClientPresenter {
      * End this player's turn
      */
     public void performEndMyTurn() {
-        client.performEndMyTurn();
         UI.setTurnPlayer("Other Player");
+        client.performEndMyTurn();
     }
 
     /**
@@ -217,6 +217,7 @@ public class ClientPresenter {
     public void refuseRestart() {
     }
 
+
     /**
      * Accepts the restart
      */
@@ -238,8 +239,8 @@ public class ClientPresenter {
         client.performCapture(capturedPos);
 
         if (board.hasCapturedAll()) {
-            client.anounceWin();
             UI.anounceYouWin();
+            client.anounceWin();
         }
     }
 
@@ -255,8 +256,8 @@ public class ClientPresenter {
         client.performRemovePiece(space);
 
         if (board.hasCapturedAll()) {
-            client.anounceWin();
             UI.anounceYouWin();
+            client.anounceWin();
         }
     }
 
@@ -304,7 +305,7 @@ public class ClientPresenter {
      */
     public void performFinishGame() {
 
-        client.performFinishGame((board.getmPlayerNumber() - board.getmLostPiecesCount()));
+        client.performFinishGame((board.getmPlayedPiecesCount() - board.getmLostPiecesCount()));
     }
 
 
@@ -388,6 +389,7 @@ public class ClientPresenter {
 
     public void actOnFinishGame(int piecesOnBoard) {
         if (board.getFinishSituation(piecesOnBoard) == Board.SITUATION_TIE) {
+
             client.anounceTie();
             UI.anounceTie();
         } else {
@@ -395,20 +397,23 @@ public class ClientPresenter {
         }
     }
 
-    public void actOnAnnounceTie() {
+    synchronized public void actOnAnnounceTie() {
         UI.anounceTie();
     }
 
-    public void actOnAnnounceNoTie() {
+    synchronized public void actOnAnnounceNoTie() {
         int situtation = board.getAfterNotTieSituation();
         if (situtation == Board.SITUATION_WON) {
+
             client.anounceWin();
             UI.anounceYouWin();
         } else {
             if (situtation == Board.SITUATION_LOST) {
+
                 client.anounceLost();
                 UI.anounceYouLost();
             } else {
+
                 client.anounceTie();
                 UI.anounceTie();
             }
