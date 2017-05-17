@@ -79,6 +79,7 @@ public class ClientWindow implements ActionListener, ClientView {
     private JRadioButton rbRed;
     private JRadioButton rbBlack;
     private JButton jbFinishGame;
+    private JTextField tfServiceName;
 
     //main window
     private JFrame mWindow;
@@ -290,8 +291,8 @@ public class ClientWindow implements ActionListener, ClientView {
                             } catch (NumberFormatException ne) {
                             }
 
-                            if (validIP(tfIpAddress.getText()) && port != -1)
-                                mClientPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port);
+                            if (validIP(tfIpAddress.getText()) && port != -1 && !tfServiceName.getText().isEmpty())
+                                mClientPresenter.startUpClient(tfName.getText(), tfIpAddress.getText(), port, tfServiceName.getText());
                             else
                                 JOptionPane.showMessageDialog($$$getRootComponent$$$(), "Invalid Port or IP");
 
@@ -676,6 +677,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbConnect.setEnabled(en);
         cbPlayLocal.setEnabled(en);
         tfName.setEnabled(en);
+        tfServiceName.setEnabled(en);
 
     }
 
@@ -1028,7 +1030,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jpMain.add(jpConnection, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 5, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(34, 73), null, 0, false));
         jpConnection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connection", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION, new Font("Montserrat SemiBold", jpConnection.getFont().getStyle(), 22)));
         jpIpInfo = new JPanel();
-        jpIpInfo.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 4, new Insets(0, 0, 0, 0), -1, -1));
+        jpIpInfo.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 4, new Insets(0, 0, 0, 0), -1, -1));
         jpConnection.add(jpIpInfo, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jpIpInfo.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Connection Information", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Montserrat", jpIpInfo.getFont().getStyle(), 18)));
         tfIpAddress = new JTextField();
@@ -1039,7 +1041,7 @@ public class ClientWindow implements ActionListener, ClientView {
         jbConnect.setBorderPainted(true);
         jbConnect.setFont(new Font("Montserrat", jbConnect.getFont().getStyle(), jbConnect.getFont().getSize()));
         jbConnect.setText("Connect");
-        jpIpInfo.add(jbConnect, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        jpIpInfo.add(jbConnect, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         tfPort = new JTextField();
         tfPort.setFont(new Font("Montserrat", tfPort.getFont().getStyle(), tfPort.getFont().getSize()));
         jpIpInfo.add(tfPort, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -1049,7 +1051,7 @@ public class ClientWindow implements ActionListener, ClientView {
         cbPlayLocal = new JCheckBox();
         cbPlayLocal.setFont(new Font("Montserrat", cbPlayLocal.getFont().getStyle(), cbPlayLocal.getFont().getSize()));
         cbPlayLocal.setText("Play Local");
-        jpIpInfo.add(cbPlayLocal, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        jpIpInfo.add(cbPlayLocal, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         jlPort = new JLabel();
         jlPort.setFont(new Font("Montserrat", jlPort.getFont().getStyle(), jlPort.getFont().getSize()));
         jlPort.setText("Port");
@@ -1063,6 +1065,12 @@ public class ClientWindow implements ActionListener, ClientView {
         label1.setFont(new Font("Montserrat", label1.getFont().getStyle(), label1.getFont().getSize()));
         label1.setText("Name");
         jpIpInfo.add(label1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setFont(new Font("Montserrat", label2.getFont().getStyle(), label2.getFont().getSize()));
+        label2.setText("Service Name");
+        jpIpInfo.add(label2, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tfServiceName = new JTextField();
+        jpIpInfo.add(tfServiceName, new com.intellij.uiDesigner.core.GridConstraints(3, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         jpConnectionStatus = new JPanel();
         jpConnectionStatus.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         jpConnection.add(jpConnectionStatus, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(90, 217), null, 0, false));
@@ -1158,10 +1166,10 @@ public class ClientWindow implements ActionListener, ClientView {
         jlTurn.setFont(new Font("Montserrat SemiBold", jlTurn.getFont().getStyle(), 22));
         jlTurn.setText("Controle de turno");
         jpMain.add(jlTurn, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 5, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setFont(new Font("Montserrat", label2.getFont().getStyle(), label2.getFont().getSize()));
-        label2.setText("Piece color");
-        jpMain.add(label2, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label3 = new JLabel();
+        label3.setFont(new Font("Montserrat", label3.getFont().getStyle(), label3.getFont().getSize()));
+        label3.setText("Piece color");
+        jpMain.add(label3, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

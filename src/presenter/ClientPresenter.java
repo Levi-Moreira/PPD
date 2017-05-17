@@ -37,7 +37,7 @@ public class ClientPresenter {
      */
     public void startUpClient(String clientName) {
         try {
-            client.startUpClient(clientName, "", -1, false);
+            client.startUpClient(clientName, "", -1, false, "");
         } catch (MalformedURLException e) {
             e.printStackTrace();
             showConnectionError();
@@ -46,15 +46,15 @@ public class ClientPresenter {
 
     /**
      * Start up a client for a remote connection
-     *
-     * @param clientName the client name
+     *  @param clientName the client name
      * @param ip         the ip address of the server
      * @param port       the port number of the server
+     * @param serviceName
      */
-    public void startUpClient(String clientName, String ip, int port) {
+    public void startUpClient(String clientName, String ip, int port, String serviceName) {
 
         try {
-            client.startUpClient(clientName, ip, port, true);
+            client.startUpClient(clientName, ip, port, true, serviceName);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             showConnectionError();

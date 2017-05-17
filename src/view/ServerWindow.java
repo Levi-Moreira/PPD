@@ -70,8 +70,8 @@ public class ServerWindow implements ServerView {
         System.exit(0);
     }
 
-    public Server startUpServer() {
-        return presenter.startUpServer();
+    public Server startUpServer(String serviceName) {
+        return presenter.startUpServer(serviceName);
     }
 
     {

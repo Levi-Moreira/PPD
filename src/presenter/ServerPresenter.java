@@ -20,7 +20,7 @@ public class ServerPresenter {
         modelIO = new ServerNetworkModel(this);
     }
 
-    public Server startUpServer() {
-        return modelIO.startUpServer();
+    public Server startUpServer(String serviceName) {
+        return modelIO.startUpServer(serviceName);
     }
 }

@@ -1,8 +1,6 @@
 package network;
 
 import model.entities.Message;
-import network.IClient;
-import network.IServer;
 import presenter.ClientPresenter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,36 +35,42 @@ public class Client extends UnicastRemoteObject implements IClient {
     /**
      * Start up the client for a remote communication
      *
-     * @param clientName the name of the client
-     * @param ip         the ip address of the server
-     * @param port       the port in the server where the app lives
+     * @param clientName  the name of the client
+     * @param ip          the ip address of the server
+     * @param port        the port in the server where the app lives
+     * @param serviceName
      */
-    public void startUpClient(String clientName, String ip, int port, boolean remote) throws MalformedURLException {
+    public void startUpClient(String clientName, String ip, int port, boolean remote, String serviceName) throws MalformedURLException {
         this.clientName = clientName;
 
+        String serverURL = "";
         if (!remote) {
-            String serverURL = "rmi://localhost/IServer";
-            IServer server = null;
-            try {
-                server = (IServer) Naming.lookup(serverURL);
-                this.server = server;
-            } catch (NotBoundException e) {
-                e.printStackTrace();
-                showConnectionError();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                showConnectionError();
-            }
+            serverURL = "rmi://localhost/IServer";
+        } else {
+            serverURL = "rmi://" + ip + ":" + port + "/" + serviceName;
+        }
 
-            clientConnected();
-            System.out.println("Conectado....");
 
-            try {
-                server.registerClient(this);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                showConnectionError();
-            }
+        IServer server = null;
+        try {
+            server = (IServer) Naming.lookup(serverURL);
+            this.server = server;
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+            showConnectionError();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            showConnectionError();
+        }
+
+        clientConnected();
+        System.out.println("Conectado....");
+
+        try {
+            server.registerClient(this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            showConnectionError();
         }
     }
 

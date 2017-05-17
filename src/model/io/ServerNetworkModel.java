@@ -32,7 +32,7 @@ public class ServerNetworkModel {
         this.serverPresenter = serverPresenter;
     }
 
-    public Server startUpServer() {
+    public Server startUpServer(String serviceName) {
         Server server = null;
         try {
             server = new Server(this);
@@ -41,7 +41,7 @@ public class ServerNetworkModel {
 
         }
         try {
-            Naming.rebind("IServer",server);
+            Naming.rebind(serviceName,server);
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

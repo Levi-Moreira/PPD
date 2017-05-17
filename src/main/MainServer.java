@@ -4,6 +4,7 @@ import network.Server;
 import view.ServerWindow;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -47,9 +48,8 @@ public class MainServer {
         frame.setResizable(false);
         frame.setVisible(true);
 
-        int opt = JOptionPane.showConfirmDialog(frame, "Start up server?");
-        if (opt == 0) {
-            int clientsNumber = 0;
+        String opt = JOptionPane.showInputDialog(frame, "Start up server?");
+        if (opt != null && !"".equals(opt)) {
             try {
 
                 serverGui.printToArea("Server is bound to the following addresses: \n");
@@ -57,9 +57,9 @@ public class MainServer {
                 for (NetworkInterface netint : Collections.list(nets))
                     serverGui.displayInterfaceInformation(netint, serverGui);
                 serverGui.printToArea("Connected to the port: " + port + "\n");
+                serverGui.printToArea("Service name: " + opt);
 
-
-                theServer = serverGui.startUpServer();
+                theServer = serverGui.startUpServer(opt);
                 setUpServerExit(frame, theServer);
 
             } catch (IOException e) {
